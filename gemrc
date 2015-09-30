@@ -1,0 +1,5 @@
+---
+gem:     --no-ri --no-rdoc
+bundle:  --no-ri --no-rdoc
+install: --no-ri --no-rdoc
+update:  --no-ri --no-rdoc
