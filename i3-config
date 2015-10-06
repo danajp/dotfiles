@@ -163,7 +163,7 @@ bindsym XF86AudioMute exec ~/bin/volume-toggle-mute
 bindsym XF86AudioLowerVolume exec ~/bin/volume-down
 bindsym XF86AudioRaiseVolume exec ~/bin/volume-up
 bindsym $mod+x layout toggle all
-bindsym $mod+p exec --no-startup-id "xrandr --output DP2-1-8 --mode 2560x1440 --pos 1920x0; xmodmap ~/.Xmodmap"
+bindsym $mod+p exec --no-startup-id "/usr/local/sbin/hotplug-monitor; xmodmap ~/.Xmodmap"
 
 workspace 1 output eDP1
 workspace 2 output eDP1
