@@ -85,6 +85,8 @@ function source-first()
 source-if "$ETC_DIR/local.first"
 
 # --- configuration variables ----------------------------------------
+add-to-path-if "$HOME/bin"
+add-to-path-if "$HOME/.local/bin"
 
 # where I keep source code for things
 : ${SRC_DIR:="$HOME/src"}
@@ -119,6 +121,7 @@ if which pyenv > /dev/null; then
 fi
 
 # --- ruby rbenv -----------------------------------------------------
+add-to-path-if "$HOME/.rbenv/bin"
 if which rbenv > /dev/null; then
     eval "$(rbenv init -)"
 fi
