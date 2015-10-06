@@ -148,7 +148,7 @@ if [ -n "$ORACLE_HOME" ]; then
 fi
 
 # --- z (https://github.com/rupa/z) ----------------------------------
-source-first "$SRC_DIR/z/z.sh" "$(brew --prefix)/etc/profile.d/z.sh"
+source-first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
 
 # --- cask for emacs -------------------------------------------------
 add-to-path-if "$HOME/.cask/bin"
@@ -157,8 +157,8 @@ add-to-path-if "$HOME/.cask/bin"
 source-first \
     /etc/bash_completion.d/git \
     /usr/share/bash-completion/completions/git \
-    "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
-source-if "$(brew --prefix)/etc/bash_completion.d/git-flow-completion.bash"
+    "$(which brew >/dev/null && brew --prefix)/etc/bash_completion.d/git-completion.bash"
+source-if "$(which brew >/dev/null && brew --prefix)/etc/bash_completion.d/git-flow-completion.bash"
 
 # --- local post options ----------------------------------------------
 source-if "$ETC_DIR/local.last"
