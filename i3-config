@@ -154,6 +154,7 @@ bar {
         position top
 }
 
+exec --no-startup-id xscreensaver -no-splash
 exec --no-startup-id nm-applet
 exec --no-startup-id gnome-settings-daemon
 exec --no-startup-id xfce4-power-manager
