@@ -58,11 +58,11 @@ i3: ~/.i3/config ~/.i3/i3status.conf
 ~/.i3:
 	mkdir -p ~/.i3
 
-~/.i3/config: ~/.i3
-	ln -s $(PWD)/i3-config ~/.i3/config
+~/.i3/config: | ~/.i3
+	ln -s $(PWD)/i3/config ~/.i3/config
 
-~/.i3/i3status.conf: ~/.i3
-	ln -s $(PWD)/i3-i3status.conf ~/.i3/i3status.conf
+~/.i3/i3status.conf: | ~/.i3
+	ln -s $(PWD)/i3/i3status.conf ~/.i3/i3status.conf
 
 .PHONY: other
 other: ~/.gemrc ~/.screenrc
