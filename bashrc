@@ -153,6 +153,55 @@ if [ -n "$ORACLE_HOME" ]; then
     add_to_pathish SQLPATH "$ETC_DIR/sqlplus" head force
 fi
 
+# --- docker-machine helpers -----------------------------------------
+
+dm_set_docker_ip() {
+  docker_host_ip=$(echo "${DOCKER_HOST}" | grep -o '[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}' )
+  export DOCKER_IP=${docker_host_ip:-localhost}
+}
+
+dm_on() {
+  eval "$(docker-machine env default)"
+  dm_set_docker_ip
+  dm_status
+}
+
+dm_off() {
+  unset \
+    DOCKER_HOST \
+    DOCKER_TLS_VERIFY \
+    DOCKER_CERT_PATH \
+    DOCKER_MACHINE_NAME
+  dm_set_docker_ip
+  dm_status
+}
+
+dm_status() {
+  echo "Using docker daemon on ${DOCKER_IP}"
+}
+
+dm() {
+  local \
+    action \
+    docker_host_ip
+
+  action="$1"
+
+  case "$action" in
+    on)
+      dm_on
+      ;;
+    off)
+      dm_off
+      ;;
+    *)
+      dm_status
+      ;;
+  esac
+}
+
+dm_set_docker_ip
+
 # --- z (https://github.com/rupa/z) ----------------------------------
 source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
 
