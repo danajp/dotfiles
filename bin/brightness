@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+SCRIPT_NAME=$(basename $0)
+BRIGHTNESS_FILE='/sys/class/backlight/intel_backlight/brightness'
+INCREMENT=50
+MAX_VALUE=852
+MIN_VALUE=5
+
+case "${SCRIPT_NAME}" in
+  brightness-up)
+    operator='+'
+    ;;
+  brightness-down)
+    operator='-'
+    ;;
+  *)
+    echo "name of this script isn't something I recognize"
+    exit 1
+    ;;
+esac
+
+current=$(< $BRIGHTNESS_FILE)
+new=$(( ${current} ${operator} ${INCREMENT} ));
+
+if (( ${new} >= ${MAX_VALUE} )); then
+    new=${MAX_VALUE}
+fi
+
+if (( ${new} <= ${MIN_VALUE} )); then
+  new=${MIN_VALUE}
+fi
+
+echo "change brightness: ${current} -> ${new}"
+echo "${new}" | sudo tee "${BRIGHTNESS_FILE}"

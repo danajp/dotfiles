@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+SCRIPT_NAME=$(basename $0)
+SINK='@DEFAULT_SINK@'
+STEP='5%'
+FEEDBACK_SOUND='/usr/share/sounds/ubuntu/notifications/Rhodes.ogg'
+FEEDBACK_SOUND="${HOME}/bin/click.wav"
+
+case "${SCRIPT_NAME}" in
+  volume-up)
+    pactl set-sink-volume "${SINK}" "+${STEP}"
+    ;;
+  volume-down)
+    pactl set-sink-volume "${SINK}" "-${STEP}"
+    ;;
+  volume-toggle-mute)
+    pactl set-sink-mute "${SINK}" toggle
+    ;;
+  *)
+    echo "name of this script isn't something I recognize"
+    exit 1
+    ;;
+esac
+
+paplay "${FEEDBACK_SOUND}"

@@ -1,12 +1,17 @@
-PWD=`pwd`
+PWD=$(shell pwd)
 
-install: ~/.bashrc ~/.bash_profile ~/.i3/config ~/.screenrc
+.PHONY: install
+install: bash bin i3 other
 
+.PHONY: clean
 clean:
 	rm -f ~/.bashrc
 	rm -f ~/.bash_profile
 	rm -f ~/.gemrc
 	rm -rf ~/.i3
+
+.PHONY: bash
+bash: ~/.bashrc ~/.bash_profile
 
 ~/.bashrc:
 	ln -s $(PWD)/bashrc ~/.bashrc
@@ -14,8 +19,41 @@ clean:
 ~/.bash_profile:
 	ln -s $(PWD)/bash_profile ~/.bash_profile
 
-~/.gemrc:
-	ln -s $(PWD)/gemrc ~/.gemrc
+.PHONY: bin
+bin: volume brightness
+
+~/bin:
+	mkdir ~/bin
+
+.PHONY: brightness
+brightness: ~/bin/brightness-up ~/bin/brightness-down
+
+~/bin/brightness: ~/bin
+	cd ~/bin && ln -s $(PWD)/bin/brightness brightness
+
+~/bin/brightness-up: ~/bin/brightness
+	cd ~/bin && ln -s brightness brightness-up
+
+~/bin/brightness-down: ~/bin/brightness
+	cd ~/bin && ln -s brightness brightness-down
+
+.PHONY: volume
+volume: ~/bin/volume-up ~/bin/volume-down ~/bin/volume-toggle-mute
+
+~/bin/volume: ~/bin
+	cd ~/bin && ln -s $(PWD)/bin/volume volume
+
+~/bin/volume-up: ~/bin/volume
+	cd ~/bin && ln -s volume volume-up
+
+~/bin/volume-down: ~/bin/volume
+	cd ~/bin && ln -s volume volume-down
+
+~/bin/volume-toggle-mute: ~/bin/volume
+	cd ~/bin && ln -s volume volume-toggle-mute
+
+.PHONY: i3
+i3: ~/.i3/config ~/.i3/i3status.conf
 
 ~/.i3:
 	mkdir -p ~/.i3
@@ -25,6 +63,12 @@ clean:
 
 ~/.i3/i3status.conf: ~/.i3
 	ln -s $(PWD)/i3-i3status.conf ~/.i3/i3status.conf
+
+.PHONY: other
+other: ~/.gemrc ~/.screenrc
+
+~/.gemrc:
+	ln -s $(PWD)/gemrc ~/.gemrc
 
 ~/.screenrc:
 	ln -s $(PWD)/screenrc ~/.screenrc
