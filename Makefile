@@ -28,7 +28,7 @@ bin: volume brightness
 .PHONY: brightness
 brightness: ~/bin/brightness-up ~/bin/brightness-down
 
-~/bin/brightness: ~/bin
+~/bin/brightness: | ~/bin
 	cd ~/bin && ln -s $(PWD)/bin/brightness brightness
 
 ~/bin/brightness-up: ~/bin/brightness
@@ -40,7 +40,7 @@ brightness: ~/bin/brightness-up ~/bin/brightness-down
 .PHONY: volume
 volume: ~/bin/volume-up ~/bin/volume-down ~/bin/volume-toggle-mute
 
-~/bin/volume: ~/bin
+~/bin/volume: | ~/bin
 	cd ~/bin && ln -s $(PWD)/bin/volume volume
 
 ~/bin/volume-up: ~/bin/volume
