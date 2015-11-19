@@ -130,6 +130,9 @@ fi
 # see https://github.com/burke/zeus/issues/469
 zeus () { ARGS=$@; command zeus "$@"; ZE_EC=$?; stty sane; if [ $ZE_EC = 2 ]; then zeus "$ARGS"; fi }
 
+# --- heroku toolbelt ------------------------------------------------
+add_to_path_if '/usr/local/heroku/bin'
+
 # --- node.js nvm ----------------------------------------------------
 source_if "$HOME/.nvm/nvm.sh"
 
