@@ -1,0 +1,30 @@
+#!/bin/bash -ex
+
+CONFIG_DIR="${HOME}/Documents/vpn"
+OPENVPN="/usr/sbin/openvpn"
+CLOSE_ALL="close_all"
+
+function get_vpns() {
+    for f in ${CONFIG_DIR}/*ovpn; do
+        basename $f .ovpn;
+    done
+    echo "${CLOSE_ALL}"
+}
+
+vpn=$(get_vpns | dmenu -p "VPN:" -l 20)
+
+if [[ "$vpn" = "$CLOSE_ALL" ]]
+then
+  sudo /usr/bin/killall $OPENVPN
+else
+  sudo $OPENVPN \
+       --client \
+       --config "${CONFIG_DIR}/${vpn}.ovpn" \
+       --auth-user-pass ~/.openvpnrc \
+       --auth-nocache \
+       --script-security 2 \
+       --up /etc/openvpn/update-resolv-conf \
+       --down /etc/openvpn/update-resolv-conf \
+       --daemon \
+       --writepid "/run/openvpn/${vpn}.pid"
+fi
