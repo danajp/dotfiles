@@ -1,4 +1,7 @@
 # -*- Mode: shell-script -*-
+THIS=$(readlink -f ${BASH_SOURCE})
+THIS_DIR=$(dirname ${THIS})
+
 
 # --- utility functions ----------------------------------------------
 
@@ -82,7 +85,7 @@ function source_first()
 }
 
 # --- local pre options ----------------------------------------------
-source_if "$ETC_DIR/local.first"
+source_if "$THIS_DIR/local.first"
 
 # --- configuration variables ----------------------------------------
 add_to_path_if "$HOME/bin"
@@ -150,7 +153,7 @@ if [ -n "$ORACLE_HOME" ]; then
         add_to_pathish LD_LIBRARY_PATH "$ORACLE_HOME/lib" head
     fi
 
-    add_to_pathish SQLPATH "$ETC_DIR/sqlplus" head force
+    add_to_pathish SQLPATH "$THIS_DIR/sqlplus" head force
 fi
 
 # --- docker-machine helpers -----------------------------------------
@@ -216,4 +219,4 @@ source_first \
 source_if "$(which brew >/dev/null && brew --prefix)/etc/bash_completion.d/git-flow-completion.bash"
 
 # --- local post options ----------------------------------------------
-source_if "$ETC_DIR/local.last"
+source_if "$THIS_DIR/local.last"
