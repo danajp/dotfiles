@@ -3,20 +3,25 @@
 CONFIG_DIR="${HOME}/Documents/vpn"
 OPENVPN="/usr/sbin/openvpn"
 CLOSE_ALL="close_all"
+ALL="all"
 
 function get_vpns() {
-    for f in ${CONFIG_DIR}/*ovpn; do
-        basename $f .ovpn;
-    done
-    echo "${CLOSE_ALL}"
+  for f in ${CONFIG_DIR}/*ovpn; do
+    basename $f .ovpn;
+  done
 }
 
-vpn=$(get_vpns | dmenu -p "VPN:" -l 20)
+function vpn_menu_list() {
+  get_vpns
+  echo "${CLOSE_ALL}"
+  echo "${ALL}"
+}
 
-if [[ "$vpn" = "$CLOSE_ALL" ]]
-then
-  sudo /usr/bin/killall $OPENVPN
-else
+function connect() {
+  local vpn
+
+  vpn="$1"
+
   sudo $OPENVPN \
        --client \
        --config "${CONFIG_DIR}/${vpn}.ovpn" \
@@ -27,4 +32,16 @@ else
        --down /etc/openvpn/update-resolv-conf \
        --daemon \
        --writepid "/run/openvpn/${vpn}.pid"
+}
+
+vpn=$(vpn_menu_list | dmenu -p "VPN:" -l 20)
+
+if [[ "$vpn" = "$CLOSE_ALL" ]]; then
+  sudo /usr/bin/killall $OPENVPN
+elif [[ "$vpn" == "${ALL}" ]]; then
+  for name in $(get_vpns); do
+    connect "$name"
+  done
+else
+  connect "$vpn"
 fi
