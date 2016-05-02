@@ -162,7 +162,8 @@ fi
 
 dm_set_docker_ip() {
   docker_host_ip=$(echo "${DOCKER_HOST}" | grep -o '[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}\.[[:digit:]]\{1,3\}' )
-  export DOCKER_IP=${docker_host_ip:-localhost}
+  docker_interface_ip=$(ifconfig docker0 | grep 'inet addr' | awk '{print $2}' | awk -F: '{print $2}')
+  export DOCKER_IP=${docker_host_ip:-$docker_interface_ip}
 }
 
 dm_on() {
