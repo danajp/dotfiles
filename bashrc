@@ -208,6 +208,15 @@ dm() {
 
 dm_set_docker_ip
 
+# --- AWS utils ------------------------------------------------------
+n2ip () {
+  aws ec2 \
+      --region us-east-1 \
+      describe-instances \
+      --filters Name=tag:Name,Values=$1 Name=instance-state-name,Values=running \
+    | jq -r '.Reservations[].Instances[].NetworkInterfaces[0].PrivateIpAddress'
+}
+
 # --- z (https://github.com/rupa/z) ----------------------------------
 source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
 
