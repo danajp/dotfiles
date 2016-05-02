@@ -95,7 +95,9 @@ add_to_path_if "$HOME/.local/bin"
 : ${SRC_DIR:="$HOME/src"}
 
 # --- shell options --------------------------------------------------
-[ "$SHELL" == "/bin/bash" ] && shopt -s checkwinsize
+shopt -s checkwinsize
+shopt -s histappend
+shopt -s cmdhist
 
 [ -d "$HOME/bin" ] && add_to_path "$HOME/bin" head force
 
