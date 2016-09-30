@@ -1,47 +1,97 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 CONFIG_DIR="${HOME}/Documents/vpn"
 OPENVPN="/usr/sbin/openvpn"
-CLOSE_ALL="close_all"
-ALL="all"
+VPNS="support prod prod-staging"
 
-function get_vpns() {
-  for f in ${CONFIG_DIR}/*ovpn; do
-    basename $f .ovpn;
-  done
+function info() {
+  echo "[$(date)] $1" >&2
 }
 
-function vpn_menu_list() {
-  get_vpns
-  echo "${CLOSE_ALL}"
-  echo "${ALL}"
-}
-
-function connect() {
+function parent_vpn() {
   local vpn
 
   vpn="$1"
 
+  case "$vpn" in
+    prod | prod-staging)
+      echo support
+      ;;
+  esac
+}
+
+function pid_file() {
+  local vpn
+
+  vpn="$1"
+
+  echo "/run/openvpn/${vpn}-vpn.pid"
+}
+
+function config_file() {
+  local vpn
+
+  vpn="$1"
+
+  echo "$CONFIG_DIR/${vpn}-vpn.ovpn"
+}
+
+function connected() {
+  local vpn
+
+  vpn="$1"
+
+  [[ -e "$(pid_file $vpn)" ]] && pgrep -F "$(pid_file $vpn)" > /dev/null
+}
+
+function connect() {
+  local vpn parent
+
+  vpn="$1"
+  parent="$(parent_vpn $vpn)"
+
+  if [[ -n "$parent" ]]; then
+    connect "$parent"
+  fi
+
+  if connected "$vpn"; then
+    info "already connected to $vpn"
+    return 0
+  fi
+
+  info "connect to $vpn"
   sudo $OPENVPN \
        --client \
-       --config "${CONFIG_DIR}/${vpn}.ovpn" \
+       --config "$(config_file $vpn)" \
        --auth-user-pass ~/.openvpnrc \
        --auth-nocache \
        --script-security 2 \
        --up /etc/openvpn/update-resolv-conf \
        --down /etc/openvpn/update-resolv-conf \
        --daemon \
-       --writepid "/run/openvpn/${vpn}.pid"
+       --writepid "$(pid_file $vpn)"
 }
 
-vpn=$(vpn_menu_list | dmenu -p "VPN:" -l 20)
-
-if [[ "$vpn" = "$CLOSE_ALL" ]]; then
-  sudo /usr/bin/killall $OPENVPN
-elif [[ "$vpn" == "${ALL}" ]]; then
-  for name in $(get_vpns); do
-    connect "$name"
+connect_all() {
+  for vpn in $VPNS; do
+    connect "$vpn"
   done
-else
-  connect "$vpn"
-fi
+}
+
+function choose() {
+  vpn="$(echo "$VPNS" all close-all | xargs -n1 | dmenu -p "vpn:")"
+
+  case "$vpn" in
+    close-all)
+      sudo killall "$OPENVPN"
+      ;;
+    all)
+      connect_all
+      ;;
+    *)
+      connect "$vpn"
+      ;;
+  esac
+}
+
+choose
