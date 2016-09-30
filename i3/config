@@ -157,6 +157,7 @@ bar {
 exec --no-startup-id nm-applet
 exec --no-startup-id gnome-settings-daemon
 exec --no-startup-id ~/.dropbox-dist/dropboxd
+exec --no-startup-id pasystray
 
 bindsym XF86AudioMute exec ~/bin/volume-toggle-mute
 bindsym XF86AudioLowerVolume exec ~/bin/volume-down
