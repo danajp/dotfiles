@@ -72,7 +72,7 @@ i3: ~/.i3/config ~/.i3/i3status.conf
 	ln -s $(PWD)/i3/i3status.conf ~/.i3/i3status.conf
 
 .PHONY: other
-other: ~/.gemrc ~/.screenrc ~/.Xmodmap
+other: ~/.gemrc ~/.screenrc ~/.Xmodmap gitconfig
 
 ~/.gemrc:
 	ln -s $(PWD)/gemrc ~/.gemrc
@@ -82,3 +82,7 @@ other: ~/.gemrc ~/.screenrc ~/.Xmodmap
 
 ~/.Xmodmap:
 	ln -s $(PWD)/Xmodmap ~/.Xmodmap
+
+.PHONY: gitconfig
+gitconfig:
+	git config --global include.path $(PWD)/gitconfig
