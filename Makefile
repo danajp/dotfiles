@@ -21,7 +21,7 @@ bash: ~/.bashrc ~/.bash_profile
 	ln -s $(PWD)/bash_profile ~/.bash_profile
 
 .PHONY: bin
-bin: volume brightness ~/bin/vpn
+bin: volume brightness ~/bin/vpn ~/bin/lock
 
 ~/bin:
 	mkdir ~/bin
@@ -55,6 +55,9 @@ volume: ~/bin/volume-up ~/bin/volume-down ~/bin/volume-toggle-mute
 
 ~/bin/vpn: | ~/bin
 	cd ~/bin && ln -s $(PWD)/bin/vpn vpn
+
+~/bin/lock: | ~/bin
+	cd ~/bin && ln -s $(PWD)/bin/lock lock
 
 .PHONY: i3
 i3: ~/.i3/config ~/.i3/i3status.conf
