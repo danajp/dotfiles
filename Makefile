@@ -9,6 +9,7 @@ clean:
 	rm -f ~/.bash_profile
 	rm -f ~/.gemrc
 	rm -rf ~/.i3
+	rm -f ~/.Xmodmap
 
 .PHONY: bash
 bash: ~/.bashrc ~/.bash_profile
@@ -68,10 +69,13 @@ i3: ~/.i3/config ~/.i3/i3status.conf
 	ln -s $(PWD)/i3/i3status.conf ~/.i3/i3status.conf
 
 .PHONY: other
-other: ~/.gemrc ~/.screenrc
+other: ~/.gemrc ~/.screenrc ~/.Xmodmap
 
 ~/.gemrc:
 	ln -s $(PWD)/gemrc ~/.gemrc
 
 ~/.screenrc:
 	ln -s $(PWD)/screenrc ~/.screenrc
+
+~/.Xmodmap:
+	ln -s $(PWD)/Xmodmap ~/.Xmodmap
