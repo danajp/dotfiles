@@ -10,6 +10,7 @@ clean:
 	rm -f ~/.gemrc
 	rm -rf ~/.i3
 	rm -f ~/.Xmodmap
+	rm -f ~/.Xresources
 
 .PHONY: bash
 bash: ~/.bashrc ~/.bash_profile
@@ -72,7 +73,7 @@ i3: ~/.i3/config ~/.i3/i3status.conf
 	ln -s $(PWD)/i3/i3status.conf ~/.i3/i3status.conf
 
 .PHONY: other
-other: ~/.gemrc ~/.screenrc ~/.Xmodmap gitconfig
+other: ~/.gemrc ~/.screenrc ~/.Xmodmap gitconfig ~/.Xresources
 
 ~/.gemrc:
 	ln -s $(PWD)/gemrc ~/.gemrc
@@ -82,6 +83,9 @@ other: ~/.gemrc ~/.screenrc ~/.Xmodmap gitconfig
 
 ~/.Xmodmap:
 	ln -s $(PWD)/Xmodmap ~/.Xmodmap
+
+~/.Xresources:
+	ln -s $(PWD)/Xresources ~/.Xresources
 
 .PHONY: gitconfig
 gitconfig:
