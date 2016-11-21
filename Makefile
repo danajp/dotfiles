@@ -22,7 +22,7 @@ bash: ~/.bashrc ~/.bash_profile
 	ln -s $(PWD)/bash_profile ~/.bash_profile
 
 .PHONY: bin
-bin: volume brightness ~/bin/vpn ~/bin/lock
+bin: volume brightness ~/bin/vpn ~/bin/lock ~/bin/hotplug-monitor
 
 ~/bin:
 	mkdir ~/bin
@@ -62,6 +62,9 @@ volume: ~/bin/volume-up ~/bin/volume-down ~/bin/volume-toggle-mute ~/bin/click.w
 
 ~/bin/lock: | ~/bin
 	cd ~/bin && ln -s $(PWD)/bin/lock lock
+
+~/bin/hotplug-monitor: | ~/bin
+	cd ~/bin && ln -s $(PWD)/bin/hotplug-monitor hotplug-monitor
 
 .PHONY: i3
 i3: ~/.i3/config ~/.i3/i3status.conf
