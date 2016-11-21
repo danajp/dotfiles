@@ -106,7 +106,8 @@ if ! grep -qi "r" <<<"$LESS"; then
     export LESS="$LESS -r"
 fi
 
-export PS1="\h:\W \u\$ "
+source "$THIS_DIR/feature-switch"
+export PS1="\h:\W \u \$(set_env_ps1)\$ "
 export HISTCONTROL='ignoreboth'
 # ls color output
 export CLICOLOR=1

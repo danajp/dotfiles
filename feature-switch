@@ -1,0 +1,109 @@
+#!/bin/bash
+
+ENV_DIR="/home/dana/src/dotfiles/features"
+
+fatal() {
+  echo "$1"
+  exit 1
+}
+
+feature_exists() {
+  local feature
+  feature="$1"
+
+  [[ -d "${ENV_DIR}/${feature}" ]]
+}
+
+context_exists() {
+  local feature context
+
+  feature="$1"
+  context="$2"
+
+  [[ -e "${ENV_DIR}/${feature}/${context}" ]]
+}
+
+update_active_contexts() {
+  local feature context
+
+  feature="$1"
+  context="$2"
+
+  if [[ "${context}" == 'off' ]]; then
+    remove_feature "${feature}"
+  else
+    add_feature "${feature}"
+    set_feature_context "${feature}" "${context}"
+  fi
+
+  source_feature_context "${feature}" "${context}"
+}
+
+set_env_ps1() {
+  local feature context
+
+  for feature in $(<<<"$SET_ENV_FEATURES" split_pathish); do
+    context=$(eval "echo \$SET_ENV_FEATURE_${feature}")
+    echo -n "${feature}:$context "
+  done
+}
+
+split_pathish() {
+  awk -F: '{ for (i=1; i<=NF; i++) print $i }'
+}
+
+join_pathish() {
+  awk '{ s = s ":" $1 } END { sub(/^:/, "", s); print s }'
+}
+
+source_feature_context() {
+  local feature context
+
+  feature="$1"
+  context="$2"
+
+  source "${ENV_DIR}/${feature}/${context}"
+}
+
+set_feature_context() {
+  local feature context
+
+  feature="$1"
+  context="$2"
+
+  eval "export SET_ENV_FEATURE_${feature}='${context}'"
+}
+
+add_feature() {
+  local feature
+  feature="$1"
+
+  export SET_ENV_FEATURES=$((<<<"${SET_ENV_FEATURES}" split_pathish; echo "${feature}") | uniq | join_pathish)
+}
+
+remove_feature() {
+  local feature
+  feature="$1"
+
+  export SET_ENV_FEATURES=$(<<<"${SET_ENV_FEATURES}" split_pathish | grep -v "${feature}" | join_pathish)
+  eval "unset SET_ENV_FEATURE_${feature}"
+}
+
+context() {
+  local feature context
+
+  feature="$1"
+  context="$2"
+
+  if ! feature_exists "${feature}"; then
+    fatal "could not find feature ${feature}"
+  fi
+
+  if ! context_exists "${feature}" "${context}"; then
+    fatal "could not find context ${context} for feature ${feature}"
+  fi
+
+  #source "${ENV_DIR}/${feature}/${context}"
+
+  update_active_contexts "${feature}" "${context}"
+}
