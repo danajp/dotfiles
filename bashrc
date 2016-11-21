@@ -113,6 +113,7 @@ export HISTCONTROL='ignoreboth'
 export CLICOLOR=1
 
 # --- python virtualenvs ---------------------------------------------
+export WORKON_HOME="$HOME/virtualenvs"
 source_first /usr/local/bin/virtualenvwrapper.sh /etc/bash_completion.d/virtualenvwrapper
 
 # -- pyenv -----------------------------------------------------------
