@@ -40,7 +40,7 @@ brightness: ~/bin/brightness-up ~/bin/brightness-down
 	cd ~/bin && ln -s brightness brightness-down
 
 .PHONY: volume
-volume: ~/bin/volume-up ~/bin/volume-down ~/bin/volume-toggle-mute
+volume: ~/bin/volume-up ~/bin/volume-down ~/bin/volume-toggle-mute ~/bin/click.wav
 
 ~/bin/volume: | ~/bin
 	cd ~/bin && ln -s $(PWD)/bin/volume volume
@@ -53,6 +53,9 @@ volume: ~/bin/volume-up ~/bin/volume-down ~/bin/volume-toggle-mute
 
 ~/bin/volume-toggle-mute: ~/bin/volume
 	cd ~/bin && ln -s volume volume-toggle-mute
+
+~/bin/click.wav:
+	cd ~/bin && ln -s $(PWD)/bin/click.wav
 
 ~/bin/vpn: | ~/bin
 	cd ~/bin && ln -s $(PWD)/bin/vpn vpn
