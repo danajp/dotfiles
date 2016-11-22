@@ -169,7 +169,7 @@ bindsym XF86Search exec ~/bin/lock
 bindsym Pause exec ~/bin/lock
 
 bindsym $mod+x layout toggle all
-bindsym $mod+p exec --no-startup-id "/usr/local/sbin/hotplug-monitor; xmodmap ~/.Xmodmap"
+bindsym $mod+p exec --no-startup-id "hotplug-monitor; xmodmap ~/.Xmodmap"
 
 workspace 1 output eDP1
 workspace 2 output eDP1
