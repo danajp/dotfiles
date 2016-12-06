@@ -11,6 +11,7 @@ clean:
 	rm -rf ~/.i3
 	rm -f ~/.Xmodmap
 	rm -f ~/.Xresources
+	rm -f ~/.tmux.conf
 
 .PHONY: bash
 bash: ~/.bashrc ~/.bash_profile
@@ -99,3 +100,6 @@ gitconfig:
 
 ~/.openvpnrc:
 	ln -s $(PWD)/openvpnrc ~/.openvpnrc
+
+~/.tmux.conf:
+	ln -s $(PWD)/tmux.conf ~/.tmux.conf
