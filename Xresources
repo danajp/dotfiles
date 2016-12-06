@@ -63,7 +63,5 @@
 *color14:                 S_base1
 *color15:                 S_base3
 
-!*faceName: Terminus:style=Regular:size=12
-
 Xft.antialias: true
-*font: xft:terminus-14:encoding=combined
+*.font:-*-terminus-*-*-*-*-*-140-*-*-*-*-*-*
