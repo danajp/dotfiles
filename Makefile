@@ -80,7 +80,7 @@ i3: ~/.i3/config ~/.i3/i3status.conf
 	ln -s $(PWD)/i3/i3status.conf ~/.i3/i3status.conf
 
 .PHONY: other
-other: ~/.gemrc ~/.screenrc ~/.Xmodmap gitconfig ~/.Xresources ~/.openvpnrc
+other: ~/.gemrc ~/.screenrc ~/.Xmodmap gitconfig ~/.Xresources ~/.openvpnrc ~/.tmux.conf ~/.config/powerline
 
 ~/.gemrc:
 	ln -s $(PWD)/gemrc ~/.gemrc
@@ -103,3 +103,6 @@ gitconfig:
 
 ~/.tmux.conf:
 	ln -s $(PWD)/tmux.conf ~/.tmux.conf
+
+~/.config/powerline:
+	cd ~/.config && ln -s $(PWD)/powerline
