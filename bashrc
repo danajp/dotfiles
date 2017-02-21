@@ -215,11 +215,30 @@ dm_set_docker_ip
 
 # --- AWS utils ------------------------------------------------------
 n2ip () {
+  local verbose query
+
+  for arg in "$@"; do
+    case "$arg" in
+      -v)
+        verbose=on
+        ;;
+      *)
+        query="$arg"
+        ;;
+    esac
+  done
+
+  if [[ "$verbose" == "on" ]]; then
+    name_query='(.Tags | map(select(.Key == "Name")) | map(.Value) | .[0])'
+  else
+    name_query='""'
+  fi
+
   aws ec2 \
       --region us-east-1 \
       describe-instances \
       --filters Name=tag:Name,Values=$1 Name=instance-state-name,Values=running \
-    | jq -r '.Reservations[].Instances[].NetworkInterfaces[0].PrivateIpAddress'
+    | jq -r ".Reservations[].Instances[] | [.NetworkInterfaces[0].PrivateIpAddress, $name_query] | join(\" \")"
 }
 
 # --- z (https://github.com/rupa/z) ----------------------------------
