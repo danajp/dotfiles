@@ -254,5 +254,11 @@ source_first \
     "$(which brew >/dev/null && brew --prefix)/etc/bash_completion.d/git-completion.bash"
 source_if "$(which brew >/dev/null && brew --prefix)/etc/bash_completion.d/git-flow-completion.bash"
 
+# --- kubectl completion ---------------------------------------------
+if which kubectl &>/dev/null; then
+  alias k=kubectl
+  eval "$(k completion bash)"
+fi
+
 # --- local post options ----------------------------------------------
 source_if "$THIS_DIR/local.last"
