@@ -78,8 +78,18 @@ connect_all() {
   done
 }
 
-function choose() {
-  vpn="$(echo "$VPNS" all close-all | xargs -n1 | dmenu -p "vpn:")"
+function menu() {
+  echo "$VPNS" all close-all | xargs -n1 | dmenu -p "vpn:"
+}
+
+main() {
+  local vpn
+
+  if [[ -z "$1" ]]; then
+    vpn=$(menu)
+  else
+    vpn="$1"
+  fi
 
   case "$vpn" in
     close-all)
@@ -94,4 +104,4 @@ function choose() {
   esac
 }
 
-choose
+main "$@"
