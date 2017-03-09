@@ -235,7 +235,6 @@ n2ip () {
   fi
 
   aws ec2 \
-      --region us-east-1 \
       describe-instances \
       --filters Name=tag:Name,Values=$1 Name=instance-state-name,Values=running \
     | jq -r ".Reservations[].Instances[] | [.NetworkInterfaces[0].PrivateIpAddress, $name_query] | join(\" \")"
