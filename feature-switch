@@ -107,3 +107,15 @@ context() {
 
   update_active_contexts "${feature}" "${context}"
 }
+
+initialize() {
+  local feature
+
+  for d in ${ENV_DIR}/*; do
+    if context_exists "$feature" default; then
+      update_active_contexts "$feature" default
+    fi
+  done
+}
+
+initialize
