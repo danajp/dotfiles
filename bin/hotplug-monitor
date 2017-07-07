@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 MONITOR_STATUS=$(< /sys/class/drm/card0-DP-3/status)
-MONITOR_XRANDR_OUTPUT='DP-2-1-8'
+MONITOR_XRANDR_OUTPUT='DP-2-1'
 
 export DISPLAY=':0'
 export XAUTHORITY='/home/dana/.Xauthority'
