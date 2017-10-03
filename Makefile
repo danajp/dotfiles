@@ -107,5 +107,5 @@ gitconfig:
 ~/.tmux.conf:
 	ln -s $(PWD)/tmux.conf ~/.tmux.conf
 
-~/.config/powerline:
+~/.config/powerline: ~/.config
 	cd ~/.config && ln -s $(PWD)/powerline
