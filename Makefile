@@ -28,6 +28,9 @@ bin: volume brightness ~/bin/vpn ~/bin/lock ~/bin/hotplug-monitor ~/bin/1passwor
 ~/bin:
 	mkdir ~/bin
 
+~/.config:
+	mkdir ~/.config
+
 .PHONY: brightness
 brightness: ~/bin/brightness-up ~/bin/brightness-down
 
