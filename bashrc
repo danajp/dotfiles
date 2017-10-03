@@ -255,8 +255,7 @@ source_if "$(which brew >/dev/null && brew --prefix)/etc/bash_completion.d/git-f
 
 # --- kubectl completion ---------------------------------------------
 if which kubectl &>/dev/null; then
-  alias k=kubectl
-  eval "$(k completion bash)"
+  eval "$(kubectl completion bash)"
 fi
 
 # --- local post options ----------------------------------------------
