@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 
-SCRIPT_NAME=$(basename $0)
 BRIGHTNESS_FILE='/sys/class/backlight/intel_backlight/brightness'
 INCREMENT=50
 MAX_VALUE=852
 MIN_VALUE=5
 
-case "${SCRIPT_NAME}" in
-  brightness-up)
+case "$1" in
+  up)
     operator='+'
     ;;
-  brightness-down)
+  down)
     operator='-'
     ;;
   *)
-    echo "name of this script isn't something I recognize"
+    echo "$1 isn't something I recognize"
     exit 1
     ;;
 esac

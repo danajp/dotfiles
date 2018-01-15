@@ -161,11 +161,11 @@ exec --no-startup-id gnome-settings-daemon
 exec --no-startup-id ~/.dropbox-dist/dropboxd
 exec --no-startup-id pasystray
 
-bindsym XF86AudioMute exec ~/bin/volume-toggle-mute
-bindsym XF86AudioLowerVolume exec ~/bin/volume-down
-bindsym XF86AudioRaiseVolume exec ~/bin/volume-up
-bindsym XF86MonBrightnessUp exec ~/bin/brightness-up
-bindsym XF86MonBrightnessDown exec ~/bin/brightness-down
+bindsym XF86AudioMute exec ~/bin/volume toggle-mute
+bindsym XF86AudioLowerVolume exec ~/bin/volume down
+bindsym XF86AudioRaiseVolume exec ~/bin/volume up
+bindsym XF86MonBrightnessUp exec ~/bin/brightness up
+bindsym XF86MonBrightnessDown exec ~/bin/brightness down
 bindsym XF86Search exec ~/bin/lock
 bindsym Pause exec ~/bin/lock
 
