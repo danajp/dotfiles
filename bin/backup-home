@@ -1,0 +1,5 @@
+#!/bin/bash
+
+INCLUDE="Documents org secrets src"
+
+tar -cvzf home.tar.gz $INCLUDE
