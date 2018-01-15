@@ -1,7 +1,19 @@
 PWD=$(shell pwd)
 
+SCRIPTS_SRC:=$(wildcard bin/*)
+SCRIPTS_DEST:=$(patsubst bin/%,~/bin/%,$(SCRIPTS_SRC))
+
+.PHONY: scripts
+scripts: ~/bin $(SCRIPTS_DEST)
+
+~/bin:
+	mkdir ~/bin
+
+~/bin/%: bin/%
+	ln -s $(PWD)/$< $@
+
 .PHONY: install
-install: bash bin i3 other
+install: bash scripts i3 other
 
 .PHONY: clean
 clean:
@@ -22,53 +34,8 @@ bash: ~/.bashrc ~/.bash_profile
 ~/.bash_profile:
 	ln -s $(PWD)/bash_profile ~/.bash_profile
 
-.PHONY: bin
-bin: volume brightness ~/bin/lock ~/bin/hotplug-monitor ~/bin/1password
-
-~/bin:
-	mkdir ~/bin
-
 ~/.config:
 	mkdir ~/.config
-
-.PHONY: brightness
-brightness: ~/bin/brightness-up ~/bin/brightness-down
-
-~/bin/brightness: | ~/bin
-	cd ~/bin && ln -s $(PWD)/bin/brightness brightness
-
-~/bin/brightness-up: ~/bin/brightness
-	cd ~/bin && ln -s brightness brightness-up
-
-~/bin/brightness-down: ~/bin/brightness
-	cd ~/bin && ln -s brightness brightness-down
-
-.PHONY: volume
-volume: ~/bin/volume-up ~/bin/volume-down ~/bin/volume-toggle-mute ~/bin/click.wav
-
-~/bin/volume: | ~/bin
-	cd ~/bin && ln -s $(PWD)/bin/volume volume
-
-~/bin/volume-up: ~/bin/volume
-	cd ~/bin && ln -s volume volume-up
-
-~/bin/volume-down: ~/bin/volume
-	cd ~/bin && ln -s volume volume-down
-
-~/bin/volume-toggle-mute: ~/bin/volume
-	cd ~/bin && ln -s volume volume-toggle-mute
-
-~/bin/click.wav:
-	cd ~/bin && ln -s $(PWD)/bin/click.wav
-
-~/bin/lock: | ~/bin
-	cd ~/bin && ln -s $(PWD)/bin/lock lock
-
-~/bin/hotplug-monitor: | ~/bin
-	cd ~/bin && ln -s $(PWD)/bin/hotplug-monitor hotplug-monitor
-
-~/bin/1password: | ~/bin
-	cd ~/bin && ln -s $(PWD)/bin/1password
 
 .PHONY: i3
 i3: ~/.i3/config ~/.i3/i3status.conf
