@@ -1,0 +1,9 @@
+#!/bin/bash
+
+SCREENSHOT_DIR="${HOME}/Documents/screenshots"
+FILENAME="${SCREENSHOT_DIR}/screenshot-$(date '+%Y-%m-%d-%H-%M-%S').png"
+
+mkdir -p "${SCREENSHOT_DIR}"
+
+import "${FILENAME}" \
+  && echo "screenshot saved to ${FILENAME}"
