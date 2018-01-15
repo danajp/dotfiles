@@ -1,0 +1,33 @@
+#!/bin/bash
+
+LAPTOP='--output eDP-1'
+LAPTOP_ARGS='--primary --mode 1920x1080 --pos 0x0'
+
+MONITOR='--output DP-2-1'
+MONITOR_ARGS='--mode 2560x1440 --pos 1920x0'
+
+on() {
+  xrandr $LAPTOP $LAPTOP_ARGS $MONITOR $MONITOR_ARGS
+}
+
+off() {
+  xrandr $LAPTOP $LAPTOP_ARGS $MONITOR --off
+}
+
+main() {
+  local script_name
+
+  case "$1" in
+    on)
+      on
+      ;;
+    off)
+      off
+      ;;
+    *)
+      echo "$1 isn't something I recognize" >&2
+      exit 1
+  esac
+}
+
+main "$@"
