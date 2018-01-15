@@ -160,6 +160,13 @@ if [ -n "$ORACLE_HOME" ]; then
     add_to_pathish SQLPATH "$THIS_DIR/sqlplus" head force
 fi
 
+# -- golang ----------------------------------------------------------
+if [ -d /usr/local/go ]; then
+  export GOPATH="$SRC_DIR/go"
+  add_to_path_if /usr/local/go/bin
+  add_to_path_if "$GOPATH/bin"
+fi
+
 # --- docker-machine helpers -----------------------------------------
 
 dm_set_docker_ip() {
