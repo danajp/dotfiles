@@ -157,8 +157,9 @@ bar {
 exec --no-startup-id "xrdb ~/.Xresources"
 exec --no-startup-id "setxkbmap -option caps:ctrl_modifier"
 exec --no-startup-id nm-applet
-exec --no-startup-id gnome-settings-daemon
-exec --no-startup-id ~/.dropbox-dist/dropboxd
+#exec --no-startup-id unity-settings-daemon
+#exec --no-startup-id ~/.dropbox-dist/dropboxd
+#exec --no-startup-id blueman-applet
 exec --no-startup-id pasystray
 
 bindsym XF86AudioMute exec ~/bin/volume toggle-mute
