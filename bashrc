@@ -269,3 +269,4 @@ fi
 
 # --- local post options ----------------------------------------------
 source_if "$THIS_DIR/local.last"
+source_if "$HOME/secrets/bash"
