@@ -133,6 +133,8 @@ if which rbenv > /dev/null; then
     eval "$(rbenv init -)"
 fi
 
+alias be="bundle exec"
+
 # --- workaround for zeus bug ----------------------------------------
 # see https://github.com/burke/zeus/issues/469
 zeus () { ARGS=$@; command zeus "$@"; ZE_EC=$?; stty sane; if [ $ZE_EC = 2 ]; then zeus "$ARGS"; fi }
