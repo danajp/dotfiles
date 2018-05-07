@@ -251,6 +251,8 @@ n2ip () {
     | jq -r ".Reservations[].Instances[] | [.NetworkInterfaces[0].PrivateIpAddress, $name_query] | join(\" \")"
 }
 
+export AWS_VAULT_BACKEND=file
+
 # --- z (https://github.com/rupa/z) ----------------------------------
 source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
 
