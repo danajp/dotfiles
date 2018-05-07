@@ -259,6 +259,8 @@ source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.s
 # --- cask for emacs -------------------------------------------------
 add_to_path_if "$HOME/.cask/bin"
 
+export EDITOR='emacsclient -c'
+
 # --- git completion -------------------------------------------------
 source_first \
     /etc/bash_completion.d/git \
