@@ -270,6 +270,10 @@ source_if "$(which brew >/dev/null && brew --prefix)/etc/bash_completion.d/git-f
 
 # --- kubectl completion ---------------------------------------------
 if which kubectl &>/dev/null; then
+  alias k=kubectl
+  alias kgp='k get pod'
+  alias kgj='k get job'
+  alias kc='k config use-context'
   eval "$(kubectl completion bash)"
 fi
 
