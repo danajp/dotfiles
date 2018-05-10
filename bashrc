@@ -226,12 +226,14 @@ dm_set_docker_ip
 
 # --- AWS utils ------------------------------------------------------
 n2ip () {
-  local verbose query
+  local query awk
+
+  awk='{ print $0 }'
 
   for arg in "$@"; do
     case "$arg" in
-      -v)
-        verbose=on
+      -q)
+        awk='{print $1}'
         ;;
       *)
         query="$arg"
@@ -239,16 +241,11 @@ n2ip () {
     esac
   done
 
-  if [[ "$verbose" == "on" ]]; then
-    name_query='(.Tags | map(select(.Key == "Name")) | map(.Value) | .[0])'
-  else
-    name_query='""'
-  fi
-
   aws ec2 \
       describe-instances \
-      --filters Name=tag:Name,Values=$1 Name=instance-state-name,Values=running \
-    | jq -r ".Reservations[].Instances[] | [.NetworkInterfaces[0].PrivateIpAddress, $name_query] | join(\" \")"
+      --filters "Name=tag:Name,Values=$query" Name=instance-state-name,Values=running \
+    | jq -r '.Reservations[].Instances[] | [.NetworkInterfaces[0].PrivateIpAddress, (.Tags[] | select(.Key == "Name").Value)] | join(" ")' \
+    | awk "$awk"
 }
 
 export AWS_VAULT_BACKEND=file
