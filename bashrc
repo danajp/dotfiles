@@ -244,7 +244,7 @@ n2ip () {
   aws ec2 \
       describe-instances \
       --filters "Name=tag:Name,Values=$query" Name=instance-state-name,Values=running \
-    | jq -r '.Reservations[].Instances[] | [.NetworkInterfaces[0].PrivateIpAddress, (.Tags[] | select(.Key == "Name").Value)] | join(" ")' \
+    | jq -r '.Reservations[].Instances[] | [.NetworkInterfaces[0].PrivateIpAddress, (.Tags[] | select(.Key == "Name").Value), .InstanceId] | join(" ")' \
     | awk "$awk"
 }
 
