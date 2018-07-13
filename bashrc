@@ -250,6 +250,31 @@ n2ip () {
 
 export AWS_VAULT_BACKEND=file
 
+aws_ip_to_instance_id() {
+  aws ec2 describe-instances --filters "Name=network-interface.addresses.private-ip-address,Values=$name" \
+    | jq -r '.Reservations[].Instances[].InstanceId'
+
+}
+
+aws_dns_to_instance_id() {
+  aws ec2 describe-instances --filters "Name=network-interface.addresses.private-dns-name,Values=$name" \
+    | jq -r '.Reservations[].Instances[].InstanceId'
+}
+
+aws_terminate_in_asg() {
+  local name id
+
+  name="$1"
+
+  id="$(aws_ip_to_instance_id "$name")"
+
+  [[ -n "$id" ]] || id="$(aws_dns_to_instance_id "$name")"
+  [[ -n "$id" ]] || id="$name"
+
+  aws autoscaling terminate-instance-in-auto-scaling-group \
+      --instance-id "$id" \
+      --no-should-decrement-desired-capacity
+}
 # --- z (https://github.com/rupa/z) ----------------------------------
 source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
 
