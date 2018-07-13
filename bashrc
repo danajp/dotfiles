@@ -88,7 +88,7 @@ function source_first()
 source_if "$THIS_DIR/local.first"
 
 # --- configuration variables ----------------------------------------
-add_to_path_if "$HOME/bin"
+add_to_path_if "$HOME/bin" head force
 add_to_path_if "$HOME/.local/bin"
 
 # where I keep source code for things
@@ -100,8 +100,6 @@ add_to_path_if "$SRC_DIR/gpg-stupid"
 shopt -s checkwinsize
 shopt -s histappend
 shopt -s cmdhist
-
-[ -d "$HOME/bin" ] && add_to_path "$HOME/bin" head force
 
 # make sure color escape codes work in less
 if ! grep -qi "r" <<<"$LESS"; then
