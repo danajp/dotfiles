@@ -128,9 +128,11 @@ if which pyenv > /dev/null; then
 fi
 
 # --- ruby rbenv -----------------------------------------------------
-add_to_path_if "$HOME/.rbenv/bin"
+add_to_path_if "$HOME/.rbenv/bin" head
 if which rbenv > /dev/null; then
-    eval "$(rbenv init -)"
+    # I'll manage my own PATH
+    add_to_path_if "$HOME/.rbenv/shims" head
+    eval "$(rbenv init - | grep -v 'export PATH')"
 fi
 
 alias be="bundle exec"
