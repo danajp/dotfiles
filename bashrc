@@ -296,6 +296,7 @@ if which kubectl &>/dev/null; then
   alias kgp='k get pod'
   alias kgj='k get job'
   alias kc='k config use-context'
+  alias kcc='k config current-context'
   eval "$(kubectl completion bash)"
 fi
 
