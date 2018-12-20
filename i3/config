@@ -183,3 +183,6 @@ workspace 7 output DP-2-1
 workspace 8 output DP-2-1
 workspace 9 output DP-2-1
 workspace 10 output DP-2-1
+
+for_window [class="zoom" title="Zoom - Pro Account"] move to workspace 4
+assign [class="zoom"] 3
