@@ -10,7 +10,7 @@ scripts: ~/bin $(SCRIPTS_DEST)
 	mkdir ~/bin
 
 ~/bin/%: bin/%
-	ln -s $(PWD)/$< $@
+	ln -sf $(PWD)/$< $@
 
 .PHONY: install
 install: bash scripts i3 other
@@ -29,10 +29,10 @@ clean:
 bash: ~/.bashrc ~/.bash_profile
 
 ~/.bashrc:
-	ln -s $(PWD)/bashrc ~/.bashrc
+	ln -sf $(PWD)/bashrc ~/.bashrc
 
 ~/.bash_profile:
-	ln -s $(PWD)/bash_profile ~/.bash_profile
+	ln -sf $(PWD)/bash_profile ~/.bash_profile
 
 ~/.config:
 	mkdir ~/.config
@@ -44,35 +44,35 @@ i3: ~/.i3/config ~/.i3/i3status.conf
 	mkdir -p ~/.i3
 
 ~/.i3/config: | ~/.i3
-	ln -s $(PWD)/i3/config ~/.i3/config
+	ln -sf $(PWD)/i3/config ~/.i3/config
 
 ~/.i3/i3status.conf: | ~/.i3
-	ln -s $(PWD)/i3/i3status.conf ~/.i3/i3status.conf
+	ln -sf $(PWD)/i3/i3status.conf ~/.i3/i3status.conf
 
 .PHONY: other
 other: ~/.gemrc ~/.screenrc ~/.Xmodmap gitconfig ~/.Xresources ~/.openvpnrc ~/.tmux.conf ~/.config/powerline
 
 ~/.gemrc:
-	ln -s $(PWD)/gemrc ~/.gemrc
+	ln -sf $(PWD)/gemrc ~/.gemrc
 
 ~/.screenrc:
-	ln -s $(PWD)/screenrc ~/.screenrc
+	ln -sf $(PWD)/screenrc ~/.screenrc
 
 ~/.Xmodmap:
-	ln -s $(PWD)/Xmodmap ~/.Xmodmap
+	ln -sf $(PWD)/Xmodmap ~/.Xmodmap
 
 ~/.Xresources:
-	ln -s $(PWD)/Xresources ~/.Xresources
+	ln -sf $(PWD)/Xresources ~/.Xresources
 
 .PHONY: gitconfig
 gitconfig:
 	git config --global include.path $(PWD)/gitconfig
 
 ~/.openvpnrc:
-	ln -s $(PWD)/openvpnrc ~/.openvpnrc
+	ln -sf $(PWD)/openvpnrc ~/.openvpnrc
 
 ~/.tmux.conf:
-	ln -s $(PWD)/tmux.conf ~/.tmux.conf
+	ln -sf $(PWD)/tmux.conf ~/.tmux.conf
 
 ~/.config/powerline: ~/.config
-	cd ~/.config && ln -s $(PWD)/powerline
+	cd ~/.config && ln -sf $(PWD)/powerline
