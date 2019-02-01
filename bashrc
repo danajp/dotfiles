@@ -117,6 +117,7 @@ export WORKON_HOME="$HOME/virtualenvs"
 source_first /usr/local/bin/virtualenvwrapper.sh /etc/bash_completion.d/virtualenvwrapper
 
 # -- pyenv -----------------------------------------------------------
+add_to_path_if "$HOME/.pyenv/bin"
 if which pyenv > /dev/null; then
     eval "$(pyenv init -)";
     export PYENV_ROOT="$HOME/.pyenv"
