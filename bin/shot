@@ -1,9 +1,14 @@
 #!/bin/bash
 
+# Take a screenshot, selecting screen area with the mouse. Put the
+# image on the clipboard and save to a file.
+
+set -eo pipefail
+
 SCREENSHOT_DIR="${HOME}/Documents/screenshots"
 FILENAME="${SCREENSHOT_DIR}/screenshot-$(date '+%Y-%m-%d-%H-%M-%S').png"
 
 mkdir -p "${SCREENSHOT_DIR}"
 
-import "${FILENAME}" \
+maim --select | tee "$FILENAME" | xclip -selection clipboard -t image/png \
   && echo "screenshot saved to ${FILENAME}"
