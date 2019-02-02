@@ -106,7 +106,6 @@ if ! grep -qi "r" <<<"$LESS"; then
     export LESS="$LESS -r"
 fi
 
-source "$THIS_DIR/feature-switch"
 export PS1="\h:\W \u \$(__avc_prompt)\$ "
 export HISTCONTROL='ignoreboth'
 # ls color output
