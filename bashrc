@@ -92,7 +92,7 @@ add_to_path_if "$HOME/bin" head force
 add_to_path_if "$HOME/.local/bin"
 
 # where I keep source code for things
-: ${SRC_DIR:="$HOME/src"}
+SRC_DIR="${SRC_DIR:-$HOME/src}"
 
 add_to_path_if "$SRC_DIR/gpg-stupid"
 
