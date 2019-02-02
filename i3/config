@@ -161,14 +161,15 @@ exec --no-startup-id nm-applet
 #exec --no-startup-id ~/.dropbox-dist/dropboxd
 #exec --no-startup-id blueman-applet
 exec --no-startup-id pasystray
+exec --no-startup-id xautolock -time 2 -locker ~/bin/lock
 
 bindsym XF86AudioMute exec ~/bin/volume toggle-mute
 bindsym XF86AudioLowerVolume exec ~/bin/volume down
 bindsym XF86AudioRaiseVolume exec ~/bin/volume up
 bindsym XF86MonBrightnessUp exec ~/bin/brightness up
 bindsym XF86MonBrightnessDown exec ~/bin/brightness down
-bindsym XF86Search exec ~/bin/lock
-bindsym Pause exec ~/bin/lock
+bindsym XF86Search exec xautolock -locknow
+bindsym Pause exec xautolock -locknow
 
 bindsym $mod+x layout toggle all
 bindsym $mod+p exec --no-startup-id "hotplug-monitor; xmodmap ~/.Xmodmap"
