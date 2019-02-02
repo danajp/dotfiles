@@ -107,7 +107,7 @@ if ! grep -qi "r" <<<"$LESS"; then
 fi
 
 source "$THIS_DIR/feature-switch"
-export PS1="\h:\W \u \$(set_env_ps1)\$ "
+export PS1="\h:\W \u \$(__avc_prompt)\$ "
 export HISTCONTROL='ignoreboth'
 # ls color output
 export CLICOLOR=1
@@ -249,8 +249,6 @@ n2ip () {
     | awk "$awk"
 }
 
-export AWS_VAULT_BACKEND=file
-
 aws_ip_to_instance_id() {
   aws ec2 describe-instances --filters "Name=network-interface.addresses.private-ip-address,Values=$name" \
     | jq -r '.Reservations[].Instances[].InstanceId'
@@ -276,6 +274,30 @@ aws_terminate_in_asg() {
       --instance-id "$id" \
       --no-should-decrement-desired-capacity
 }
+
+# --- aws-vault ------------------------------------------------------
+export AWS_VAULT_BACKEND=file
+
+avc() {
+  local profile
+
+  profile="$1"
+
+  if [[ "$profile" == off ]]; then
+    eval "$(env | grep ^AWS |  grep -v ^AWS_VAULT | awk -F= '{print "unset " $1}')"
+    unset AVC_PROFILE
+  else
+    eval "$(aws-vault exec --session-ttl=12h --assume-role-ttl=1h "$profile" -- env | grep ^AWS_ | grep -v ^AWS_VAULT | sed 's/^/export /')"
+    export AVC_PROFILE="$profile"
+  fi
+}
+
+__avc_prompt() {
+  [[ -z "$AVC_PROFILE" ]] && return
+
+  echo "aws-vault:$AVC_PROFILE "
+}
+
 # --- z (https://github.com/rupa/z) ----------------------------------
 source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
 
