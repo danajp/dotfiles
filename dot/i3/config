@@ -161,7 +161,7 @@ exec --no-startup-id nm-applet
 #exec --no-startup-id ~/.dropbox-dist/dropboxd
 #exec --no-startup-id blueman-applet
 exec --no-startup-id pasystray
-exec --no-startup-id xautolock -time 2 -locker ~/bin/lock
+exec --no-startup-id xautolock -time 10 -locker ~/bin/lock
 
 bindsym XF86AudioMute exec ~/bin/volume toggle-mute
 bindsym XF86AudioLowerVolume exec ~/bin/volume down
