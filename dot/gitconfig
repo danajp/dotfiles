@@ -10,3 +10,5 @@
     log = auto
     diff = auto
     status = auto
+[github]
+    user = danajp
