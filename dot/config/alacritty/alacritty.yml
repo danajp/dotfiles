@@ -2,32 +2,88 @@
 
 # container for holding color themes, not part of standard config
 themes:
-  solarized: &solarized_dark_theme
-    # Colors (Solarized Dark)
+  # lifted from https://github.com/aaron-williamson/base16-alacritty/blob/master/colors/base16-solarized-dark-256.yml
+  solarized_dark: &solarized_dark_theme
     # Default colors
     primary:
       background: '0x002b36'
-      foreground: '0x839496'
+      foreground: '0x93a1a1'
+
+    # Colors the cursor will use if `custom_cursor_colors` is true
+    cursor:
+      text: '0x002b36'
+      cursor: '0x93a1a1'
+
     # Normal colors
     normal:
-      black: '0x073642'
-      red: '0xdc322f'
-      green: '0x859900'
-      yellow: '0xb58900'
-      blue: '0x268bd2'
-      magenta: '0xd33682'
-      cyan: '0x2aa198'
-      white: '0xeee8d5'
-      # Bright colors
-    bright:
-      black: '0x002b36'
-      red: '0xcb4b16'
-      green: '0x586e75'
-      yellow: '0x657b83'
-      blue: '0x839496'
+      black:   '0x002b36'
+      red:     '0xdc322f'
+      green:   '0x859900'
+      yellow:  '0xb58900'
+      blue:    '0x268bd2'
       magenta: '0x6c71c4'
-      cyan: '0x93a1a1'
-      white: '0xfdf6e3'
+      cyan:    '0x2aa198'
+      white:   '0x93a1a1'
+
+    # Bright colors
+    bright:
+      black:   '0x657b83'
+      red:     '0xdc322f'
+      green:   '0x859900'
+      yellow:  '0xb58900'
+      blue:    '0x268bd2'
+      magenta: '0x6c71c4'
+      cyan:    '0x2aa198'
+      white:   '0xfdf6e3'
+
+    indexed_colors:
+      - { index: 16, color: '0xcb4b16' }
+      - { index: 17, color: '0xd33682' }
+      - { index: 18, color: '0x073642' }
+      - { index: 19, color: '0x586e75' }
+      - { index: 20, color: '0x839496' }
+      - { index: 21, color: '0xeee8d5' }
+
+  # lifted from https://github.com/aaron-williamson/base16-alacritty/blob/master/colors/base16-solarized-light-256.yml
+  solarized_light: &solarized_light_theme
+    primary:
+      background: '0xfdf6e3'
+      foreground: '0x586e75'
+
+    # Colors the cursor will use if `custom_cursor_colors` is true
+    cursor:
+      text: '0xfdf6e3'
+      cursor: '0x586e75'
+
+    # Normal colors
+    normal:
+      black:   '0xfdf6e3'
+      red:     '0xdc322f'
+      green:   '0x859900'
+      yellow:  '0xb58900'
+      blue:    '0x268bd2'
+      magenta: '0x6c71c4'
+      cyan:    '0x2aa198'
+      white:   '0x586e75'
+
+    # Bright colors
+    bright:
+      black:   '0x839496'
+      red:     '0xdc322f'
+      green:   '0x859900'
+      yellow:  '0xb58900'
+      blue:    '0x268bd2'
+      magenta: '0x6c71c4'
+      cyan:    '0x2aa198'
+      white:   '0x002b36'
+
+    indexed_colors:
+      - { index: 16, color: '0xcb4b16' }
+      - { index: 17, color: '0xd33682' }
+      - { index: 18, color: '0xeee8d5' }
+      - { index: 19, color: '0x93a1a1' }
+      - { index: 20, color: '0x657b83' }
+      - { index: 21, color: '0x073642' }
 
   default: &default_theme
     # Default colors
