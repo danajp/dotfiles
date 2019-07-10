@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -eo pipefail
+
+[[ -n "$DEBUG" ]] && set -x
+
+ALACRITTY_CONFIG="$HOME/src/dotfiles/dot/config/alacritty/alacritty.yml"
+
+current_theme() {
+  grep 'colors: *\*' "$ALACRITTY_CONFIG" | awk '{print $2}' | grep -o '\(dark\|light\)'
+}
+
+set_emacs() {
+  local value
+
+  value="$1"
+
+  emacsclient -e "(color-theme-sanityinc-solarized-${value})" >/dev/null
+}
+
+set_alacritty() {
+  local value
+
+  value="$1"
+
+  sed 's#\(colors:[[:space:]]\**solarized_\)\(light\|dark\)\(_theme\)#\1'"${value}"'\3#' -i "$ALACRITTY_CONFIG"
+}
+
+main() {
+  local current target
+
+  current="$(current_theme)"
+
+  if [[ "$current" == dark ]]; then
+    target=light
+  else
+    target=dark
+  fi
+
+  set_alacritty "$target"
+  set_emacs "$target"
+}
+
+main
