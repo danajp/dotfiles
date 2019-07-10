@@ -263,6 +263,9 @@ ap() {
   "$ansible" "$playbook" -e "ct_dest=$HOME/bin/ct" -e "@${vars}" "$@"
 }
 
+# --- terraform ------------------------------------------------------
+alias tf=terraform
+
 # --- z (https://github.com/rupa/z) ----------------------------------
 source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
 
