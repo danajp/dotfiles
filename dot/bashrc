@@ -107,6 +107,9 @@ fi
 
 export PS1="\h:\W \u \$(__avc_prompt)\$ "
 export HISTCONTROL='ignoreboth'
+export HISTFILESIZE=100000
+export HISTSIZE=100000
+export PROMPT_COMMAND='history -a'
 # ls color output
 export CLICOLOR=1
 
