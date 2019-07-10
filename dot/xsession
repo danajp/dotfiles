@@ -1,0 +1,5 @@
+# -*- mode: shell-script -*-
+
+xmodmap ~/.Xmodmap
+
+exec i3
