@@ -246,6 +246,23 @@ __avc_prompt() {
   echo "aws-vault:$AVC_PROFILE "
 }
 
+# --- ansible utils --------------------------------------------------
+ap() {
+  local ansible playbook vars
+
+  ansible=ansible-playbook
+  playbook="$1"
+  vars="$2"
+
+  shift 2
+
+  if [[ -x ./bin/ansible-playbook ]]; then
+    ansible=./bin/ansible-playbook
+  fi
+
+  "$ansible" "$playbook" -e "ct_dest=$HOME/bin/ct" -e "@${vars}" "$@"
+}
+
 # --- z (https://github.com/rupa/z) ----------------------------------
 source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
 
