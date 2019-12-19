@@ -241,15 +241,21 @@ aws_ssm_get() {
 export AWS_VAULT_BACKEND=file
 
 avc() {
-  local profile
+  local profile output
 
   profile="$1"
 
   if [[ "$profile" == off ]]; then
-    eval "$(env | grep ^AWS |  grep -v ^AWS_VAULT | awk -F= '{print "unset " $1}')"
+    eval "$(echo "$output" | awk '/^AWS/ && !/^AWS_VAULT/ { print "unset " $1 }')"
     unset AVC_PROFILE
   else
-    eval "$(aws-vault exec --session-ttl=12h --assume-role-ttl=1h "$profile" -- env | grep ^AWS_ | grep -v ^AWS_VAULT | sed 's/^/export /')"
+    output="$(aws-vault exec --session-ttl=12h --assume-role-ttl=1h "$profile" -- env)"
+    if [[ $? -ne 0 ]]; then
+      echo "$output" >&2
+      return 1
+    fi
+
+    eval "$(echo "$output" | awk '/^AWS/ && !/^AWS_VAULT/ { print "export " $1 }')"
     export AVC_PROFILE="$profile"
   fi
 }
