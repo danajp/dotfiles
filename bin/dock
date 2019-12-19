@@ -1,13 +1,17 @@
 #!/bin/bash
 
 LAPTOP='--output eDP-1'
-LAPTOP_ARGS='--primary --mode 1920x1080 --pos 0x0'
+#LAPTOP_ARGS='--primary --mode 2560x1440 --pos 0x0 --scale 0.75x0.75'
+#LAPTOP_ARGS='--primary --mode 2560x1440 --pos 0x0 --scale 1x1'
+LAPTOP_ARGS='--primary --mode 1920x1080 --pos 0x0 --scale 1x1'
 
 MONITOR='--output DP-2-1'
-MONITOR_ARGS='--mode 2560x1440 --pos 1920x0'
+MONITOR_ARGS='--mode 2560x1440 --pos 1920x0 --rate 60.0'
+#MONITOR_ARGS='--mode 1920x1080 --pos 1920x0'
 
 on() {
-  xrandr $LAPTOP $LAPTOP_ARGS $MONITOR $MONITOR_ARGS
+  xrandr --verbose $MONITOR $MONITOR_ARGS
+  xrandr --verbose $LAPTOP $LAPTOP_ARGS
 }
 
 off() {
