@@ -174,7 +174,6 @@ bindsym XF86Search exec xautolock -locknow
 bindsym Pause exec xautolock -locknow
 
 bindsym $mod+x layout toggle all
-bindsym $mod+p exec --no-startup-id "hotplug-monitor; xmodmap ~/.Xmodmap"
 
 workspace 1 output eDP-1
 workspace 2 output eDP-1
