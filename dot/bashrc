@@ -225,6 +225,18 @@ aws_terminate_in_asg() {
       --no-should-decrement-desired-capacity
 }
 
+aws_ssm_list() {
+  aws ssm describe-parameters | jq -r .Parameters[].Name
+}
+
+aws_ssm_get() {
+  local name
+
+  name="$1"
+
+  aws ssm get-parameter --name "$name" --with-decryption | jq -r .Parameter.Value
+}
+
 # --- aws-vault ------------------------------------------------------
 export AWS_VAULT_BACKEND=file
 
