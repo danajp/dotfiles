@@ -285,6 +285,9 @@ ap() {
 
 # --- terraform ------------------------------------------------------
 alias tf=terraform
+export TF_PLUGIN_CACHE_DIR="$HOME/.terraform-plugin-cache"
+
+add_to_path_if "$HOME/.tfenv/bin"
 
 # --- z (https://github.com/rupa/z) ----------------------------------
 source_first "$SRC_DIR/z/z.sh" "$(which brew && brew --prefix)/etc/profile.d/z.sh"
