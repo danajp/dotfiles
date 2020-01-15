@@ -14,6 +14,11 @@ scripts: ~/bin $(SCRIPTS_DEST)
 .PHONY: dots
 dots: $(DOT_DEST)
 
+.PHONY: clean
+clean:
+	rm -f ~/.bashrc
+	rm -f ~/.bash_profile
+
 ~/.%: dot/%
 	mkdir -p "$(@D)"
 	ln -sf "$(PWD)/$<" "$@"
