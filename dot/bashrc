@@ -112,6 +112,7 @@ export HISTSIZE=100000
 export PROMPT_COMMAND='history -a'
 # ls color output
 export CLICOLOR=1
+alias ls='ls --color=auto'
 
 # --- python virtualenvs ---------------------------------------------
 export WORKON_HOME="$HOME/virtualenvs"
