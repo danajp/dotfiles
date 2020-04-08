@@ -12,3 +12,5 @@
     status = auto
 [github]
     user = danajp
+[url "git@github.com:"]
+        insteadOf = https://github.com/
