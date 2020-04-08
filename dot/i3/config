@@ -164,7 +164,9 @@ exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id pasystray
 exec --no-startup-id xautolock -time 10 -locker ~/bin/lock
+exec --no-startup-id copyq
 
+bindsym $mod+c exec copyq menu
 bindsym XF86AudioMute exec ~/bin/volume toggle-mute
 bindsym XF86AudioLowerVolume exec ~/bin/volume down
 bindsym XF86AudioRaiseVolume exec ~/bin/volume up
