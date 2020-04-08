@@ -114,6 +114,10 @@ export PROMPT_COMMAND='history -a'
 export CLICOLOR=1
 alias ls='ls --color=auto'
 
+# --- asdf -----------------------------------------------------------
+source_if "$HOME/.asdf/asdf.sh"
+source_if "$HOME/.asdf/completions/asdf.bash"
+
 # --- python virtualenvs ---------------------------------------------
 export WORKON_HOME="$HOME/virtualenvs"
 source_first /usr/local/bin/virtualenvwrapper.sh /etc/bash_completion.d/virtualenvwrapper
