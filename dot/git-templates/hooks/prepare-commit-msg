@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+if git secrets --version >/dev/null; then
+  git secrets --prepare_commit_msg_hook -- "$@"
+fi
