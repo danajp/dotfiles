@@ -181,12 +181,13 @@ workspace 1 output eDP-1-1
 workspace 2 output eDP-1-1
 workspace 3 output eDP-1-1
 workspace 4 output eDP-1-1
-workspace 5 output DP-0.2
-workspace 6 output DP-0.2
-workspace 7 output DP-0.2
-workspace 8 output DP-0.2
-workspace 9 output DP-0.2
-workspace 10 output DP-0.2
+
+workspace 5 output DP-5
+workspace 6 output DP-5
+workspace 7 output DP-5
+workspace 8 output DP-5
+workspace 9 output DP-5
+workspace 10 output DP-5
 
 for_window [class="zoom" title="Zoom - Pro Account"] move to workspace 4
 for_window [class="zoom" title="Zoom - Free Account"] move to workspace 4
