@@ -324,3 +324,5 @@ add_to_path_if /usr/local/kubebuilder/bin
 # --- local post options ----------------------------------------------
 source_if "$THIS_DIR/local.last"
 source_if "$HOME/secrets/bash"
+
+add_to_path_if "$HOME/.dajoku-cli/bin"
