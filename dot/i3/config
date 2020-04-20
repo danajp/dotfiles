@@ -9,6 +9,9 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+set $internal_monitor eDP-1-1
+set $external_monitor DP-5
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -177,17 +180,17 @@ bindsym Pause exec xautolock -locknow
 
 bindsym $mod+x layout toggle all
 
-workspace 1 output eDP-1-1
-workspace 2 output eDP-1-1
-workspace 3 output eDP-1-1
-workspace 4 output eDP-1-1
+workspace 1 output $internal_monitor
+workspace 2 output $internal_monitor
+workspace 3 output $internal_monitor
+workspace 4 output $internal_monitor
 
-workspace 5 output DP-5
-workspace 6 output DP-5
-workspace 7 output DP-5
-workspace 8 output DP-5
-workspace 9 output DP-5
-workspace 10 output DP-5
+workspace 5 output $external_monitor
+workspace 6 output $external_monitor
+workspace 7 output $external_monitor
+workspace 8 output $external_monitor
+workspace 9 output $external_monitor
+workspace 10 output $external_monitor
 
 for_window [class="zoom" title="Zoom - Pro Account"] move to workspace 4
 for_window [class="zoom" title="Zoom - Free Account"] move to workspace 4
