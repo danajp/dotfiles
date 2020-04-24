@@ -118,6 +118,11 @@ alias ls='ls --color=auto'
 source_if "$HOME/.asdf/asdf.sh"
 source_if "$HOME/.asdf/completions/asdf.bash"
 
+# --- starship prompt ------------------------------------------------
+if which starship > /dev/null; then
+  eval "$(starship init bash)"
+fi
+
 # --- python virtualenvs ---------------------------------------------
 export WORKON_HOME="$HOME/virtualenvs"
 source_first /usr/local/bin/virtualenvwrapper.sh /etc/bash_completion.d/virtualenvwrapper
@@ -250,6 +255,8 @@ avc() {
 
   profile="$1"
 
+  unset AWS_VAULT
+
   if [[ "$profile" == off ]]; then
     eval "$(echo "$output" | awk '/^AWS/ && !/^AWS_VAULT/ { print "unset " $1 }')"
     unset AVC_PROFILE
@@ -262,6 +269,7 @@ avc() {
 
     eval "$(echo "$output" | awk '/^AWS/ && !/^AWS_VAULT/ { print "export " $1 }')"
     export AVC_PROFILE="$profile"
+    export AWS_VAULT="$profile"
   fi
 }
 
