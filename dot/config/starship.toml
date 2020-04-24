@@ -1,0 +1,13 @@
+add_newline = false
+
+[character]
+symbol = "$"
+
+[kubernetes]
+disabled = false
+
+[ruby]
+disabled = true
+
+[aws]
+displayed_items = "profile"
