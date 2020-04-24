@@ -178,6 +178,9 @@ bindsym XF86MonBrightnessDown exec ~/bin/brightness down
 bindsym XF86Search exec xautolock -locknow
 bindsym Pause exec xautolock -locknow
 
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
+
 bindsym $mod+x layout toggle all
 
 workspace 1 output $internal_monitor
