@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+OUTPUT="${OUTPUT:-eDP-1-1}"
+
+current() {
+  xrandr --verbose | grep "$OUTPUT" -A10 | grep Brightness | awk '{print $2}'
+}
+
+add() {
+  local left right
+
+  left="$1"
+  right="$2"
+
+  python -c 'from __future__ import print_function; import sys; print(float(sys.argv[1]) + float(sys.argv[2]))' "$left" "$right"
+}
+
+incr() {
+  local step
+
+  step="$1"
+
+  xrandr --output "$OUTPUT" --brightness "$(add "$(current)" "$step")"
+}
+
+main() {
+  case "$1" in
+    up)
+      incr 0.1
+      ;;
+    down)
+      incr -0.1
+      ;;
+    *)
+      echo "$1 isn't something I recognize" >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

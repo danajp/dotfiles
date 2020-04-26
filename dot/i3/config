@@ -170,8 +170,8 @@ bindsym $mod+c exec copyq -s main menu
 bindsym XF86AudioMute exec ~/bin/volume toggle-mute
 bindsym XF86AudioLowerVolume exec ~/bin/volume down
 bindsym XF86AudioRaiseVolume exec ~/bin/volume up
-bindsym XF86MonBrightnessUp exec ~/bin/brightness up
-bindsym XF86MonBrightnessDown exec ~/bin/brightness down
+bindsym XF86MonBrightnessUp exec ~/bin/xrandr-brightness up
+bindsym XF86MonBrightnessDown exec ~/bin/xrandr-brightness down
 bindsym XF86Search exec xautolock -locknow
 bindsym Pause exec xautolock -locknow
 
