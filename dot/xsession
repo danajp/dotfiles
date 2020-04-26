@@ -1,5 +1,26 @@
 # -*- mode: shell-script -*-
 
-xmodmap ~/.Xmodmap
+if which autorandr >/dev/null; then
+  echo "run autorandr" >&2
+  autorandr --change
+fi
+
+# this must be run before xmodmap
+# see https://unix.stackexchange.com/questions/403962/xmodmap-not-working-on-startup
+echo "run setxkbmap" >&2
+# remap caps lock to ctrl
+setxkbmap -option caps:ctrl_modifier
+
+echo "run xmodmap" >&2
+# thinkpad
+# Remap print screen to Super_R
+xmodmap -e 'keycode 107 = Super_R'
+
+# system76
+# Remap menu to Super_R
+xmodmap -e 'keycode 135 = Super_R'
+
+# load xresources
+xrdb ~/.Xresources
 
 exec i3

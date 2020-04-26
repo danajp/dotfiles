@@ -1,8 +1,0 @@
-! Remap print screen to Super_R
-keycode 107 = Super_R
-! Remap menu to Super_R
-keycode 135 = Super_R
-clear Mod4
-add Mod4 = Super_L Super_R
-
-!! mac keyboard
