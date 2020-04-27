@@ -1,7 +1,10 @@
 add_newline = false
 
+[cmd_duration]
+disabled = true
+
 [character]
-symbol = "$"
+use_symbol_for_status = true
 
 [kubernetes]
 disabled = false
@@ -9,5 +12,17 @@ disabled = false
 [ruby]
 disabled = true
 
-[aws]
-displayed_items = "profile"
+[nodejs]
+disabled = true
+
+[golang]
+disabled = true
+
+[python]
+disabled = true
+
+[aws.region_aliases]
+us-east-1 = "use1"
+us-west-2 = "usw2"
+eu-central-1 = "euc1"
+eu-west-1 = "euw1"
