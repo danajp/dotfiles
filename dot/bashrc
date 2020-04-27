@@ -344,6 +344,9 @@ fi
 
 add_to_path_if /usr/local/kubebuilder/bin
 
+# --- force gcloud to use system python ------------------------------
+export CLOUDSDK_PYTHON=/usr/bin/python
+
 # --- local post options ----------------------------------------------
 source_if "$THIS_DIR/local.last"
 source_if "$HOME/secrets/bash"
