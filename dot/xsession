@@ -1,6 +1,8 @@
 # -*- mode: shell-script -*-
 
-if which autorandr >/dev/null; then
+S76_TOUCHPAD="SynPS/2 Synaptics TouchPad"
+
+if command -v autorandr >/dev/null; then
   echo "run autorandr" >&2
   autorandr --change
 fi
@@ -22,5 +24,11 @@ xmodmap -e 'keycode 135 = Super_R'
 
 # load xresources
 xrdb ~/.Xresources
+
+if xinput list "$S76_TOUCHPAD" >/dev/null 2>/dev/null; then
+  echo "configure system76 touchpad" >&2
+  xinput set-prop "$S76_TOUCHPAD" "libinput Tapping Enabled" 1
+  xinput set-prop "$S76_TOUCHPAD" "libinput Accel Speed" 0.8
+fi
 
 exec i3
