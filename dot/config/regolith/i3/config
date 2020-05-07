@@ -39,6 +39,9 @@
 # Alt key is Mod1, and Windows key is Mod4
 ###############################################################################
 
+set $internal_monitor eDP-1-1
+set $external_monitor DP-5
+
 set_from_resource $mod  i3-wm.mod Mod4
 set_from_resource $alt  i3-wm.alt Mod1
 
@@ -173,6 +176,17 @@ bindsym $mod+Ctrl+Shift+Left move workspace to output left
 bindsym $mod+Ctrl+Shift+Down move workspace to output down
 bindsym $mod+Ctrl+Shift+Up move workspace to output up
 bindsym $mod+Ctrl+Shift+Right move workspace to output right
+
+workspace 1 output $internal_monitor
+workspace 2 output $internal_monitor
+workspace 3 output $internal_monitor
+workspace 4 output $internal_monitor
+workspace 5 output $external_monitor
+workspace 6 output $external_monitor
+workspace 7 output $external_monitor
+workspace 8 output $external_monitor
+workspace 9 output $external_monitor
+workspace 10 output $external_monitor
 
 ## Modify // Next Window Orientation // <> Backspace ##
 bindsym $mod+BackSpace split toggle
