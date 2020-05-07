@@ -1,0 +1,14 @@
+#!/bin/bash
+
+line=''
+
+for pidfile in /run/openvpn/*.pid; do
+  pid=$(cat "$pidfile")
+
+  if [[ -e "/proc/$pid" ]]; then
+    line="$line $(basename "$pidfile" .pid)"
+  fi
+done
+
+
+echo "$line"
