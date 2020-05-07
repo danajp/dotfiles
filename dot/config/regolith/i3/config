@@ -324,6 +324,9 @@ bindsym $mod+Shift+n exec $i3-wm.program.files
 set_from_resource $i3-wm.program.notification_ui i3-wm.program.notification_ui /usr/bin/rofication-gui
 bindsym $mod+n exec $i3-wm.program.notification_ui
 
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
+
 ###############################################################################
 # Workspace Management
 ###############################################################################
