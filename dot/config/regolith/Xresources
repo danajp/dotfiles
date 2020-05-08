@@ -4,4 +4,6 @@ i3-wm.bar.trayoutput: primary
 i3xrocks.date.format2: + %Y-%m-%d %H:%M:%S %Z
 i3xrocks.my.utc.format: + %H:%M:%S %Z
 
-i3wm.program.1: nm-applet
+i3-wm.program.1: nm-applet
+i3-wm.program.2: copyq
+i3-wm.program.3: ~/bin/x-initialize

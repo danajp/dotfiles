@@ -1,0 +1,52 @@
+#!/bin/bash
+
+##
+# initialize some stuff we want in X
+#
+
+log() {
+  echo "$@" >&2
+}
+
+detect_machine() {
+  local f product_version
+
+  f=/sys/class/dmi/id/product_version
+
+  [[ -e "$f" ]] || return
+
+  product_version="$(cat "$f")"
+
+  if [[ "$product_version" == addw1 ]]; then
+    echo s76
+  elif [[ "$product_version" == "ThinkPad T460s" ]]; then
+    echo t460s
+  fi
+}
+
+MACHINE="$(detect_machine)"
+S76_TOUCHPAD="SynPS/2 Synaptics TouchPad"
+
+# this must be run before xmodmap
+# see https://unix.stackexchange.com/questions/403962/xmodmap-not-working-on-startup
+log "run setxkbmap"
+# remap caps lock to ctrl
+setxkbmap -option caps:ctrl_modifier
+
+if [[ "$MACHINE" == t460s ]]; then
+  # Remap print screen to Super_R
+  log "run xmodmap for thinkpad"
+  xmodmap -e 'keycode 107 = Super_R'
+fi
+
+if [[ "$MACHINE" == s76 ]]; then
+  # Remap menu to Super_R
+  log "run xmodmap for s76"
+  xmodmap -e 'keycode 135 = Super_R'
+
+  if xinput list "$S76_TOUCHPAD" >/dev/null 2>/dev/null; then
+    echo "configure system76 touchpad" >&2
+    xinput set-prop "$S76_TOUCHPAD" "libinput Tapping Enabled" 1
+    xinput set-prop "$S76_TOUCHPAD" "libinput Accel Speed" 0.8
+  fi
+fi
