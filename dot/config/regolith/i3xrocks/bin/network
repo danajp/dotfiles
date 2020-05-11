@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -eo pipefail
+
+wireless="$(echo /sys/class/net/*/wireless | awk -F/ '{print $5}')"
+ethernet="$(echo /sys/class/net/en* | awk -F/ '{print $5}')"
+
+interface_ip() {
+  local interface
+
+  interface="$1"
+
+  ip addr show "$interface" | awk '/inet / {print $2}' | awk -F/ '{print $1}'
+}
+
+interface_state() {
+  local interface
+
+  interface="$1"
+
+  cat "/sys/class/net/$interface/operstate"
+}
+
+interface_value() {
+  local interface
+
+  interface="$1"
+
+  if [[ "$(interface_state "$interface")" == up ]]; then
+    interface_ip "$interface"
+  else
+    echo down
+  fi
+
+}
+
+WIFI_ICON=${wifi_icon:-$(xrescat i3xrocks.label.wifi "")}
+WIRED_ICON=${wired_icon:-$(xrescat i3xrocks.label.wired "")}
+LABEL_COLOR=${label_color:-$(xrescat i3xrocks.label.color "#7B8394")}
+VALUE_COLOR=${color:-$(xrescat i3xrocks.value.color "#D8DEE9")}
+VALUE_FONT=${font:-$(xrescat i3xrocks.value.font "Source Code Pro Medium 13")}
+
+VALUE="w: $(interface_value "$wireless") e: $(interface_value "$ethernet")"
+
+echo "<span color=\"${LABEL_COLOR}\">$WIFI_ICON</span> <span font_desc=\"${VALUE_FONT}\" color=\"${VALUE_COLOR}\">$(interface_value "$wireless")</span>" \
+     "<span color=\"${LABEL_COLOR}\">$WIRED_ICON</span> <span font_desc=\"${VALUE_FONT}\" color=\"${VALUE_COLOR}\">$(interface_value "$ethernet")</span>"
