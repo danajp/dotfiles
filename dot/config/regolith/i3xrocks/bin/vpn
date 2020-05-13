@@ -1,0 +1,15 @@
+#!/bin/bash
+
+LABEL_COLOR=${label_color:-$(xrescat i3xrocks.label.color "#7B8394")}
+VALUE_COLOR=${color:-$(xrescat i3xrocks.value.color "#D8DEE9")}
+VALUE_FONT=${font:-$(xrescat i3xrocks.value.font "Source Code Pro Medium 13")}
+
+for pidfile in /run/openvpn/*.pid; do
+  pid=$(cat "$pidfile")
+
+  if [[ -e "/proc/$pid" ]]; then
+    name="$(basename "$pidfile" .pid)"
+    echo -n "<span color=\"$LABEL_COLOR\">vpn:</span><span font_desc=\"$VALUE_FONT\" color=\"$VALUE_COLOR\">$name</span>"
+  fi
+done
+echo

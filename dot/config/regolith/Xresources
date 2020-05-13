@@ -1,0 +1,43 @@
+#include "/etc/regolith/styles/solarized-dark/root"
+
+#define my_font Terminus (TTF) 13
+#define my_rofi_font Terminus (TTF) 16
+
+i3-wm.bar.font: pango:my_font
+i3-wm.font: pango:my_font
+i3xrocks.value.font: my_font
+rofi.font: pango:my_rofi_font
+
+i3-wm.bar.position: top
+i3-wm.bar.trayoutput: primary
+
+i3xrocks.date.format2: + %Y-%m-%d %H:%M:%S %Z
+i3xrocks.my.utc.format: + %H:%M:%S %Z
+
+i3-wm.window.border.size: 3
+i3-wm.client.focused.color.child_border: color_yellow
+i3-wm.client.focused.color.indicator: color_red
+
+i3-wm.program.1: nm-applet
+i3-wm.program.2: copyq
+i3-wm.program.3: ~/bin/x-initialize
+
+i3-wm.workspace.01.name: 1
+i3-wm.workspace.02.name: 2
+i3-wm.workspace.03.name: 3
+i3-wm.workspace.04.name: 4
+i3-wm.workspace.05.name: 5
+i3-wm.workspace.06.name: 6
+i3-wm.workspace.07.name: 7
+i3-wm.workspace.08.name: 8
+i3-wm.workspace.09.name: 9
+i3-wm.workspace.10.name: 10
+i3-wm.workspace.11.name: 11
+i3-wm.workspace.12.name: 12
+i3-wm.workspace.13.name: 13
+i3-wm.workspace.14.name: 14
+i3-wm.workspace.15.name: 15
+i3-wm.workspace.16.name: 16
+i3-wm.workspace.17.name: 17
+i3-wm.workspace.18.name: 18
+i3-wm.workspace.19.name: 19

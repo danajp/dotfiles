@@ -1,0 +1,3 @@
+[utc]
+command=~/.config/regolith/i3xrocks/bin/utc
+interval=1
