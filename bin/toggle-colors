@@ -5,10 +5,10 @@ set -eo pipefail
 [[ -n "$DEBUG" ]] && set -x
 
 ALACRITTY_CONFIG="$HOME/src/dotfiles/dot/config/alacritty/alacritty.yml"
+REGOLITH_XRESOURCES="$HOME/src/dotfiles/dot/config/regolith/Xresources"
 
-current_theme() {
-  grep 'colors: *\*' "$ALACRITTY_CONFIG" | awk '{print $2}' | grep -o '\(dark\|light\)'
-}
+REGOLITH_DARK_THEME="/etc/regolith/styles/solarized-dark/root"
+REGOLITH_LIGHT_THEME="styles/solarized-light/root"
 
 set_emacs() {
   local value
@@ -26,19 +26,37 @@ set_alacritty() {
   sed 's#\(colors:[[:space:]]\**solarized_\)\(light\|dark\)\(_theme\)#\1'"${value}"'\3#' -i "$ALACRITTY_CONFIG"
 }
 
-main() {
-  local current target
+set_regolith() {
+  local value theme
 
-  current="$(current_theme)"
+  value="$1"
 
-  if [[ "$current" == dark ]]; then
-    target=light
+  if [[ "$value" == light ]]; then
+    theme="$REGOLITH_LIGHT_THEME"
   else
-    target=dark
+    theme="$REGOLITH_DARK_THEME"
   fi
+
+  sed "s|^#define my_theme.*|#define my_theme \"$theme\"|" -i "$REGOLITH_XRESOURCES"
+  regolith-look refresh
+}
+
+main() {
+  local target
+
+  target="$1"
+
+  case "$target" in
+    dark | light)
+    ;;
+    *)
+      echo "invalid target: $target"
+      return 1
+  esac
 
   set_alacritty "$target"
   set_emacs "$target"
+  set_regolith "$target"
 }
 
-main
+main "$@"
