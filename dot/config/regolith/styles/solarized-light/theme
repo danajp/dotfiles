@@ -1,7 +1,7 @@
 #define gtk_theme           SolArc-Light
 #define icon_theme          Arc
 #define desktop_wallpaper   /usr/share/backgrounds/ESP_020528_1750_desktop.jpg
-#define rofi_theme          /home/dana/.config/regolith/solarized-light/rofi.rasi
+#define rofi_theme          /home/dana/.config/regolith/styles/solarized-light/rofi.rasi
 #define theme_terminal_scrollbar never
 
 #define i3wm_window_border_size         1
