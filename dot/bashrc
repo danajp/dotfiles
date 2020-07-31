@@ -278,7 +278,7 @@ avc() {
   unset AWS_VAULT
 
   if [[ "$profile" == off ]]; then
-    eval "$(echo "$output" | awk '/^AWS/ && !/^AWS_VAULT/ { print "unset " $1 }')"
+    eval "$(env | awk -F= '{print $1}' | awk '/^AWS/ && !/^AWS_VAULT/ { print "unset " $1 }')"
     unset AVC_PROFILE
   else
     output="$(aws-vault exec --session-ttl=12h --assume-role-ttl=1h "$profile" -- env)"
