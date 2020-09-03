@@ -230,12 +230,20 @@ n2ip () {
 }
 
 aws_ip_to_instance_id() {
-  aws ec2 describe-instances --filters "Name=network-interface.addresses.private-ip-address,Values=$name" \
+  local ip
+
+  ip="$1"
+
+  aws ec2 describe-instances --filters "Name=network-interface.addresses.private-ip-address,Values=$ip" \
     | jq -r '.Reservations[].Instances[].InstanceId'
 
 }
 
 aws_dns_to_instance_id() {
+  local name
+
+  name="$1"
+
   aws ec2 describe-instances --filters "Name=network-interface.addresses.private-dns-name,Values=$name" \
     | jq -r '.Reservations[].Instances[].InstanceId'
 }
