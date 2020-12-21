@@ -279,9 +279,15 @@ aws_ssm_get() {
 export AWS_VAULT_BACKEND=file
 
 avc() {
-  local profile output
+  local profile output duration
 
   profile="$1"
+
+  if [[ "$profile" == prod ]]; then
+    duration=1h
+  else
+    duration=12h
+  fi
 
   unset AWS_VAULT
 
@@ -289,7 +295,7 @@ avc() {
     eval "$(env | awk -F= '{print $1}' | awk '/^AWS/ && !/^AWS_VAULT/ { print "unset " $1 }')"
     unset AVC_PROFILE
   else
-    output="$(aws-vault exec --session-ttl=12h --assume-role-ttl=1h "$profile" -- env)"
+    output="$(aws-vault exec --duration "$duration" "$profile" -- env)"
     if [[ $? -ne 0 ]]; then
       echo "$output" >&2
       return 1
