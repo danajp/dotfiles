@@ -352,6 +352,7 @@ if which kubectl &>/dev/null; then
 fi
 
 add_to_path_if /usr/local/kubebuilder/bin
+add_to_path_if "$HOME/.krew/bin"
 
 # --- force gcloud to use system python ------------------------------
 export CLOUDSDK_PYTHON=/usr/bin/python
