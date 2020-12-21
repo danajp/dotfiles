@@ -157,6 +157,8 @@ if which pyenv > /dev/null; then
     fi
 fi
 
+export PIPENV_VENV_IN_PROJECT=1
+
 # --- ruby rbenv -----------------------------------------------------
 add_to_path_if "$HOME/.rbenv/bin" head
 if which rbenv > /dev/null; then
