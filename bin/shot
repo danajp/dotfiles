@@ -10,5 +10,5 @@ FILENAME="${SCREENSHOT_DIR}/screenshot-$(date '+%Y-%m-%d-%H-%M-%S').png"
 
 mkdir -p "${SCREENSHOT_DIR}"
 
-maim --select | tee "$FILENAME" | xclip -selection clipboard -t image/png \
+maim --noopengl --select | tee "$FILENAME" | xclip -selection clipboard -t image/png \
   && echo "screenshot saved to ${FILENAME}"
