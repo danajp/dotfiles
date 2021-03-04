@@ -203,8 +203,6 @@ if [ -d /usr/local/go ]; then
   add_to_path_if "$GOPATH/bin"
   mkdir -p "$HOME/go/bin"
   add_to_path "$HOME/go/bin"
-else
-  export GOBIN="$HOME/bin"
 fi
 
 # --- AWS utils ------------------------------------------------------
