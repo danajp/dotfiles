@@ -285,7 +285,7 @@ avc() {
 
   profile="$1"
 
-  if [[ "$profile" == prod ]]; then
+  if [[ "$profile" == prod ]] || [[ "$profile" == bastion ]]; then
     duration=1h
   else
     duration=12h
