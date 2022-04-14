@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -eo pipefail
+
+main() {
+  local podfile podname
+
+  podfile="$1"
+
+  podname="$(kubectl create -f "$podfile" -o name)"
+
+  sleep 5
+
+  kubectl attach -it --pod-running-timeout=1m "$podname"
+  kubectl delete "$podname"
+}
+
+main "$@"
