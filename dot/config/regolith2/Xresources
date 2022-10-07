@@ -3,4 +3,12 @@ i3-wm.binding.down: k
 i3-wm.binding.up: l
 i3-wm.binding.right: semicolon
 
+i3-wm.binding.move_left: Shift+j
+i3-wm.binding.move_down: Shift+k
+i3-wm.binding.move_up: Shift+l
+i3-wm.binding.move_right: Shift+semicolon
+
+
+i3-wm.bar.position: top
+
 regolith.look.path: /usr/share/regolith-look/solarized-dark
