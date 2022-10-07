@@ -1,0 +1,14 @@
+set $internal_monitor eDP-1
+set $external_monitor DP-1-5
+
+workspace "$ws1" output $internal_monitor
+workspace "$ws2" output $internal_monitor
+workspace "$ws3" output $internal_monitor
+workspace "$ws4" output $internal_monitor
+
+workspace "$ws5" output $external_monitor
+workspace "$ws6" output $external_monitor
+workspace "$ws7" output $external_monitor
+workspace "$ws8" output $external_monitor
+workspace "$ws9" output $external_monitor
+workspace "$ws10" output $external_monitor
