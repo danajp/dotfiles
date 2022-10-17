@@ -1,10 +1,14 @@
-## Modify // Window Position // <><Shift> l k j ; ##
+! colors from solarized dark theme
+#define color_red       #dc322f
+#define color_yellow    #b58900
+
+! ## Modify // Window Position // <><Shift> l k j ; ##
 i3-wm.binding.left: j
 i3-wm.binding.down: k
 i3-wm.binding.up: l
 i3-wm.binding.right: semicolon
 
-## Modify // Window Position // <><Shift> l k j ; ##
+! ## Modify // Window Position // <><Shift> l k j ; ##
 i3-wm.binding.move_left: Shift+j
 i3-wm.binding.move_down: Shift+k
 i3-wm.binding.move_up: Shift+l
@@ -12,7 +16,11 @@ i3-wm.binding.move_right: Shift+semicolon
 
 i3-wm.bar.position: top
 i3-wm.gaps.focus_follows_mouse: true
+i3-wm.gaps.inner.size: 10
 
 regolith.look.path: /usr/share/regolith-look/solarized-dark
 
 i3xrocks.date.format2: %Y-%m-%d %H:%M:%S %Z
+
+i3-wm.client.focused.color.child_border: color_yellow
+i3-wm.client.focused.color.indicator: color_red
