@@ -12,3 +12,5 @@ workspace "$ws7" output $external_monitor
 workspace "$ws8" output $external_monitor
 workspace "$ws9" output $external_monitor
 workspace "$ws10" output $external_monitor
+
+bindsym $mod+c exec copyq menu
