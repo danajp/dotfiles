@@ -29,3 +29,6 @@ i3-wm.program.1: copyq
 
 ! default binding is c, which we want for copyq menu
 i3-wm.binding.settings: s
+
+! use rofi as command launcher (ilia doesn't support arguments wtf?)
+i3-wm.program.launcher.cmd: rofi -show run -theme solarized
