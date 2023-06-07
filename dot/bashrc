@@ -332,8 +332,6 @@ ap() {
 
 # --- terraform ------------------------------------------------------
 alias tf=terraform
-export TF_PLUGIN_CACHE_DIR="$HOME/.terraform-plugin-cache"
-add_to_path_if "$HOME/.tfenv/bin"
 
 # needed for the golang aws sdk to load credentials from aws profiles
 export AWS_SDK_LOAD_CONFIG=true
