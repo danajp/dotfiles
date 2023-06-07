@@ -335,6 +335,7 @@ alias tf=terraform
 
 # needed for the golang aws sdk to load credentials from aws profiles
 export AWS_SDK_LOAD_CONFIG=true
+export AWS_PAGER=
 
 # --- cask for emacs -------------------------------------------------
 add_to_path_if "$HOME/.cask/bin"
