@@ -27,6 +27,9 @@ disabled = true
 [terraform]
 disabled = true
 
+[vagrant]
+disabled = true
+
 [aws.region_aliases]
 us-east-1 = "use1"
 us-west-2 = "usw2"
