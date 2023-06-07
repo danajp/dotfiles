@@ -359,7 +359,13 @@ if which kubectl &>/dev/null; then
   eval "$(kubectl completion bash)"
 fi
 
-add_to_path_if /usr/local/kubebuilder/bin
+KUBECONFIG=
+for cfg in $HOME/.kube/config $HOME/src/home-server/{libvirt,proxmox}/kubeconfig.yaml; do
+  if [[ -e "$cfg" ]]; then
+    add_to_pathish KUBECONFIG "$cfg" tail
+  fi
+done
+
 add_to_path_if "$HOME/.krew/bin"
 
 # --- local post options ----------------------------------------------
