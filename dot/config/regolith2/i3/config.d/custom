@@ -1,16 +1,26 @@
 set $internal_monitor eDP-1
 set $external_monitor DP-1-5
 
-workspace "$ws1" output $internal_monitor
-workspace "$ws2" output $internal_monitor
-workspace "$ws3" output $internal_monitor
-workspace "$ws4" output $internal_monitor
+workspace $ws1 output $internal_monitor
+workspace $ws2 output $internal_monitor
+workspace $ws3 output $internal_monitor
+workspace $ws4 output $internal_monitor
 
-workspace "$ws5" output $external_monitor
-workspace "$ws6" output $external_monitor
-workspace "$ws7" output $external_monitor
-workspace "$ws8" output $external_monitor
-workspace "$ws9" output $external_monitor
-workspace "$ws10" output $external_monitor
+workspace $ws5 output $external_monitor
+workspace $ws6 output $external_monitor
+workspace $ws7 output $external_monitor
+workspace $ws8 output $external_monitor
+workspace $ws9 output $external_monitor
+workspace $ws10 output $external_monitor
 
 bindsym $mod+c exec copyq menu
+bindsym $mod+shift+v split v
+bindsym $mod+shift+h split h
+
+# main window
+for_window [class="zoom" title="Zoom - Licensed Account"] move to workspace $ws4
+no_focus [class="zoom" title="Zoom - Licensed Account"]
+# popup notifications (note lowercase z)
+#for_window [class="zoom" title="zoom"] floating enable
+# meeting windows have title "Zoom" (notexpr capital Z) or "Zoom Meeting"
+for_window [class="zoom"] move to workspace $ws3
