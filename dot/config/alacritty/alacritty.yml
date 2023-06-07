@@ -1,7 +1,8 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
 
 # container for holding color themes, not part of standard config
-themes:
+anchors:
+  font: &font_name Inconsolata
   # lifted from https://github.com/aaron-williamson/base16-alacritty/blob/master/colors/base16-solarized-dark-256.yml
   solarized_dark: &solarized_dark_theme
     # Default colors
@@ -210,12 +211,15 @@ tabspaces: 8
 # Font configuration (changes require restart)
 font:
   normal:
-    family: Terminus
+    family: *font_name
+    style: Normal
   bold:
-    family: Terminus
+    family: *font_name
+    style: Bold
   italic:
-    family: Terminus
-  size: 11.0
+    family: *font_name
+    style: Italic
+  size: 12.0
   # Normal (roman) font face
   #normal:
     # Font family
