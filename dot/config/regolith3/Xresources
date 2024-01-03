@@ -1,0 +1,46 @@
+! colors from solarized dark theme
+#define color_red       #dc322f
+#define color_yellow    #b58900
+
+! ## Modify // Window Position // <><Shift> l k j ; ##
+wm.binding.left: j
+wm.binding.down: k
+wm.binding.up: l
+wm.binding.right: semicolon
+
+! ## Modify // Window Position // <><Shift> l k j ; ##
+wm.binding.move_left: Shift+j
+wm.binding.move_down: Shift+k
+wm.binding.move_up: Shift+l
+wm.binding.move_right: Shift+semicolon
+
+wm.bar.position: top
+wm.gaps.focus_follows_mouse: true
+wm.gaps.inner.size: 10
+
+regolith.look.path: /usr/share/regolith-look/solarized-dark
+
+i3xrocks.date.format2: %Y-%m-%d %H:%M:%S %Z
+
+wm.client.focused.color.child_border: color_yellow
+wm.client.focused.color.indicator: color_red
+
+wm.program.1: copyq
+wm.program.2: dunst
+
+! default binding is c, which we want for copyq menu
+wm.binding.settings: s
+
+! use rofi as command launcher (ilia doesn't support arguments wtf?)
+wm.program.launcher.cmd: rofi -show run -theme solarized_alternate
+
+wm.workspace.01.name:
+wm.workspace.02.name:
+wm.workspace.03.name:
+wm.workspace.04.name:
+wm.workspace.05.name:
+wm.workspace.06.name:
+wm.workspace.07.name:
+wm.workspace.08.name:
+wm.workspace.09.name:
+wm.workspace.10.name:
