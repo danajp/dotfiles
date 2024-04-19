@@ -95,6 +95,9 @@ SRC_DIR="${SRC_DIR:-$HOME/src}"
 
 add_to_path_if "$SRC_DIR/gpg-stupid"
 
+GPG_TTY=$(tty)
+export GPG_TTY
+
 # --- shell options --------------------------------------------------
 shopt -s checkwinsize
 shopt -s histappend
