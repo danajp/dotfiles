@@ -179,9 +179,6 @@ zeus () { ARGS=$@; command zeus "$@"; ZE_EC=$?; stty sane; if [ $ZE_EC = 2 ]; th
 # --- heroku toolbelt ------------------------------------------------
 add_to_path_if '/usr/local/heroku/bin'
 
-# --- node.js nvm ----------------------------------------------------
-source_if "$HOME/.nvm/nvm.sh"
-
 # --- oracle ---------------------------------------------------------
 if [ -n "$ORACLE_HOME" ]; then
     export NLS_LANG="AMERICAN_AMERICA.utf8"
