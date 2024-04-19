@@ -108,7 +108,6 @@ if ! grep -qi "r" <<<"$LESS"; then
     export LESS="$LESS -r"
 fi
 
-export PS1="\h:\W \u \$(__avc_prompt)\$ "
 export HISTCONTROL='ignoreboth'
 export HISTFILESIZE=100000
 export HISTSIZE=100000
@@ -296,12 +295,6 @@ avc() {
     export AVC_PROFILE="$profile"
     export AWS_VAULT="$profile"
   fi
-}
-
-__avc_prompt() {
-  [[ -z "$AVC_PROFILE" ]] && return
-
-  echo "aws-vault:$AVC_PROFILE "
 }
 
 # --- ansible utils --------------------------------------------------
