@@ -331,7 +331,7 @@ export AWS_PAGER=
 # --- cask for emacs -------------------------------------------------
 add_to_path_if "$HOME/.cask/bin"
 
-export EDITOR='emacsclient -c'
+export EDITOR='emacsclient'
 
 # --- git completion -------------------------------------------------
 source_first \
