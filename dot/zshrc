@@ -1,0 +1,31 @@
+# -*- mode: sh -*-
+
+# --- utils ----------------------------------------------------------
+add_to_path_if() {
+  local dir="$1"
+
+  [ -d "$dir" ] && path+="$dir"
+}
+
+typeset -U path
+
+export ZSH="$HOME/.oh-my-zsh"
+
+plugins=(
+  asdf
+  direnv
+  starship
+  z
+)
+
+source "$ZSH/oh-my-zsh.sh"
+
+# --- kubectl --------------------------------------------------------
+alias k=kubectl
+
+source <(kubectl completion zsh)
+
+# kubectl plugins dir
+add_to_path_if "$HOME/.krew/bin"
+
+add_to_path_if "$HOME/.dajoku-cli/bin"
