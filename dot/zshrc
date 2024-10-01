@@ -1,12 +1,23 @@
-# -*- mode: sh -*-
+# -*- mode: shell-script; sh-shell: zsh -*-
 
 # --- utils ----------------------------------------------------------
 add_to_path_if() {
-  local dir="$1"
+  local dir
+
+  dir="$1"
 
   [ -d "$dir" ] && path+="$dir"
 }
 
+source_if() {
+  local file
+
+  file="$1"
+
+  [ -e "$file" ] && source "$file"
+}
+
+# keep values in path unique
 typeset -U path
 
 export ZSH="$HOME/.oh-my-zsh"
@@ -17,15 +28,25 @@ plugins=(
   starship
   z
 )
-
 source "$ZSH/oh-my-zsh.sh"
 
+# --- common setup ---------------------------------------------------
+export EDITOR=emacsclient
+export ASDF_GOLANG_MOD_VERSION_ENABLED=true
 # --- kubectl --------------------------------------------------------
 alias k=kubectl
+alias kc='k config use-context'
 
 source <(kubectl completion zsh)
 
 # kubectl plugins dir
 add_to_path_if "$HOME/.krew/bin"
 
+# --- work specific config, if available -----------------------------
+source_if "$HOME/src/work/zsh"
 add_to_path_if "$HOME/.dajoku-cli/bin"
+
+source_if "$HOME/secrets/bash"
+
+alias y2i="ASDF_RUBY_VERSION=3.1.2 ruby -r yaml -r json -e 'puts ({\"items\" => YAML.load_stream(STDIN) }.to_json)'"
+alias i2y="ASDF_RUBY_VERSION=3.1.2 ruby -r yaml -r json -e 'puts JSON.parse(STDIN.read)[\"items\"].map {|i| i.to_yaml }.join(\"\")'"
