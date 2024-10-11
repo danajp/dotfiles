@@ -1,8 +1,18 @@
 add_newline = false
-right_format="$time${custom.local_time}"
 
-[cmd_duration]
-disabled = true
+format = """\
+  $kubernetes\
+  $directory\
+  $git_branch\
+  $git_status\
+  $aws\
+  $cmd_duration\
+  $fill\
+  $time\
+  ${custom.local_time}\
+  $line_break\
+  $character\
+"""
 
 [kubernetes]
 disabled = false
@@ -47,4 +57,8 @@ format="[$time]($style) "
 description = "show local time"
 when = true
 command = "date +'%T %Z'"
+#command = "echo date"
 format = "[$output]($style)"
+
+[fill]
+symbol=" "
