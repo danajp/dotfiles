@@ -31,7 +31,7 @@ wm.program.2: dunst
 ! default binding is c, which we want for copyq menu
 wm.binding.settings: s
 
-! use rofi as command launcher (ilia doesn't support arguments wtf?)
+! use rofi as command launcher (ilia does not support arguments wtf?)
 wm.program.launcher.cmd: rofi -show run -theme solarized_alternate
 
 wm.workspace.01.name:
