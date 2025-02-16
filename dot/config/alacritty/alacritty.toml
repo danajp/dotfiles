@@ -1,0 +1,4 @@
+[general]
+live_config_reload = true
+working_directory = "None"
+import = ["font.toml", "solarized-dark.toml"]

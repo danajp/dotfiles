@@ -4,7 +4,7 @@ set -eo pipefail
 
 [[ -n "$DEBUG" ]] && set -x
 
-ALACRITTY_CONFIG="$HOME/src/dotfiles/dot/config/alacritty/alacritty.yml"
+ALACRITTY_CONFIG="$HOME/src/dotfiles/dot/config/alacritty/alacritty.toml"
 REGOLITH_XRESOURCES="$HOME/src/dotfiles/dot/config/regolith/Xresources"
 
 REGOLITH_DARK_THEME="/etc/regolith/styles/solarized-dark/root"
@@ -23,7 +23,9 @@ set_alacritty() {
 
   value="$1"
 
-  sed 's#\(colors:[[:space:]]\**solarized_\)\(light\|dark\)\(_theme\)#\1'"${value}"'\3#' -i "$ALACRITTY_CONFIG"
+  sed "s#\(solarized-\)\(light\|dark\)\(\.toml\)#\1$value\3#" -i "$ALACRITTY_CONFIG"
+
+  # sed 's#\(colors:[[:space:]]\**solarized_\)\(light\|dark\)\(_theme\)#\1'"${value}"'\3#' -i "$ALACRITTY_CONFIG"
 }
 
 set_regolith() {
