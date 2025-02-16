@@ -11,7 +11,7 @@ format = """\
   $time\
   ${custom.local_time}\
   $line_break\
-  $character\
+  $character
 """
 
 [kubernetes]
