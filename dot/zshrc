@@ -42,6 +42,9 @@ source <(kubectl completion zsh)
 # kubectl plugins dir
 add_to_path_if "$HOME/.krew/bin"
 
+# rustup
+add_to_path_if "$HOME/.cargo/bin"
+
 # --- work specific config, if available -----------------------------
 source_if "$HOME/src/work/zsh"
 add_to_path_if "$HOME/.dajoku-cli/bin"

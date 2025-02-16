@@ -1,2 +1,3 @@
 # -*- Mode: shell-script -*-
 [ -f ~/.bashrc ] && source ~/.bashrc
+. "$HOME/.cargo/env"
