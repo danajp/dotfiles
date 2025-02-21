@@ -1,7 +1,6 @@
 [user]
 	name = Dana Pieluszczak
 	email = danajp@users.noreply.github.com
-	signingkey = DE3215E3E0696DCE
 [alias]
     lg ="log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'"
     lgnc ="log --graph --abbrev-commit --decorate --date=relative --format=format:'%h - (%ar) %s - %an%d'"
@@ -22,3 +21,6 @@
 	gpgsign = true
 [init]
 	defaultBranch = main
+
+[include]
+    path = ~/.gitconfig-signing
