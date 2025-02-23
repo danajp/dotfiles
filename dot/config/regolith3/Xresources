@@ -33,6 +33,8 @@ wm.binding.settings: s
 
 ! use rofi as command launcher (ilia does not support arguments wtf?)
 wm.program.launcher.cmd: rofi -show run -theme solarized_alternate
+! call alacritty directly since it lives in ~/bin
+wm.program.terminal: alacritty
 
 wm.workspace.01.name:
 wm.workspace.02.name:
