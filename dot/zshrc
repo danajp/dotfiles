@@ -47,7 +47,6 @@ add_to_path_if "$HOME/.cargo/bin"
 
 # --- work specific config, if available -----------------------------
 source_if "$HOME/src/work/zsh"
-add_to_path_if "$HOME/.dajoku-cli/bin"
 
 source_if "$HOME/secrets/bash"
 
