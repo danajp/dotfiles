@@ -26,6 +26,7 @@ plugins=(
   asdf
   direnv
   starship
+  git
   z
 )
 source "$ZSH/oh-my-zsh.sh"
