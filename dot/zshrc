@@ -34,6 +34,12 @@ source "$ZSH/oh-my-zsh.sh"
 # --- common setup ---------------------------------------------------
 export EDITOR=emacsclient
 export ASDF_GOLANG_MOD_VERSION_ENABLED=true
+
+if [[ -S "$HOME/.1password/agent.sock" ]]; then
+  SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+  export SSH_AUTH_SOCK
+fi
+
 # --- kubectl --------------------------------------------------------
 alias k=kubectl
 alias kc='k config use-context'
