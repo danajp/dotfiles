@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Clone a github repo ORG/REPO into ~/src/REPO if it doesn't already
+# exist. Add the repo to the emacs project list.
+
+set -eo pipefail
+
+SRC_DIR="$HOME/src"
+
+fatal() {
+  echo "$@" >&2
+  exit 1
+}
+
+main() {
+  local org_repo repo repo_dir
+
+  org_repo="$1"
+  repo="$(awk -F/ '{print $2}' <<<"$org_repo")"
+
+  repo_dir="$SRC_DIR/$repo"
+
+  if [[ -d "$repo_dir" ]]; then
+    fatal "repo dir already exists: $repo_dir"
+  fi
+
+  git clone "git@github.com:$org_repo.git" "$repo_dir"
+  emacsclient -e "(project-remember-projects-under \"$repo_dir\")"
+}
+
+main "$@"
