@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Clone a github repo ORG/REPO into ~/src/REPO if it doesn't already
+# Clone a github repo OWNER/REPO into ~/src/REPO if it doesn't already
 # exist. Add the repo to the emacs project list.
 
 set -eo pipefail
@@ -13,10 +13,15 @@ fatal() {
 }
 
 main() {
-  local org_repo repo repo_dir
+  local owner_repo repo repo_dir
 
-  org_repo="$1"
-  repo="$(awk -F/ '{print $2}' <<<"$org_repo")"
+  owner_repo="$1"
+  owner="$(awk -F/ '{print $1}' <<<"$owner_repo")"
+  repo="$(awk -F/ '{print $2}' <<<"$owner_repo")"
+
+  if [[ -z "$owner" || -z "$repo" ]]; then
+    fatal "you must specify repo as OWNER/REPO"
+  fi
 
   repo_dir="$SRC_DIR/$repo"
 
@@ -24,7 +29,7 @@ main() {
     fatal "repo dir already exists: $repo_dir"
   fi
 
-  git clone "git@github.com:$org_repo.git" "$repo_dir"
+  git clone "git@github.com:$owner_repo.git" "$repo_dir"
   emacsclient -e "(project-remember-projects-under \"$repo_dir\")"
 }
 
