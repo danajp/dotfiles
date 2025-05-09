@@ -46,6 +46,8 @@ us-east-1 = "use1"
 us-west-2 = "usw2"
 eu-central-1 = "euc1"
 eu-west-1 = "euw1"
+ap-southeast-2 = "apse2"
+ap-southeast-4 = "apse4"
 
 [time]
 disabled = false
