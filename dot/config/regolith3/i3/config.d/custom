@@ -24,3 +24,5 @@ no_focus [class="zoom" title="Zoom - Licensed Account"]
 #for_window [class="zoom" title="zoom"] floating enable
 # meeting windows have title "Zoom" (notexpr capital Z) or "Zoom Meeting"
 for_window [class="zoom"] move to workspace $ws3
+
+exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
