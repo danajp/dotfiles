@@ -6,6 +6,7 @@ format = """\
   $git_branch\
   $git_status\
   $aws\
+  $direnv\
   $cmd_duration\
   $fill\
   $time\
@@ -64,3 +65,6 @@ format = "[$output]($style)"
 
 [fill]
 symbol=" "
+
+[direnv]
+disabled=false
