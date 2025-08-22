@@ -22,6 +22,7 @@ typeset -U path
 
 add_to_path_if "$HOME/.asdf/shims"
 add_to_path_if "$HOME/bin"
+add_to_path_if "$HOME/.local/bin"
 
 export ZSH="$HOME/.oh-my-zsh"
 
