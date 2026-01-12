@@ -63,3 +63,5 @@ alias jy='yj -jy'
 
 alias y2i="ASDF_RUBY_VERSION=3.1.2 ruby -r yaml -r json -e 'puts ({\"items\" => YAML.load_stream(STDIN) }.to_json)'"
 alias i2y="ASDF_RUBY_VERSION=3.1.2 ruby -r yaml -r json -e 'puts JSON.parse(STDIN.read)[\"items\"].map {|i| i.to_yaml }.join(\"\")'"
+
+source_if "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"

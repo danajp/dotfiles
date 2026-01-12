@@ -5,6 +5,10 @@ SCRIPTS_DEST:=$(patsubst bin/%,~/bin/%,$(SCRIPTS_SRC))
 DOT_SRC:=$(shell find dot/ -type f)
 DOT_DEST:=$(patsubst dot/%,~/.%,$(DOT_SRC))
 
+.PHONY: home-manager-install
+home-manager-install:
+	ln -s $(PWD) $(HOME)/.config/home-manager
+
 .PHONY: install
 install: dots scripts
 
