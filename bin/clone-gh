@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Clone a github repo OWNER/REPO into ~/src/REPO if it doesn't already
+# Clone a github repo OWNER/REPO or https://github.com/OWNER/REPO into ~/src/REPO if it doesn't already
 # exist. Add the repo to the emacs project list.
 
 set -eo pipefail
@@ -13,16 +13,18 @@ fatal() {
 }
 
 main() {
-  local owner_repo repo repo_dir
+  local repo_url owner_repo repo repo_dir
 
-  owner_repo="$1"
+  repo_url="$1"
   repo_dir="$2"
 
-  owner="$(awk -F/ '{print $1}' <<<"$owner_repo")"
-  repo="$(awk -F/ '{print $2}' <<<"$owner_repo")"
+  owner="$(awk -F/ '{print $(NF-1)}' <<<"$repo_url")"
+  repo="$(awk -F/ '{print $NF}' <<<"$repo_url")"
+
+  owner_repo="$owner/$repo"
 
   if [[ -z "$owner" || -z "$repo" ]]; then
-    fatal "you must specify repo as OWNER/REPO"
+    fatal "you must specify repo as OWNER/REPO or https://github.com/OWNER/REPO"
   fi
 
   if [[ -z "$repo_dir" ]]; then
