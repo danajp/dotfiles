@@ -7,6 +7,7 @@ format = """\
   $git_status\
   $aws\
   $direnv\
+  $nix_shell\
   $cmd_duration\
   $fill\
   $time\
