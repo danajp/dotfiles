@@ -20,6 +20,7 @@
   home.packages = [
     pkgs.devenv
     pkgs.git
+    pkgs.opencode
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -113,5 +114,12 @@
     includes = [
       { path = "~/.gitconfig-signing"; }
     ];
+  };
+
+  programs.opencode = {
+    enable = true;
+    settings = {
+      plugin = ["opencode-gemini-auth@latest"];
+    };
   };
 }
