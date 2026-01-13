@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  nixpkgs.config.allowUnfreePredicate = pkg: true;
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "dana";
@@ -21,6 +23,7 @@
     pkgs.devenv
     pkgs.git
     pkgs.opencode
+    pkgs.claude-code
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -121,5 +124,9 @@
     settings = {
       plugin = ["opencode-gemini-auth@latest"];
     };
+  };
+
+  programs.claude-code = {
+    enable = true;
   };
 }
