@@ -149,4 +149,5 @@
   };
 
   home.file.".asdfrc".source = ./dot/asdfrc;
+  home.file.".gemrc".source = ./dot/gemrc;
 }
