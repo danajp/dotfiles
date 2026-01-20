@@ -131,4 +131,20 @@
   programs.claude-code = {
     enable = true;
   };
+
+  programs.tmux = {
+    enable = true;
+    terminal = "screen-256color";
+    mouse = true;
+    historyLimit = 20000;
+    plugins = with pkgs.tmuxPlugins; [
+      {
+        plugin = power-theme;
+        extraConfig = ''
+          run-shell "powerline-daemon -q"
+          source /usr/share/powerline/bindings/tmux/powerline.conf
+        '';
+      }
+    ];
+  };
 }
