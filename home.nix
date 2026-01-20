@@ -21,9 +21,6 @@
   # environment.
   home.packages = [
     pkgs.devenv
-    pkgs.git
-    pkgs.opencode
-    pkgs.claude-code
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
