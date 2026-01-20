@@ -147,4 +147,6 @@
       }
     ];
   };
+
+  home.file.".asdfrc".source = ./dot/asdfrc;
 }
