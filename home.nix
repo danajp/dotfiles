@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
 {
+  # enable gpu on non nixos linux
+  # see https://nix-community.github.io/home-manager/index.xhtml#sec-usage-gpu-non-nixos
+  targets.genericLinux.gpu.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg: true;
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -187,6 +190,16 @@
       };
       fill.symbol = " ";
       direnv.disabled = false;
+    };
+  };
+
+  programs.ghostty = {
+    enable = true;
+    settings = {
+      theme = "Builtin Solarized Dark";
+      font-family = "Inconsolata";
+      font-size = 12.0;
+      window-decoration = "none";
     };
   };
 }
