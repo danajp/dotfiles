@@ -120,8 +120,8 @@
     enable = true;
     settings = {
       plugin = ["opencode-gemini-auth@latest"];
-      mode.plan.model = "anthropic/claude-opus-4-5-20251101";
-      mode.build.model = "anthropic/claude-sonnet-4-20250514";
+      mode.plan.model = "anthropic/claude-opus-4-5";
+      mode.build.model = "anthropic/claude-sonnet-4-5";
     };
   };
 
