@@ -200,6 +200,8 @@
       font-family = "Inconsolata";
       font-size = 12.0;
       window-decoration = "none";
+      mouse-scroll-multiplier = 0.5;
+      app-notifications = "no-clipboard-copy";
     };
   };
 }
