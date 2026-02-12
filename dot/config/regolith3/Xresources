@@ -27,6 +27,7 @@ wm.client.focused.color.indicator: color_red
 
 wm.program.1: copyq
 wm.program.2: dunst
+wm.program.compositor: picom --daemon --config ~/.config/regolith3/picom/config
 
 ! default binding is c, which we want for copyq menu
 wm.binding.settings: s
