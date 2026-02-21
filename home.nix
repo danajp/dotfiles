@@ -130,9 +130,10 @@ in
   programs.opencode = {
     enable = true;
     settings = {
-      plugin = ["opencode-gemini-auth@latest"];
-      mode.plan.model = "anthropic/claude-opus-4-5";
-      mode.build.model = "anthropic/claude-sonnet-4-5";
+      plugin = [
+        "@opencode-ai/plugin"
+        "oh-my-opencode"
+      ];
     };
   };
 
@@ -199,6 +200,8 @@ in
 
       exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
     '';
+
+    "opencode/oh-my-opencode.json".source = ./dot/config/opencode/oh-my-opencode.json;
   };
 
   programs.starship = {
