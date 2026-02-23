@@ -1,0 +1,41 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "agents": {
+    "sisyphus": {
+      "model": "opencode/claude-opus-4-5"
+    },
+    "oracle": {
+      "model": "opencode/gpt-5.2"
+    },
+    "explore": {
+      "model": "opencode/gpt-5-nano"
+    },
+    "librarian": {
+      "model": "opencode/big-pickle"
+    },
+    "frontend-ui-ux-engineer": {
+      "model": "opencode/claude-opus-4-5"
+    },
+    "document-writer": {
+      "model": "opencode/claude-opus-4-5"
+    },
+    "multimodal-looker": {
+      "model": "opencode/claude-opus-4-5"
+    },
+    "metis": {
+      "model": "opencode/gpt-5-nano"
+    },
+    "momus": {
+      "model": "opencode/gpt-5-nano"
+    },
+    "sisyphus-junior": {
+      "model": "opencode/gpt-5-nano"
+    },
+    "prometheus": {
+      "model": "opencode/gpt-5.2"
+    },
+    "atlas": {
+      "model": "opencode/gpt-5-nano"
+    }
+  }
+}

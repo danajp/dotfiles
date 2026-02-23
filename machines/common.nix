@@ -1,10 +1,6 @@
+# Common Home Manager configuration shared across all machines
 { config, pkgs, ... }:
 
-let
-  # Monitor configuration - change these per machine
-  internalMonitor = "eDP-1";
-  externalMonitor = "DP-2-1";
-in
 {
   # enable gpu on non nixos linux
   # see https://nix-community.github.io/home-manager/index.xhtml#sec-usage-gpu-non-nixos
@@ -30,38 +26,7 @@ in
   home.packages = [
     pkgs.asdf-vm
     pkgs.devenv
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
-
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
   ];
-
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
-  };
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
@@ -157,51 +122,19 @@ in
     ];
   };
 
-  home.file.".asdfrc".source = ./dot/asdfrc;
-  home.file.".gemrc".source = ./dot/gemrc;
+  home.file.".asdfrc".source = ../dot/asdfrc;
+  home.file.".gemrc".source = ../dot/gemrc;
 
-  # Regolith3 configs
+  # Regolith3 configs (non-machine-specific parts)
   xdg.enable = true;
   xdg.configFile = {
-    "regolith3/Xresources".source = ./dot/config/regolith3/Xresources;
-    "regolith3/picom/config".source = ./dot/config/regolith3/picom/config;
-    "regolith3/i3xrocks/conf.d".source = ./dot/config/regolith3/i3xrocks/conf.d;
+    "regolith3/Xresources".source = ../dot/config/regolith3/Xresources;
+    "regolith3/picom/config".source = ../dot/config/regolith3/picom/config;
+    "regolith3/i3xrocks/conf.d".source = ../dot/config/regolith3/i3xrocks/conf.d;
     "regolith3/i3xrocks/bin/utc" = {
-      source = ./dot/config/regolith3/i3xrocks/bin/utc;
+      source = ../dot/config/regolith3/i3xrocks/bin/utc;
       executable = true;
     };
-    "regolith3/i3/config.d/custom".text = ''
-      set $internal_monitor ${internalMonitor}
-      set $external_monitor ${externalMonitor}
-
-      workspace $ws1 output $internal_monitor
-      workspace $ws2 output $internal_monitor
-      workspace $ws3 output $internal_monitor
-      workspace $ws4 output $internal_monitor
-
-      workspace $ws5 output $external_monitor
-      workspace $ws6 output $external_monitor
-      workspace $ws7 output $external_monitor
-      workspace $ws8 output $external_monitor
-      workspace $ws9 output $external_monitor
-      workspace $ws10 output $external_monitor
-
-      bindsym $mod+c exec copyq menu
-      bindsym $mod+shift+v split v
-      bindsym $mod+shift+h split h
-
-      # main window
-      for_window [class="zoom" title="Zoom - Licensed Account"] move to workspace $ws4
-      no_focus [class="zoom" title="Zoom - Licensed Account"]
-      # popup notifications (note lowercase z)
-      #for_window [class="zoom" title="zoom"] floating enable
-      # meeting windows have title "Zoom" (notexpr capital Z) or "Zoom Meeting"
-      for_window [class="zoom"] move to workspace $ws3
-
-      exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
-    '';
-
-    "opencode/oh-my-opencode.json".source = ./dot/config/opencode/oh-my-opencode.json;
   };
 
   programs.starship = {
@@ -360,17 +293,17 @@ in
         interface-type = "wired";
         interval = 3;
         format-connected = "<label-connected>";
-        label-connected = " %downspeed%  %upspeed% ";
+        label-connected = " %downspeed%  %upspeed% ";
         label-connected-foreground = "\${colors.cyan}";
         format-disconnected = "<label-disconnected>";
-        label-disconnected = " --";
+        label-disconnected = " --";
         label-disconnected-foreground = "\${colors.foreground-alt}";
       };
 
       # Bluetooth (was: 30_bluetooth) - custom script
       "module/bluetooth" = {
         type = "custom/script";
-        exec = ''/usr/bin/bluetoothctl show 2>/dev/null | /usr/bin/grep -q "Powered: yes" && echo "" || echo ""'';
+        exec = ''/usr/bin/bluetoothctl show 2>/dev/null | /usr/bin/grep -q "Powered: yes" && echo "" || echo ""'';
         interval = 20;
         label-foreground = "\${colors.primary}";
         click-left = "/usr/bin/bluetoothctl power on";
@@ -380,7 +313,7 @@ in
       # VPN (was: 40_nm-vpn) - custom script
       "module/vpn" = {
         type = "custom/script";
-        exec = ''/usr/bin/nmcli -t connection show --active 2>/dev/null | /usr/bin/grep -q vpn && echo " VPN" || echo ""'';
+        exec = ''/usr/bin/nmcli -t connection show --active 2>/dev/null | /usr/bin/grep -q vpn && echo " VPN" || echo ""'';
         interval = 30;
         label-foreground = "\${colors.green}";
       };
@@ -390,11 +323,11 @@ in
         type = "internal/cpu";
         interval = 5;
         format = "<label>";
-        label = " %percentage%%";
+        label = " %percentage%%";
         label-foreground = "\${colors.foreground}";
         warn-percentage = 80;
         format-warn = "<label-warn>";
-        label-warn = " %percentage%%";
+        label-warn = " %percentage%%";
         label-warn-foreground = "\${colors.alert}";
       };
 
@@ -403,11 +336,11 @@ in
         type = "internal/memory";
         interval = 10;
         format = "<label>";
-        label = " %percentage_used%%";
+        label = " %percentage_used%%";
         label-foreground = "\${colors.foreground}";
         warn-percentage = 90;
         format-warn = "<label-warn>";
-        label-warn = " %percentage_used%%";
+        label-warn = " %percentage_used%%";
         label-warn-foreground = "\${colors.alert}";
       };
 
@@ -420,15 +353,15 @@ in
         poll-interval = 10;
 
         format-charging = "<label-charging>";
-        label-charging = " %percentage%%";
+        label-charging = " %percentage%%";
         label-charging-foreground = "\${colors.green}";
 
         format-discharging = "<label-discharging>";
-        label-discharging = " %percentage%%";
+        label-discharging = " %percentage%%";
         label-discharging-foreground = "\${colors.warning}";
 
         format-full = "<label-full>";
-        label-full = " %percentage%%";
+        label-full = " %percentage%%";
         label-full-foreground = "\${colors.green}";
       };
 
@@ -437,10 +370,10 @@ in
         type = "internal/pulseaudio";
         interval = 5;
         format-volume = "<label-volume>";
-        label-volume = " %percentage%%";
+        label-volume = " %percentage%%";
         label-volume-foreground = "\${colors.foreground}";
         format-muted = "<label-muted>";
-        label-muted = " muted";
+        label-muted = " muted";
         label-muted-foreground = "\${colors.foreground-alt}";
         click-right = "pavucontrol";
       };
@@ -450,7 +383,7 @@ in
         type = "custom/script";
         exec = "TZ=UTC /usr/bin/date +'%Y-%m-%d %H:%M:%S %Z'";
         interval = 1;
-        label = " %output%";
+        label = " %output%";
         label-foreground = "\${colors.violet}";
       };
 
@@ -460,7 +393,7 @@ in
         interval = 1;
         date = "%Y-%m-%d";
         time = "%H:%M:%S %Z";
-        label = " %date% %time%";
+        label = " %date% %time%";
         label-foreground = "\${colors.primary}";
       };
 
