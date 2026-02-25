@@ -181,7 +181,7 @@
   programs.ghostty = {
     enable = true;
     settings = {
-      theme = "Builtin Solarized Dark";
+      theme = "dark:iTerm2 Solarized Dark,light:iTerm2 Solarized Light";
       font-family = "Inconsolata";
       font-size = 12.0;
       window-decoration = "none";
