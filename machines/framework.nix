@@ -4,8 +4,8 @@
 let
   # Monitor configuration for framework
   # TODO: Update these values for your Framework laptop
-  internalMonitor = "eDP-1";  # Placeholder - update with actual monitor name
-  externalMonitor = "DP-1";   # Placeholder - update with actual monitor name
+  internalMonitor = "eDP-1";
+  externalMonitor = "DisplayPort-1-0";
 in
 {
   imports = [ ./common.nix ];
