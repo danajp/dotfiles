@@ -187,6 +187,8 @@
   };
 
   services.polybar = {
+    # NOTE: Systemd service manually disabled. Polybar is started by i3 instead.
+    # Run: systemctl --user disable polybar
     enable = true;
     package = pkgs.polybar.override {
       i3Support = true;

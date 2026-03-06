@@ -165,6 +165,17 @@
           always = false;
           notification = false;
         }
+        {
+          command = "${pkgs.writeShellScriptBin "polybar-launch" ''
+            /usr/bin/killall -q polybar 2>/dev/null || true
+            while /usr/bin/pgrep -u $UID -x polybar >/dev/null 2>&1; do sleep 0.5; done
+            for m in $(${pkgs.polybar.override { i3Support = true; pulseSupport = true; }}/bin/polybar --list-monitors 2>/dev/null | cut -d: -f1); do
+              MONITOR=$m ${pkgs.polybar.override { i3Support = true; pulseSupport = true; }}/bin/polybar top &
+            done
+          ''}/bin/polybar-launch";
+          always = true;
+          notification = false;
+        }
       ];
 
       # Keybindings
