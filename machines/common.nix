@@ -2,6 +2,7 @@
 { config, pkgs, ... }:
 
 {
+  imports = [ ./i3.nix ];
   # enable gpu on non nixos linux
   # see https://nix-community.github.io/home-manager/index.xhtml#sec-usage-gpu-non-nixos
   targets.genericLinux.gpu.enable = true;
@@ -125,16 +126,11 @@
   home.file.".asdfrc".source = ../dot/asdfrc;
   home.file.".gemrc".source = ../dot/gemrc;
 
-  # Regolith3 configs (non-machine-specific parts)
+  # XDG config files
   xdg.enable = true;
   xdg.configFile = {
-    "regolith3/Xresources".source = ../dot/config/regolith3/Xresources;
+    # Keep picom config since i3 still uses it
     "regolith3/picom/config".source = ../dot/config/regolith3/picom/config;
-    "regolith3/i3xrocks/conf.d".source = ../dot/config/regolith3/i3xrocks/conf.d;
-    "regolith3/i3xrocks/bin/utc" = {
-      source = ../dot/config/regolith3/i3xrocks/bin/utc;
-      executable = true;
-    };
   };
 
   programs.starship = {
@@ -192,7 +188,10 @@
 
   services.polybar = {
     enable = true;
-    package = pkgs.polybar.override { i3Support = true; };
+    package = pkgs.polybar.override {
+      i3Support = true;
+      pulseSupport = true;
+    };
 
     # Solarized Dark palette
     # base03  #002b36  base02  #073642
@@ -401,18 +400,32 @@
     };
 
     script = ''
+      PATH="${pkgs.procps}/bin:${pkgs.coreutils}/bin:${pkgs.iproute2}/bin:${pkgs.i3}/bin:${pkgs.gnugrep}/bin:$PATH"
+      export PATH
+
       launch_bars() {
-        /usr/bin/killall -q polybar
-        while /usr/bin/pgrep -u $UID -x polybar >/dev/null; do sleep 0.5; done
-        for m in $(polybar --list-monitors | /usr/bin/cut -d: -f1); do
-          MONITOR=$m polybar top &
+        # Wait for i3 IPC socket to be available
+        timeout=10
+        while [ -z "$I3SOCK" ] && [ $timeout -gt 0 ]; do
+          export I3SOCK=$(${pkgs.i3}/bin/i3 --get-socketpath 2>/dev/null || echo "")
+          ${pkgs.coreutils}/bin/sleep 0.5
+          timeout=$((timeout - 1))
+        done
+        [ -n "$I3SOCK" ] && export I3SOCK
+
+        ${pkgs.procps}/bin/killall -q polybar || true
+        while ${pkgs.procps}/bin/pgrep -u $UID -x polybar >/dev/null; do ${pkgs.coreutils}/bin/sleep 0.5; done
+        for m in $(${pkgs.polybar}/bin/polybar --list-monitors 2>/dev/null | ${pkgs.coreutils}/bin/cut -d: -f1); do
+          MONITOR=$m ${pkgs.polybar}/bin/polybar top &
         done
       }
 
+      # Delay to ensure i3 is fully initialized
+      ${pkgs.coreutils}/bin/sleep 2
       launch_bars
 
       # Re-launch on monitor hotplug via i3 output events
-      i3-msg -t subscribe -m '["output"]' | while read -r line; do
+      ${pkgs.i3}/bin/i3-msg -t subscribe -m '["output"]' 2>/dev/null | while read -r line; do
         launch_bars
       done &
     '';

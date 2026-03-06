@@ -10,36 +10,23 @@ in
 {
   imports = [ ./common.nix ];
 
-  # Machine-specific i3 config with monitor assignments
-  xdg.configFile."regolith3/i3/config.d/custom".text = ''
-    set $internal_monitor ${internalMonitor}
-    set $external_monitor ${externalMonitor}
+  # Machine-specific i3 workspace output assignments and display config
+  xsession.windowManager.i3.extraConfig = ''
+    # TODO: Set display resolutions and positions for Framework
+    # exec --no-startup-id xrandr --output ${internalMonitor} --primary --mode 2256x1504 --pos 0x0
+    # exec --no-startup-id xrandr --output ${externalMonitor} --mode 2560x1440 --pos 2256x0
 
-    workspace $ws1 output $internal_monitor
-    workspace $ws2 output $internal_monitor
-    workspace $ws3 output $internal_monitor
-    workspace $ws4 output $internal_monitor
-
-    workspace $ws5 output $external_monitor
-    workspace $ws6 output $external_monitor
-    workspace $ws7 output $external_monitor
-    workspace $ws8 output $external_monitor
-    workspace $ws9 output $external_monitor
-    workspace $ws10 output $external_monitor
-
-    bindsym $mod+c exec copyq menu
-    bindsym $mod+shift+v split v
-    bindsym $mod+shift+h split h
-
-    # main window
-    for_window [class="zoom" title="Zoom - Licensed Account"] move to workspace $ws4
-    no_focus [class="zoom" title="Zoom - Licensed Account"]
-    # popup notifications (note lowercase z)
-    #for_window [class="zoom" title="zoom"] floating enable
-    # meeting windows have title "Zoom" (notexpr capital Z) or "Zoom Meeting"
-    for_window [class="zoom"] move to workspace $ws3
-
-    exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+    # Workspace output assignments
+    workspace 1 output ${internalMonitor}
+    workspace 2 output ${internalMonitor}
+    workspace 3 output ${internalMonitor}
+    workspace 4 output ${internalMonitor}
+    workspace 5 output ${externalMonitor}
+    workspace 6 output ${externalMonitor}
+    workspace 7 output ${externalMonitor}
+    workspace 8 output ${externalMonitor}
+    workspace 9 output ${externalMonitor}
+    workspace 10 output ${externalMonitor}
   '';
 
   # Machine-specific oh-my-opencode config
