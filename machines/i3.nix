@@ -334,6 +334,15 @@
           "${mod}+b" = "exec --no-startup-id regolith-control-center bluetooth";
           "${mod}+Shift+n" = "exec --no-startup-id /usr/bin/nautilus --new-window";
 
+          # Volume keys
+          "XF86AudioRaiseVolume" = "exec --no-startup-id volumectl up";
+          "XF86AudioLowerVolume" = "exec --no-startup-id volumectl down";
+          "XF86AudioMute" = "exec --no-startup-id volumectl toggle-mute";
+
+          # Brightness keys
+          "XF86MonBrightnessUp" = "exec --no-startup-id brightnessctl set +10%";
+          "XF86MonBrightnessDown" = "exec --no-startup-id brightnessctl set 10%-";
+
           # Bar toggle
           "${mod}+i" = "bar mode toggle";
 
