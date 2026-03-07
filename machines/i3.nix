@@ -83,10 +83,7 @@
             command = "floating enable";
             criteria = { class = "floating_window"; };
           }
-          {
-            command = "floating enable";
-            criteria = { class = "regolith-control-center"; };
-          }
+
         ];
       };
 
@@ -95,7 +92,7 @@
         modifier = modifier;
         criteria = [
           { class = "floating_window"; }
-          { class = "regolith-control-center"; }
+
         ];
       };
 
@@ -321,11 +318,6 @@
           "${mod}+Escape" = "exec dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock";
           "${mod}+Shift+s" = "exec systemctl suspend";
 
-          # System settings
-          # Note: mod+c is used for copyq menu above
-          "${mod}+d" = "exec --no-startup-id regolith-control-center display";
-          "${mod}+w" = "exec --no-startup-id regolith-control-center wifi";
-          "${mod}+b" = "exec --no-startup-id regolith-control-center bluetooth";
           "${mod}+Shift+n" = "exec --no-startup-id /usr/bin/nautilus --new-window";
 
           # Volume keys
