@@ -131,18 +131,8 @@
           notification = false;
         }
         {
-          command = "i3-swap-focus";
-          always = false;
-          notification = false;
-        }
-        {
           command = "/usr/bin/nm-applet";
           always = false;
-          notification = false;
-        }
-        {
-          command = "picom --daemon --config ~/.config/regolith3/picom/config";
-          always = true;
           notification = false;
         }
         {
@@ -166,15 +156,9 @@
           notification = false;
         }
         {
-          command = "${pkgs.writeShellScriptBin "polybar-launch" ''
-            /usr/bin/killall -q polybar 2>/dev/null || true
-            while /usr/bin/pgrep -u $UID -x polybar >/dev/null 2>&1; do sleep 0.5; done
-            for m in $(${pkgs.polybar.override { i3Support = true; pulseSupport = true; }}/bin/polybar --list-monitors 2>/dev/null | cut -d: -f1); do
-              MONITOR=$m ${pkgs.polybar.override { i3Support = true; pulseSupport = true; }}/bin/polybar top &
-            done
-          ''}/bin/polybar-launch";
+          command = "systemctl --user restart polybar.service";
           always = true;
-          notification = false;
+          notification = true;
         }
       ];
 
