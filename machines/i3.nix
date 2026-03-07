@@ -123,11 +123,6 @@
           notification = false;
         }
         {
-          command = "/usr/libexec/gnome-flashback-media-keys";
-          always = false;
-          notification = false;
-        }
-        {
           command = "/usr/bin/nm-applet";
           always = false;
           notification = false;
@@ -138,7 +133,7 @@
           notification = false;
         }
         {
-          command = "/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1";
+          command = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
           always = false;
           notification = false;
         }
@@ -321,9 +316,9 @@
           "${mod}+Shift+n" = "exec --no-startup-id /usr/bin/nautilus --new-window";
 
           # Volume keys
-          "XF86AudioRaiseVolume" = "exec --no-startup-id volumectl up";
-          "XF86AudioLowerVolume" = "exec --no-startup-id volumectl down";
-          "XF86AudioMute" = "exec --no-startup-id volumectl toggle-mute";
+          "XF86AudioRaiseVolume" = "exec --no-startup-id pamixer -i 5";
+          "XF86AudioLowerVolume" = "exec --no-startup-id pamixer -d 5";
+          "XF86AudioMute" = "exec --no-startup-id pamixer -t";
 
           # Brightness keys
           "XF86MonBrightnessUp" = "exec --no-startup-id brightnessctl set +10%";

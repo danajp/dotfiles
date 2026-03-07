@@ -27,6 +27,7 @@
   home.packages = [
     pkgs.asdf-vm
     pkgs.devenv
+    pkgs.pamixer
   ];
 
   # Home Manager can also manage your environment variables through
@@ -129,8 +130,6 @@
   # XDG config files
   xdg.enable = true;
   xdg.configFile = {
-    # Keep picom config since i3 still uses it
-    "regolith3/picom/config".source = ../dot/config/regolith3/picom/config;
     # Rofi solarized-dark theme
     "rofi/solarized-dark.rasi".source = ../dot/config/rofi/solarized-dark.rasi;
   };
