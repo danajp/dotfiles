@@ -131,6 +131,8 @@
   xdg.configFile = {
     # Keep picom config since i3 still uses it
     "regolith3/picom/config".source = ../dot/config/regolith3/picom/config;
+    # Rofi solarized-dark theme
+    "rofi/solarized-dark.rasi".source = ../dot/config/rofi/solarized-dark.rasi;
   };
 
   programs.starship = {
@@ -183,6 +185,26 @@
       window-decoration = "none";
       mouse-scroll-multiplier = 0.5;
       app-notifications = "no-clipboard-copy";
+    };
+  };
+
+  programs.rofi = {
+    enable = true;
+    package = pkgs.rofi;
+    font = "Inconsolata 14";
+    theme = "solarized-dark";
+    extraConfig = {
+      modi = "drun,run,window,ssh";
+      show-icons = true;
+      icon-theme = "Adwaita";
+      drun-display-format = "{name}";
+      location = 0;
+      disable-history = false;
+      hide-scrollbar = true;
+      display-drun = "Apps";
+      display-run = "Run";
+      display-window = "Windows";
+      display-ssh = "SSH";
     };
   };
 

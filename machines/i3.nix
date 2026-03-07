@@ -302,19 +302,18 @@
           "${mod}+Return" = "exec --no-startup-id systemd-run --user --scope alacritty";
           "${mod}+Shift+Return" = "exec --no-startup-id systemd-run --user --scope gtk-launch $(xdg-settings get default-web-browser)";
 
-          # Ilia launchers (will need replacement later)
-          "${mod}+space" = "exec --no-startup-id ilia -p apps -t /usr/share/regolith-look/solarized-dark/ilia.css";
-          "${mod}+Shift+space" = "exec --no-startup-id ilia -p terminal -t /usr/share/regolith-look/solarized-dark/ilia.css";
-          "${mod}+Shift+question" = "exec --no-startup-id ilia -p keybindings -a -t /usr/share/regolith-look/solarized-dark/ilia.css";
-          "${mod}+Ctrl+space" = "exec --no-startup-id ilia -p windows -t /usr/share/regolith-look/solarized-dark/ilia.css";
-          "${mod}+Mod1+space" = "exec --no-startup-id ilia -p tracker -t /usr/share/regolith-look/solarized-dark/ilia.css";
-          "${mod}+Mod1+l" = "exec --no-startup-id regolith-look-selector -t /usr/share/regolith-look/solarized-dark/ilia.css";
+          # Rofi launchers
+          "${mod}+space" = "exec --no-startup-id rofi -show drun";
+          "${mod}+Shift+space" = "exec --no-startup-id rofi -show run";
+          "${mod}+Shift+question" = "exec --no-startup-id rofi -show keys";
+          "${mod}+Ctrl+space" = "exec --no-startup-id rofi -show window";
+          "${mod}+Mod1+space" = "exec --no-startup-id rofi -show filebrowser";
 
           # Session management
           "${mod}+Shift+q" = "kill";
           "${mod}+Mod1+q" = "exec --no-startup-id kill -9 $(xdotool getwindowfocus getwindowpid)";
           "${mod}+Shift+c" = "reload";
-          "${mod}+Shift+r" = "exec --no-startup-id /usr/bin/regolith-look refresh";
+
           "${mod}+Ctrl+r" = "restart";
           "${mod}+Shift+e" = "exec /usr/bin/gnome-session-quit --logout";
           "${mod}+Shift+b" = "exec /usr/bin/gnome-session-quit --reboot";
