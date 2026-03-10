@@ -315,17 +315,17 @@
         interface-type = "wired";
         interval = 3;
         format-connected = "<label-connected>";
-        label-connected = " %downspeed%  %upspeed% ";
+        label-connected = "%{T2}%{T-} %downspeed% %{T2}%{T-} %upspeed% %{T2}%{T-}";
         label-connected-foreground = "\${colors.cyan}";
         format-disconnected = "<label-disconnected>";
-        label-disconnected = " --";
+        label-disconnected = " %{T2}%{T-} --";
         label-disconnected-foreground = "\${colors.foreground-alt}";
       };
 
       # Bluetooth (was: 30_bluetooth) - custom script
       "module/bluetooth" = {
         type = "custom/script";
-        exec = ''/usr/bin/bluetoothctl show 2>/dev/null | /usr/bin/grep -q "Powered: yes" && echo "" || echo ""'';
+        exec = ''/usr/bin/bluetoothctl show 2>/dev/null | /usr/bin/grep -q "Powered: yes" && echo "%{T2}%{T-}" || echo ""'';
         interval = 20;
         label-foreground = "\${colors.primary}";
         click-left = "/usr/bin/bluetoothctl power on";
@@ -335,7 +335,7 @@
       # VPN (was: 40_nm-vpn) - custom script
       "module/vpn" = {
         type = "custom/script";
-        exec = ''/usr/bin/nmcli -t connection show --active 2>/dev/null | /usr/bin/grep -q vpn && echo " VPN" || echo ""'';
+        exec = ''/usr/bin/nmcli -t connection show --active 2>/dev/null | /usr/bin/grep -q vpn && echo "%{T2}%{T-} VPN" || echo ""'';
         interval = 30;
         label-foreground = "\${colors.green}";
       };
@@ -345,11 +345,11 @@
         type = "internal/cpu";
         interval = 5;
         format = "<label>";
-        label = " %percentage%%";
+        label = "%{T2}%{T-} %percentage%%";
         label-foreground = "\${colors.foreground}";
         warn-percentage = 80;
         format-warn = "<label-warn>";
-        label-warn = " %percentage%%";
+        label-warn = "%{T2}%{T-} %percentage%%";
         label-warn-foreground = "\${colors.alert}";
       };
 
@@ -358,11 +358,11 @@
         type = "internal/memory";
         interval = 10;
         format = "<label>";
-        label = " %percentage_used%%";
+        label = "%{T2}%{T-} %percentage_used%%";
         label-foreground = "\${colors.foreground}";
         warn-percentage = 90;
         format-warn = "<label-warn>";
-        label-warn = " %percentage_used%%";
+        label-warn = "%{T2}%{T-} %percentage_used%%";
         label-warn-foreground = "\${colors.alert}";
       };
 
@@ -375,15 +375,15 @@
         poll-interval = 10;
 
         format-charging = "<label-charging>";
-        label-charging = " %percentage%%";
+        label-charging = "%{T2}%{T-} %percentage%%";
         label-charging-foreground = "\${colors.green}";
 
         format-discharging = "<label-discharging>";
-        label-discharging = " %percentage%%";
+        label-discharging = "%{T2}%{T-} %percentage%%";
         label-discharging-foreground = "\${colors.warning}";
 
         format-full = "<label-full>";
-        label-full = " %percentage%%";
+        label-full = "%{T2}%{T-} %percentage%%";
         label-full-foreground = "\${colors.green}";
       };
 
@@ -392,10 +392,10 @@
         type = "internal/pulseaudio";
         interval = 5;
         format-volume = "<label-volume>";
-        label-volume = " %percentage%%";
+        label-volume = "%{T2}%{T-} %percentage%%";
         label-volume-foreground = "\${colors.foreground}";
         format-muted = "<label-muted>";
-        label-muted = " muted";
+        label-muted = "%{T2}%{T-} muted";
         label-muted-foreground = "\${colors.foreground-alt}";
         click-right = "pavucontrol";
       };
@@ -405,7 +405,7 @@
         type = "custom/script";
         exec = "TZ=UTC /usr/bin/date +'%Y-%m-%d %H:%M:%S %Z'";
         interval = 1;
-        label = " %output%";
+        label = "%{T2}%{T-} %output%";
         label-foreground = "\${colors.violet}";
       };
 
@@ -415,7 +415,7 @@
         interval = 1;
         date = "%Y-%m-%d";
         time = "%H:%M:%S %Z";
-        label = " %date% %time%";
+        label = "%{T2}%{T-} %date% %time%";
         label-foreground = "\${colors.primary}";
       };
 
