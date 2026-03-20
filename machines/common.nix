@@ -100,6 +100,8 @@
       plugin = [
         "@opencode-ai/plugin"
         "oh-my-opencode"
+        # https://github.com/shahidshabbir-se/opencode-anthropic-oauth/tree/master
+        "opencode-anthropic-oauth"
       ];
     };
   };
