@@ -5,13 +5,13 @@
       "model": "opencode-go/kimi-k2.5"
     },
     "oracle": {
-      "model": "opencode-go/minimax-m2.5"
+      "model": "opencode-go/kimi-k2.5"
     },
     "explore": {
       "model": "opencode-go/minimax-m2.5"
     },
     "librarian": {
-      "model": "opencode-go/big-pickle"
+      "model": "opencode-go/glm-5"
     },
     "frontend-ui-ux-engineer": {
       "model": "opencode-go/kimi-k2.5"
@@ -23,16 +23,16 @@
       "model": "opencode-go/kimi-k2.5"
     },
     "metis": {
-      "model": "opencode-go/minimax-m2.5"
+      "model": "opencode-go/kimi-k2.5"
     },
     "momus": {
-      "model": "opencode-go/minimax-m2.5"
+      "model": "opencode-go/kimi-k2.5"
     },
     "sisyphus-junior": {
       "model": "opencode-go/minimax-m2.5"
     },
     "prometheus": {
-      "model": "opencode-go/minimax-m2.5"
+      "model": "opencode-go/kimi-k2.5"
     },
     "atlas": {
       "model": "opencode-go/minimax-m2.5"
