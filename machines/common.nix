@@ -443,28 +443,10 @@
       PATH="${pkgs.procps}/bin:${pkgs.coreutils}/bin:${pkgs.iproute2}/bin:${pkgs.i3}/bin:${pkgs.gnugrep}/bin:$PATH"
       export PATH
 
-      launch_bars() {
-        timeout=10
-        while [ -z "$I3SOCK" ] && [ $timeout -gt 0 ]; do
-          export I3SOCK=$(${pkgs.i3}/bin/i3 --get-socketpath 2>/dev/null || echo "")
-          ${pkgs.coreutils}/bin/sleep 0.5
-          timeout=$((timeout - 1))
-        done
-        [ -n "$I3SOCK" ] && export I3SOCK
-
-        ${pkgs.procps}/bin/killall -q polybar || true
-        while ${pkgs.procps}/bin/pgrep -u $UID -x polybar >/dev/null; do ${pkgs.coreutils}/bin/sleep 0.5; done
-        for m in $(${polybarPkg}/bin/polybar --list-monitors 2>/dev/null | ${pkgs.coreutils}/bin/cut -d: -f1); do
-          MONITOR=$m ${polybarPkg}/bin/polybar top &
-        done
-      }
-
-      ${pkgs.coreutils}/bin/sleep 2
-      launch_bars
-
-      ${pkgs.i3}/bin/i3-msg -t subscribe -m '["output"]' 2>/dev/null | while read -r line; do
-        launch_bars
-      done &
+      killall -q polybar
+      for m in $(polybar --list-monitors | cut -d: -f1); do
+        MONITOR="$m" polybar top &
+      done
     '';
   };
 
