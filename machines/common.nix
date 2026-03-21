@@ -1,5 +1,5 @@
 # Common Home Manager configuration shared across all machines
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-brave, ... }:
 
 {
   imports = [ ./i3.nix ];
@@ -52,6 +52,14 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  programs.brave = {
+    enable = true;
+    package = pkgs-brave.brave;
+    extensions = [
+      { id = "aeblfdkhhhdcdjpifhhbdiojplfjncoa"; } # 1Password
+    ];
+  };
 
   programs.bun.enable = true;
 

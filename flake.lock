@@ -36,10 +36,27 @@
         "type": "github"
       }
     },
+    "nixpkgs-brave": {
+      "locked": {
+        "lastModified": 1772615108,
+        "narHash": "sha256-lC0KbklwgeSqS+sTkaYpnSYr/HDeVMzYUZqV/dT31Lo=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "0c39f3b5a9a234421d4ad43ab9c7cf64840172d0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "0c39f3b5a9a234421d4ad43ab9c7cf64840172d0",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-brave": "nixpkgs-brave"
       }
     }
   },
