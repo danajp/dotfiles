@@ -1,7 +1,23 @@
 # i3 Window Manager configuration (vanilla i3, migrated from Regolith)
 { config, pkgs, lib, ... }:
 
+let
+  rofi-power-menu = pkgs.writeShellScriptBin "rofi-power-menu" ''
+    options="Lock\nLogout\nSuspend\nReboot\nPower Off"
+    chosen=$(echo -e "$options" | ${pkgs.rofi}/bin/rofi -dmenu -i -p "Power" -theme power-menu -mesg "Session")
+
+    case "$chosen" in
+      Lock)      /bin/i3lock ;;
+      Logout)    ${pkgs.i3}/bin/i3-msg exit ;;
+      Suspend)   systemctl suspend ;;
+      Reboot)    systemctl reboot ;;
+      "Power Off") systemctl poweroff ;;
+    esac
+  '';
+in
 {
+  home.packages = [ rofi-power-menu ];
+
   # Enable xsession for display manager integration
   xsession = {
     enable = true;
@@ -306,11 +322,9 @@
           "${mod}+Mod1+q" = "exec --no-startup-id kill -9 $(xdotool getwindowfocus getwindowpid)";
           "${mod}+Shift+c" = "reload";
 
-          "${mod}+Ctrl+r" = "restart";
-          "${mod}+Shift+e" = "exec /usr/bin/gnome-session-quit --logout";
-          "${mod}+Shift+b" = "exec /usr/bin/gnome-session-quit --reboot";
-          "${mod}+Shift+p" = "exec /usr/bin/gnome-session-quit --power-off";
-          "${mod}+Escape" = "exec dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock";
+          "${mod}+Shift+r" = "restart";
+          "${mod}+Shift+e" = "exec --no-startup-id rofi-power-menu";
+          "${mod}+Escape" = "exec --no-startup-id loginctl lock-session";
           "${mod}+Shift+s" = "exec systemctl suspend";
 
           "${mod}+Shift+n" = "exec --no-startup-id /usr/bin/nautilus --new-window";

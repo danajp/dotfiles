@@ -142,6 +142,7 @@
   xdg.configFile = {
     # Rofi solarized-dark theme
     "rofi/solarized-dark.rasi".source = ../dot/config/rofi/solarized-dark.rasi;
+    "rofi/power-menu.rasi".source = ../dot/config/rofi/power-menu.rasi;
   };
 
   programs.starship = {
