@@ -12,9 +12,9 @@ in
 
   # Machine-specific i3 workspace output assignments and display config
   xsession.windowManager.i3.extraConfig = ''
-    # TODO: Set display resolutions and positions for Framework
-    # exec --no-startup-id xrandr --output ${internalMonitor} --primary --mode 2256x1504 --pos 0x0
-    # exec --no-startup-id xrandr --output ${externalMonitor} --mode 2560x1440 --pos 2256x0
+    # Set display resolutions/positions
+    exec --no-startup-id xrandr --output ${internalMonitor} --primary --mode 1920x1200 --right-of ${externalMonitor}
+    exec --no-startup-id xrandr --output ${externalMonitor} --mode 2560x1440 --pos 0x0
 
     # Workspace output assignments
     workspace 1 output ${internalMonitor}
