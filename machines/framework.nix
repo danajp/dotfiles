@@ -27,6 +27,9 @@ in
     workspace 8 output ${externalMonitor}
     workspace 9 output ${externalMonitor}
     workspace 10 output ${externalMonitor}
+
+    # for fingerprint reader
+    exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
   '';
 
   # Machine-specific oh-my-opencode config
