@@ -7,7 +7,7 @@ let
     chosen=$(echo -e "$options" | ${pkgs.rofi}/bin/rofi -dmenu -i -p "Power" -theme power-menu -mesg "Session")
 
     case "$chosen" in
-      Lock)      /bin/i3lock ;;
+      Lock)      /bin/i3lock -c 000000 ;;
       Logout)    ${pkgs.i3}/bin/i3-msg exit ;;
       Suspend)   systemctl suspend ;;
       Reboot)    systemctl reboot ;;
@@ -320,7 +320,6 @@ in
           # Session management
           "${mod}+Shift+q" = "kill";
           "${mod}+Mod1+q" = "exec --no-startup-id kill -9 $(xdotool getwindowfocus getwindowpid)";
-          "${mod}+Shift+c" = "reload";
 
           "${mod}+Shift+r" = "restart";
           "${mod}+Shift+e" = "exec --no-startup-id rofi-power-menu";
