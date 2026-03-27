@@ -2,6 +2,8 @@
 { config, pkgs, lib, ... }:
 
 let
+  volume-control = import ./volume.nix { inherit pkgs; };
+
   rofi-power-menu = pkgs.writeShellScriptBin "rofi-power-menu" ''
     options="Lock\nLogout\nSuspend\nReboot\nPower Off"
     chosen=$(echo -e "$options" | ${pkgs.rofi}/bin/rofi -dmenu -i -p "Power" -theme power-menu -mesg "Session")
@@ -16,7 +18,7 @@ let
   '';
 in
 {
-  home.packages = [ rofi-power-menu ];
+  home.packages = [ rofi-power-menu volume-control ];
 
   # Enable xsession for display manager integration
   xsession = {
@@ -329,9 +331,9 @@ in
           "${mod}+Shift+n" = "exec --no-startup-id /usr/bin/nautilus --new-window";
 
           # Volume keys
-          "XF86AudioRaiseVolume" = "exec --no-startup-id pamixer -i 5";
-          "XF86AudioLowerVolume" = "exec --no-startup-id pamixer -d 5";
-          "XF86AudioMute" = "exec --no-startup-id pamixer -t";
+          "XF86AudioRaiseVolume" = "exec --no-startup-id volume up";
+          "XF86AudioLowerVolume" = "exec --no-startup-id volume down";
+          "XF86AudioMute" = "exec --no-startup-id volume toggle-mute";
 
           # Brightness keys
           "XF86MonBrightnessUp" = "exec --no-startup-id brightnessctl set +10%";
