@@ -27,3 +27,22 @@ sudo apparmor_parser -r /etc/apparmor.d/brave-nix
 
 This only needs to be done once per machine. The `*` glob matches any Nix store hash, so it survives version updates.
 
+## Signal Desktop (AppArmor sandbox)
+
+Signal Desktop is an Electron app that has the same AppArmor sandbox issue as Brave. Create a profile to allow user namespaces:
+
+```bash
+sudo tee /etc/apparmor.d/signal-desktop-nix << 'EOF'
+abi <abi/4.0>,
+include <tunables/global>
+
+profile signal-desktop-nix /nix/store/*/bin/signal-desktop flags=(unconfined) {
+  userns,
+  include if exists <local/signal-desktop-nix>
+}
+EOF
+sudo apparmor_parser -r /etc/apparmor.d/signal-desktop-nix
+```
+
+This follows the same pattern as the Brave fix above.
+

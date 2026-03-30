@@ -28,6 +28,8 @@
     pkgs.asdf-vm
     pkgs.devenv
     pkgs.pamixer
+    pkgs.libsecret  # Required for Signal Desktop to access system keyring
+    pkgs.signal-desktop
   ];
 
   # Home Manager can also manage your environment variables through
