@@ -25,7 +25,7 @@ in
             enable = true;
             primary = true;
             position = "0x0";
-            mode = "1920x1080";
+            mode = "1920x1200";
           };
         };
       };
@@ -39,7 +39,7 @@ in
             enable = true;
             primary = true;
             position = "2560x0";
-            mode = "1920x1080";
+            mode = "1920x1200";
           };
           "${externalMonitor}" = {
             enable = true;
