@@ -170,6 +170,11 @@ in
           always = true;
           notification = true;
         }
+        {
+          command = "feh --bg-fill ${../assets/akash-mehrotra-2.jpg}";
+          always = true;
+          notification = false;
+        }
       ];
 
       # Keybindings

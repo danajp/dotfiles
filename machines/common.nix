@@ -30,6 +30,7 @@
     pkgs.pamixer
     pkgs.libsecret  # Required for Signal Desktop to access system keyring
     pkgs.signal-desktop
+    pkgs.feh
   ];
 
   # Home Manager can also manage your environment variables through
