@@ -453,6 +453,14 @@
     '';
   };
 
+  systemd.user.services.polybar = {
+    # Make sure polybar restarts quickly
+    Service = {
+      KillSignal = "SIGTERM";
+      TimeoutStopSec = 1;
+    };
+  };
+
   # Dark GTK theme
   gtk = {
     enable = true;
