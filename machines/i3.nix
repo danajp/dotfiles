@@ -314,7 +314,7 @@ in
           "${mod}+Shift+plus" = "gaps inner current plus 12";
 
           # Launchers
-          "${mod}+Return" = "exec --no-startup-id systemd-run --user --scope alacritty";
+          "${mod}+Return" = "exec --no-startup-id systemd-run --user --scope ghostty";
           "${mod}+Shift+Return" = "exec --no-startup-id systemd-run --user --scope gtk-launch $(xdg-settings get default-web-browser)";
 
           # Rofi launchers
