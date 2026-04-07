@@ -71,4 +71,29 @@ in
 
   # Machine-specific oh-my-opencode config
   xdg.configFile."opencode/oh-my-opencode.json".source = ../dot/config/opencode/oh-my-opencode-thinkpad.json;
+
+  # Keyboard remapping (ThinkPad T460s only)
+  home.keyboard.options = [ "caps:ctrl_modifier" ];
+
+  # Systemd service to remap PrintScreen after setxkbmap.service runs
+  # Uses BindsTo to restart whenever setxkbmap restarts (triggered by xplugd)
+  systemd.user.services.xmodmap-printscreen = {
+    Unit = {
+      Description = "Remap PrintScreen to Super_R";
+      After = [ "setxkbmap.service" "graphical-session-pre.target" ];
+      # Restart whenever setxkbmap restarts (xplugd triggers this on hotplug)
+      BindsTo = [ "setxkbmap.service" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      # Add delay to let i3/xkbcomp finish before remapping
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
+      ExecStart = "${pkgs.xorg.xmodmap}/bin/xmodmap -e 'keycode 107 = Super_R'";
+      RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
 }
