@@ -46,3 +46,29 @@ sudo apparmor_parser -r /etc/apparmor.d/signal-desktop-nix
 
 This follows the same pattern as the Brave fix above.
 
+## ThinkPad T460s Suspend/Resume Fix
+
+The T460s (Skylake/Intel HD 520) may fail to resume from suspend, requiring a hard power-off. This is typically caused by Intel graphics power management.
+
+**Fix:** Add kernel parameters to `/etc/default/grub`:
+
+```bash
+sudo nano /etc/default/grub
+
+# Set GRUB_CMDLINE_LINUX_DEFAULT to:
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash i915.enable_dc=0 intel_idle.max_cstate=4"
+
+sudo update-grub
+sudo reboot
+```
+
+**Parameters explained:**
+- `quiet splash` - Shows graphical boot logo (remove `splash` to see boot text)
+- `i915.enable_dc=0` - Disables Intel graphics display power management (causes resume hangs)
+- `intel_idle.max_cstate=4` - Limits CPU idle states to prevent deep sleep issues
+
+**Optional:** If you have an NVMe drive (check with `lsblk -d -o NAME,TRAN`) and still have issues, also add:
+- `nvme.noacpi=1` - Disables NVMe native ACPI power management
+
+**Note:** This is system-level configuration outside Home Manager's scope.
+
