@@ -66,6 +66,14 @@
 
   programs.bun.enable = true;
 
+  programs.gh = {
+    enable = true;
+    settings = {
+      git_protocol = "ssh";
+      browser = "xdg-open";
+    };
+  };
+
   programs.git = {
     enable = true;
     settings = {
