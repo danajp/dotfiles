@@ -72,4 +72,11 @@ in
 
   # Machine-specific oh-my-opencode config
   xdg.configFile."opencode/oh-my-opencode.json".source = ../dot/config/opencode/oh-my-opencode-framework.json;
+
+  # Atlassian Jira MCP server (OAuth-based, via mcp.atlassian.com)
+  programs.opencode.settings.mcp.atlassian = {
+    type = "remote";
+    url = "https://mcp.atlassian.com/v1/mcp";
+    oauth = {};
+  };
 }
