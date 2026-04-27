@@ -31,6 +31,36 @@
     pkgs.libsecret  # Required for Signal Desktop to access system keyring
     pkgs.signal-desktop
     pkgs.feh
+
+    (pkgs.writeShellScriptBin "toggle-colors" ''
+      set -eo pipefail
+      [[ -n "$DEBUG" ]] && set -x
+
+      set_emacs() {
+        local value="$1"
+        emacsclient -e "(color-theme-sanityinc-solarized-''${value})" >/dev/null 2>&1 || true
+      }
+
+      set_system_color_scheme() {
+        local value="$1"
+        if [[ "$value" == dark ]]; then
+          gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+          gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+        else
+          gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+          gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+        fi
+      }
+
+      target="$1"
+      case "$target" in
+        dark | light) ;;
+        *) echo "Usage: toggle-colors <dark|light>"; exit 1 ;;
+      esac
+
+      set_system_color_scheme "$target"
+      set_emacs "$target"
+    '')
   ];
 
   # Home Manager can also manage your environment variables through
@@ -154,6 +184,13 @@
     # Rofi solarized-dark theme
     "rofi/solarized-dark.rasi".source = ../dot/config/rofi/solarized-dark.rasi;
     "rofi/power-menu.rasi".source = ../dot/config/rofi/power-menu.rasi;
+
+    # XDG desktop portal: use the GTK backend for Settings (color-scheme)
+    # so that Brave, Slack, and Ghostty follow gsettings color-scheme changes on i3
+    "xdg-desktop-portal/portals.conf".text = ''
+      [preferred]
+      default=gtk
+    '';
   };
 
   programs.starship = {
@@ -200,8 +237,7 @@
   programs.ghostty = {
     enable = true;
     settings = {
-      #theme = "dark:iTerm2 Solarized Dark,light:iTerm2 Solarized Light";
-      theme = "iTerm2 Solarized Dark";
+      theme = "dark:iTerm2 Solarized Dark,light:iTerm2 Solarized Light";
       font-family = "Inconsolata";
       font-size = 12.0;
       window-decoration = "none";
