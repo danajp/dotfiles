@@ -65,6 +65,25 @@ sudo apparmor_parser -r /etc/apparmor.d/1password-nix
 
 This follows the same pattern as the Brave and Signal fixes above.
 
+## Slack (AppArmor sandbox)
+
+Slack is an Electron app that has the same AppArmor sandbox issue as Brave, Signal, and 1Password. Create a profile to allow user namespaces:
+
+```bash
+sudo tee /etc/apparmor.d/slack-nix << 'EOF'
+abi <abi/4.0>,
+include <tunables/global>
+
+profile slack-nix /nix/store/*/bin/slack flags=(unconfined) {
+  userns,
+  include if exists <local/slack-nix>
+}
+EOF
+sudo apparmor_parser -r /etc/apparmor.d/slack-nix
+```
+
+This follows the same pattern as the Brave, Signal, and 1Password fixes above.
+
 ## ThinkPad T460s Suspend/Resume Fix
 
 The T460s (Skylake/Intel HD 520) may fail to resume from suspend, requiring a hard power-off. This is typically caused by Intel graphics power management.

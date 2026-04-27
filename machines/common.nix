@@ -63,6 +63,7 @@
       set_emacs "$target"
     '')
     pkgs._1password-gui
+    pkgs.slack
   ];
 
   # Home Manager can also manage your environment variables through
