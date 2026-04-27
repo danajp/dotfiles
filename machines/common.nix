@@ -511,6 +511,8 @@
   # Dark GTK theme
   gtk = {
     enable = true;
+    # Use null to let gsettings control GTK4 theming (via toggle-colors script)
+    gtk4.theme = null;
     theme = {
       name = "Adwaita-dark";
       package = pkgs.adwaita-icon-theme;
