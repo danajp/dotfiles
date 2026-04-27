@@ -27,6 +27,8 @@
   home.packages = [
     pkgs.asdf-vm
     pkgs.devenv
+    pkgs.emacs
+    pkgs.emacs-lsp-booster
     pkgs.pamixer
     pkgs.libsecret  # Required for Signal Desktop to access system keyring
     pkgs.signal-desktop
