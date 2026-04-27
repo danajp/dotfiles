@@ -62,6 +62,7 @@
       set_system_color_scheme "$target"
       set_emacs "$target"
     '')
+    pkgs._1password-gui
   ];
 
   # Home Manager can also manage your environment variables through
