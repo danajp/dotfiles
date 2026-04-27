@@ -1,3 +1,0 @@
-[network]
-command=~/.config/regolith/i3xrocks/bin/network
-interval=10

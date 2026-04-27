@@ -1,3 +1,0 @@
-[vpn]
-command=~/.config/regolith/i3xrocks/bin/vpn
-interval=10

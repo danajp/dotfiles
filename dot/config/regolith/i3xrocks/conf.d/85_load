@@ -1,4 +1,0 @@
-[load]
-interval=5
-command=~/.config/regolith/i3xrocks/bin/load
-
