@@ -31,6 +31,7 @@
     pkgs.libsecret  # Required for Signal Desktop to access system keyring
     pkgs.signal-desktop
     pkgs.feh
+    pkgs.brightnessctl
 
     (pkgs.writeShellScriptBin "toggle-colors" ''
       set -eo pipefail
