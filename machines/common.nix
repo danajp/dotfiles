@@ -30,6 +30,7 @@
     pkgs.emacs
     pkgs.emacs-lsp-booster
     pkgs.pamixer
+    pkgs.powerline
     pkgs.libsecret  # Required for Signal Desktop to access system keyring
     pkgs.signal-desktop
     pkgs.feh
@@ -174,7 +175,7 @@
         plugin = power-theme;
         extraConfig = ''
           run-shell "powerline-daemon -q"
-          source /usr/share/powerline/bindings/tmux/powerline.conf
+          source ${pkgs.powerline}/share/tmux/powerline.conf
         '';
       }
     ];
