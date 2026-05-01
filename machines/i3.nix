@@ -14,7 +14,7 @@ let
     chosen=$(echo -e "$options" | ${pkgs.rofi}/bin/rofi -dmenu -i -p "Power" -theme power-menu -mesg "Session")
 
     case "$chosen" in
-      Lock)      ${pkgs.i3lock}/bin/i3lock -c 000000 ;;
+      Lock)      /bin/i3lock -c 000000 ;;
       Logout)    ${pkgs.i3}/bin/i3-msg exit ;;
       Suspend)   systemctl suspend ;;
       Reboot)    systemctl reboot ;;
@@ -169,7 +169,11 @@ in
           notification = false;
         }
         {
-          command = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          # System polkit agent (NOT the Nix package): the system's
+          # auth chain (PAM, fingerprint reader, etc.) is wired to
+          # /usr/lib/policykit-1-gnome/. A Nix-store agent would not
+          # have access to system fingerprint device configuration.
+          command = "/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1";
           always = false;
           notification = false;
         }

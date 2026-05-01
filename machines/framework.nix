@@ -1,5 +1,5 @@
 # Machine-specific configuration for framework
-{ pkgs, ... }:
+{ ... }:
 
 let
   # Monitor configuration for framework
@@ -61,8 +61,10 @@ in
   };
 
   xsession.windowManager.i3.extraConfig = ''
-    # for fingerprint reader
-    exec --no-startup-id ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1
+    # System polkit agent for fingerprint reader. MUST use the system
+    # path (not pkgs.polkit_gnome) because the fingerprint device and
+    # PAM stack are configured to authenticate via /usr/lib/policykit-1-gnome/.
+    exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
   '';
 
   # Machine-specific oh-my-opencode config
