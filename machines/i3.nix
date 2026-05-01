@@ -3,6 +3,7 @@
 
 let
   palette = import ../lib/colors.nix;
+  workspaces = import ../lib/i3-workspaces.nix { inherit lib; };
 
   volume-control = import ./volume.nix { inherit pkgs; };
 
@@ -210,16 +211,8 @@ in
           "${mod}+9" = "workspace number 9";
           "${mod}+0" = "workspace number 10";
 
-          # Workspaces 11-19 (with Ctrl)
-          "${mod}+Ctrl+1" = "workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
-          "${mod}+Ctrl+2" = "workspace number \"12:<span> </span>12 <span foreground='#859900'></span><span> </span>\"";
-          "${mod}+Ctrl+3" = "workspace number \"13:<span> </span>13 <span foreground='#b58900'></span><span> </span>\"";
-          "${mod}+Ctrl+4" = "workspace number \"14:<span> </span>14 <span foreground='#cb4b16'></span><span> </span>\"";
-          "${mod}+Ctrl+5" = "workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"";
-          "${mod}+Ctrl+6" = "workspace number \"16:<span> </span>16 <span foreground='#d33682'></span><span> </span>\"";
-          "${mod}+Ctrl+7" = "workspace number \"17:<span> </span>17 <span foreground='#6c71c4'></span><span> </span>\"";
-          "${mod}+Ctrl+8" = "workspace number \"18:<span> </span>18 <span foreground='#586e75'></span><span> </span>\"";
-          "${mod}+Ctrl+9" = "workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
+          # Workspaces 11-19 (with Ctrl) are generated below via
+          # workspaces.mkExtBindings — see ../lib/i3-workspaces.nix.
 
           # Workspace navigation
           "${mod}+Tab" = "workspace next";
@@ -275,15 +268,6 @@ in
           "${mod}+Shift+9" = "move container to workspace number 9";
           "${mod}+Shift+0" = "move container to workspace number 10";
 
-          "${mod}+Shift+Ctrl+1" = "move container to workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+2" = "move container to workspace number \"12:<span> </span>12 <span foreground='#859900'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+3" = "move container to workspace number \"13:<span> </span>13 <span foreground='#b58900'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+4" = "move container to workspace number \"14:<span> </span>14 <span foreground='#cb4b16'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+5" = "move container to workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+6" = "move container to workspace number \"16:<span> </span>16 <span foreground='#d33682'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+7" = "move container to workspace number \"17:<span> </span>17 <span foreground='#6c71c4'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+8" = "move container to workspace number \"18:<span> </span>18 <span foreground='#586e75'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+9" = "move container to workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
 
           # Carry containers to workspaces (move + switch)
           "${mod}+Alt+1" = "move container to workspace number 1; workspace number 1";
@@ -297,15 +281,6 @@ in
           "${mod}+Alt+9" = "move container to workspace number 9; workspace number 9";
           "${mod}+Alt+0" = "move container to workspace number 10; workspace number 10";
 
-          "${mod}+Alt+Ctrl+1" = "move container to workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"; workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+2" = "move container to workspace number \"12:<span> </span>12 <span foreground='#859900'></span><span> </span>\"; workspace number \"12:<span> </span>12 <span foreground='#859900'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+3" = "move container to workspace number \"13:<span> </span>13 <span foreground='#b58900'></span><span> </span>\"; workspace number \"13:<span> </span>13 <span foreground='#b58900'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+4" = "move container to workspace number \"14:<span> </span>14 <span foreground='#cb4b16'></span><span> </span>\"; workspace number \"14:<span> </span>14 <span foreground='#cb4b16'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+5" = "move container to workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"; workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+6" = "move container to workspace number \"16:<span> </span>16 <span foreground='#d33682'></span><span> </span>\"; workspace number \"16:<span> </span>16 <span foreground='#d33682'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+7" = "move container to workspace number \"17:<span> </span>17 <span foreground='#6c71c4'></span><span> </span>\"; workspace number \"17:<span> </span>17 <span foreground='#6c71c4'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+8" = "move container to workspace number \"18:<span> </span>18 <span foreground='#586e75'></span><span> </span>\"; workspace number \"18:<span> </span>18 <span foreground='#586e75'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+9" = "move container to workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"; workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
 
           # Resize mode
           "${mod}+r" = "mode resize";
@@ -356,7 +331,13 @@ in
           # Custom splits
           "${mod}+Shift+v" = "split vertical";
           "${mod}+Shift+h" = "split horizontal";
-        };
+        }
+        # Workspaces 11-19 (with Ctrl): switch to workspace
+        // workspaces.mkExtBindings "${mod}+Ctrl+" "workspace number"
+        # Workspaces 11-19 (with Shift+Ctrl): move container to workspace
+        // workspaces.mkExtBindings "${mod}+Shift+Ctrl+" "move container to workspace number"
+        # Workspaces 11-19 (with Alt+Ctrl): carry container — move + switch
+        // workspaces.mkCarryBindings "${mod}+Alt+Ctrl+";
 
       # Resize mode
       modes = {

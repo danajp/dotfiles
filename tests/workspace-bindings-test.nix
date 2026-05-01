@@ -51,12 +51,12 @@ in
 
   testExtLabel11 = {
     expr = ws.mkExtLabel 11 colors.cyan;
-    expected = "\"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
+    expected = "\"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
   };
 
   testExtLabel19 = {
     expr = ws.mkExtLabel 19 colors.blue;
-    expected = "\"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
+    expected = "\"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
   };
 
   # ── mkExtBindings ────────────────────────────────────────────────
@@ -69,27 +69,27 @@ in
   # Spot-check: Mod4+Ctrl+1 should map to workspace 11
   testExtBindingMod4Ctrl1 = {
     expr = (ws.mkExtBindings "Mod4+Ctrl+" "workspace number")."Mod4+Ctrl+1";
-    expected = "workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
+    expected = "workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
   };
 
   # Spot-check: Mod4+Ctrl+9 should map to workspace 19
   testExtBindingMod4Ctrl9 = {
     expr = (ws.mkExtBindings "Mod4+Ctrl+" "workspace number")."Mod4+Ctrl+9";
-    expected = "workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
+    expected = "workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
   };
 
   # Move-container variant
   testMoveContainerBinding = {
     expr =
       (ws.mkExtBindings "Mod4+Shift+Ctrl+" "move container to workspace number")."Mod4+Shift+Ctrl+5";
-    expected = "move container to workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"";
+    expected = "move container to workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"";
   };
 
   # ── mkCarryBindings (move + switch) ──────────────────────────────
 
   testCarryBinding = {
     expr = (ws.mkCarryBindings "Mod4+Alt+Ctrl+")."Mod4+Alt+Ctrl+1";
-    expected = "move container to workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"; workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
+    expected = "move container to workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"; workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
   };
 
   # ── mkWorkspaceOutputs ───────────────────────────────────────────

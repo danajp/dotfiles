@@ -33,7 +33,7 @@ let
   #   => "\"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\""
   mkExtLabel =
     num: color:
-    "\"${toString num}:<span> </span>${toString num} <span foreground='${color}'></span><span> </span>\"";
+    "\"${toString num}:<span> </span>${toString num} <span foreground='${color}'></span><span> </span>\"";
 
   # All extended workspaces as a list of attrsets {num, color, label}.
   # Workspaces are numbered 11..19.
