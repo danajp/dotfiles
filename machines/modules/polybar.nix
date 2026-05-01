@@ -5,6 +5,9 @@
 # install: systemctl --user disable polybar
 { pkgs, ... }:
 
+let
+  palette = import ../../lib/colors.nix;
+in
 {
   services.polybar = {
     # NOTE: Systemd service manually disabled. Polybar is started by i3 instead.
@@ -15,28 +18,20 @@
       pulseSupport = true;
     };
 
-    # Solarized Dark palette
-    # base03  #002b36  base02  #073642
-    # base01  #586e75  base00  #657b83
-    # base0   #839496  base1   #93a1a1
-    # yellow  #b58900  orange  #cb4b16
-    # red     #dc322f  magenta #d33682
-    # violet  #6c71c4  blue    #268bd2
-    # cyan    #2aa198  green   #859900
-
+    # Solarized Dark palette pulled from ../../lib/colors.nix.
     config = {
       "colors" = {
-        background = "#002b36";
-        background-alt = "#073642";
-        foreground = "#839496";
-        foreground-alt = "#586e75";
-        primary = "#268bd2";
-        alert = "#dc322f";
-        warning = "#b58900";
-        green = "#859900";
-        cyan = "#2aa198";
-        magenta = "#d33682";
-        violet = "#6c71c4";
+        background = palette.base03;
+        background-alt = palette.base02;
+        foreground = palette.base0;
+        foreground-alt = palette.base01;
+        primary = palette.blue;
+        alert = palette.red;
+        warning = palette.yellow;
+        green = palette.green;
+        cyan = palette.cyan;
+        magenta = palette.magenta;
+        violet = palette.violet;
       };
 
       "bar/top" = {

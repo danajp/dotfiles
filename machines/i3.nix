@@ -2,6 +2,8 @@
 { config, pkgs, lib, ... }:
 
 let
+  palette = import ../lib/colors.nix;
+
   volume-control = import ./volume.nix { inherit pkgs; };
 
   rofi-power-menu = pkgs.writeShellScriptBin "rofi-power-menu" ''
@@ -49,35 +51,35 @@ in
         size = 12.0;
       };
 
-      # Solarized Dark colors
+      # Solarized Dark colors (from ../lib/colors.nix)
       colors = {
         focused = {
-          border = "#002b36";
-          background = "#586e75";
-          text = "#fdf6e3";
-          indicator = "#dc322f";
-          childBorder = "#b58900";
+          border = palette.base03;
+          background = palette.base01;
+          text = palette.base3;
+          indicator = palette.red;
+          childBorder = palette.yellow;
         };
         focusedInactive = {
-          border = "#002b36";
-          background = "#073642";
-          text = "#839496";
-          indicator = "#073642";
-          childBorder = "#002b36";
+          border = palette.base03;
+          background = palette.base02;
+          text = palette.base0;
+          indicator = palette.base02;
+          childBorder = palette.base03;
         };
         unfocused = {
-          border = "#002b36";
-          background = "#073642";
-          text = "#839496";
-          indicator = "#073642";
-          childBorder = "#002b36";
+          border = palette.base03;
+          background = palette.base02;
+          text = palette.base0;
+          indicator = palette.base02;
+          childBorder = palette.base03;
         };
         urgent = {
-          border = "#002b36";
-          background = "#dc322f";
-          text = "#fdf6e3";
-          indicator = "#dc322f";
-          childBorder = "#002b36";
+          border = palette.base03;
+          background = palette.red;
+          text = palette.base3;
+          indicator = palette.red;
+          childBorder = palette.base03;
         };
       };
 
