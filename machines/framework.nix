@@ -1,5 +1,5 @@
 # Machine-specific configuration for framework
-{ ... }:
+_:
 
 let
   # Monitor configuration for framework
