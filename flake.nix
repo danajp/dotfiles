@@ -17,23 +17,36 @@
     { nixpkgs, home-manager, nixpkgs-brave, ... }:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      extraSpecialArgs = {
-        pkgs-brave = import nixpkgs-brave {
-          inherit system;
-          config.allowUnfree = true;
-        };
+
+      # nixpkgs with an overlay that pins Brave to a known-good revision.
+      # Browser updates routinely break on nixos-unstable; we hold the
+      # version at nixpkgs-brave's commit instead. The overlay makes the
+      # pinned package available as plain `pkgs.brave`, no extra special
+      # arg threading required.
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [
+          (_final: _prev: {
+            brave = (import nixpkgs-brave {
+              inherit system;
+              config.allowUnfree = true;
+            }).brave;
+          })
+        ];
+      };
+
+      # Build a homeConfiguration for a host module under machines/.
+      # All hosts share pkgs; only the entry-point module differs.
+      mkHome = hostModule: home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ hostModule ];
       };
     in
     {
-      homeConfigurations."dana@thinkpad" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs extraSpecialArgs;
-        modules = [ ./machines/thinkpad.nix ];
-      };
-
-      homeConfigurations."dana@framework" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs extraSpecialArgs;
-        modules = [ ./machines/framework.nix ];
+      homeConfigurations = {
+        "dana@thinkpad"  = mkHome ./machines/thinkpad.nix;
+        "dana@framework" = mkHome ./machines/framework.nix;
       };
 
       # Pure-Nix unit tests for helper functions in lib/.
