@@ -26,6 +26,7 @@
   # environment.
   home.packages = [
     pkgs.asdf-vm
+    pkgs.copyq
     pkgs.devenv
     pkgs.emacs
     pkgs.emacs-lsp-booster
