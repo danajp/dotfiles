@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+# hm-snapshot: Capture the current home-manager build as a baseline snapshot.
+#
+# Usage:
+#   bin/hm-snapshot                  # snapshot all hosts (thinkpad + framework)
+#   bin/hm-snapshot thinkpad         # snapshot one host
+#
+# The snapshot is written to ./.hm-baseline/<host>/ and contains a copy of
+# every file home-manager would generate. Use `bin/hm-diff` afterwards to
+# compare a fresh build against this baseline.
+#
+# .hm-baseline/ is gitignored — these are local-machine artifacts.
+
+set -eo pipefail
+[[ -n "$DEBUG" ]] && set -x
+
+fatal() {
+  echo "hm-snapshot: $*" >&2
+  exit 1
+}
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+baseline_root="${repo_root}/.hm-baseline"
+
+snapshot_host() {
+  local host="$1"
+  local out="${baseline_root}/${host}"
+
+  # home-manager build writes ./result in cwd; do it in a scratch dir so we
+  # don't pollute the repo root.
+  local scratch
+  scratch="$(mktemp -d)"
+  # Files copied from /nix/store are read-only; chmod before rm.
+  trap 'chmod -R u+w "${scratch}" 2>/dev/null || true; rm -rf "${scratch}"' RETURN
+
+  echo "==> Building dana@${host}..."
+  ( cd "${scratch}" && \
+    home-manager build --flake "${repo_root}#dana@${host}" >/dev/null 2>&1 ) \
+    || fatal "build failed for ${host} (run \`home-manager build --flake ${repo_root}#dana@${host}\` to see the error)"
+
+  local result_link="${scratch}/result"
+  [[ -L "${result_link}" ]] || fatal "expected ${result_link} to be a symlink"
+
+  echo "==> Snapshotting to ${out}/"
+  if [[ -d "${out}" ]]; then
+    chmod -R u+w "${out}" 2>/dev/null || true
+    rm -rf "${out}"
+  fi
+  mkdir -p "${out}"
+
+  # Copy the entire home-files tree, dereferencing symlinks so we capture
+  # the actual content (the files in /nix/store) and not store paths that
+  # would diff trivially across rebuilds.
+  cp -rL "${result_link}/home-files/." "${out}/home-files/"
+
+  # Also record the activation script — it's where startup commands and
+  # service definitions land. Useful for catching unintended changes to
+  # systemd units etc.
+  cp -L "${result_link}/activate" "${out}/activate"
+
+  # Record the closure store path for high-level comparison via
+  # `nix store diff-closures`.
+  readlink -f "${result_link}" > "${out}/.store-path"
+
+  # Record the package list for a quick human-readable diff target.
+  if [[ -d "${result_link}/home-path" ]]; then
+    (cd "${result_link}/home-path" && find . -maxdepth 2 -type l \
+      | sort > "${out}/.package-list") || true
+  fi
+
+  echo "==> Snapshot for ${host} written to ${out}/"
+}
+
+main() {
+  if [[ ! -f "${repo_root}/flake.nix" ]]; then
+    fatal "must be run from a checkout containing flake.nix (got ${repo_root})"
+  fi
+
+  local hosts=()
+  if [[ $# -eq 0 ]]; then
+    hosts=(thinkpad framework)
+  else
+    hosts=("$@")
+  fi
+
+  mkdir -p "${baseline_root}"
+
+  for host in "${hosts[@]}"; do
+    snapshot_host "${host}"
+  done
+
+  echo
+  echo "Baseline snapshot complete. ${baseline_root}/ contains:"
+  ls -la "${baseline_root}/"
+  echo
+  echo "Next: make a refactor change, then run \`bin/hm-diff\` to verify"
+  echo "generated config files are byte-identical to this baseline."
+}
+
+main "$@"
