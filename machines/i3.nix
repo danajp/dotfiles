@@ -12,7 +12,7 @@ let
     chosen=$(echo -e "$options" | ${pkgs.rofi}/bin/rofi -dmenu -i -p "Power" -theme power-menu -mesg "Session")
 
     case "$chosen" in
-      Lock)      /bin/i3lock -c 000000 ;;
+      Lock)      ${pkgs.i3lock}/bin/i3lock -c 000000 ;;
       Logout)    ${pkgs.i3}/bin/i3-msg exit ;;
       Suspend)   systemctl suspend ;;
       Reboot)    systemctl reboot ;;
@@ -138,7 +138,7 @@ in
           notification = false;
         }
         {
-          command = "/usr/bin/nm-applet";
+          command = "${pkgs.networkmanagerapplet}/bin/nm-applet";
           always = false;
           notification = false;
         }
@@ -311,7 +311,7 @@ in
           "${mod}+Escape" = "exec --no-startup-id loginctl lock-session";
           "${mod}+Shift+s" = "exec systemctl suspend";
 
-          "${mod}+Shift+n" = "exec --no-startup-id /usr/bin/nautilus --new-window";
+          "${mod}+Shift+n" = "exec --no-startup-id ${pkgs.nautilus}/bin/nautilus --new-window";
 
           # Volume keys
           "XF86AudioRaiseVolume" = "exec --no-startup-id volume up";

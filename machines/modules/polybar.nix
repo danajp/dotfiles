@@ -119,17 +119,17 @@ in
       # Bluetooth (was: 30_bluetooth) - custom script
       "module/bluetooth" = {
         type = "custom/script";
-        exec = ''/usr/bin/bluetoothctl show 2>/dev/null | /usr/bin/grep -q "Powered: yes" && echo "%{T2}%{T-}" || echo ""'';
+        exec = ''${pkgs.bluez}/bin/bluetoothctl show 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q "Powered: yes" && echo "%{T2}%{T-}" || echo ""'';
         interval = 20;
         label-foreground = "\${colors.primary}";
-        click-left = "/usr/bin/bluetoothctl power on";
-        click-right = "/usr/bin/bluetoothctl power off";
+        click-left = "${pkgs.bluez}/bin/bluetoothctl power on";
+        click-right = "${pkgs.bluez}/bin/bluetoothctl power off";
       };
 
       # VPN (was: 40_nm-vpn) - custom script
       "module/vpn" = {
         type = "custom/script";
-        exec = ''/usr/bin/nmcli -t connection show --active 2>/dev/null | /usr/bin/grep -q vpn && echo "%{T2}%{T-} VPN" || echo ""'';
+        exec = ''${pkgs.networkmanager}/bin/nmcli -t connection show --active 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q vpn && echo "%{T2}%{T-} VPN" || echo ""'';
         interval = 30;
         label-foreground = "\${colors.green}";
       };
@@ -197,7 +197,7 @@ in
       # UTC time (was: 85_utc)
       "module/time-utc" = {
         type = "custom/script";
-        exec = "TZ=UTC /usr/bin/date +'%Y-%m-%d %H:%M:%S %Z'";
+        exec = "TZ=UTC ${pkgs.coreutils}/bin/date +'%Y-%m-%d %H:%M:%S %Z'";
         interval = 1;
         label = "%{T2}%{T-} %output%";
         label-foreground = "\${colors.violet}";

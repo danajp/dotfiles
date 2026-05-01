@@ -1,5 +1,5 @@
 # Machine-specific configuration for framework
-{ ... }:
+{ pkgs, ... }:
 
 let
   # Monitor configuration for framework
@@ -67,7 +67,7 @@ in
     workspace 10 output ${externalMonitor}
 
     # for fingerprint reader
-    exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+    exec --no-startup-id ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1
   '';
 
   # Machine-specific oh-my-opencode config
