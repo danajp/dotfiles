@@ -3,7 +3,7 @@
 # NOTE: Systemd service manually disabled. Polybar is started by i3
 # instead - see the `startup` block in i3.nix. Run once on a fresh
 # install: systemctl --user disable polybar
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   services.polybar = {
@@ -221,12 +221,7 @@
 
     };
 
-    script = let
-      polybarPkg = pkgs.polybar.override {
-        i3Support = true;
-        pulseSupport = true;
-      };
-    in ''
+    script = ''
       PATH="${pkgs.procps}/bin:${pkgs.coreutils}/bin:${pkgs.iproute2}/bin:${pkgs.i3}/bin:${pkgs.gnugrep}/bin:$PATH"
       export PATH
 

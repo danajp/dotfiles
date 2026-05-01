@@ -1,7 +1,7 @@
 # Brave browser, pinned to a specific nixpkgs revision via pkgs-brave.
 # The pin is necessary because Brave releases break frequently in
 # nixos-unstable; we hold at a known-good version.
-{ config, pkgs, pkgs-brave, ... }:
+{ pkgs-brave, ... }:
 
 {
   programs.brave = {

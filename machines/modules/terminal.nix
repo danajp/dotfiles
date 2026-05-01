@@ -1,5 +1,5 @@
 # Terminal emulator (ghostty) + application launcher (rofi)
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   programs.ghostty = {

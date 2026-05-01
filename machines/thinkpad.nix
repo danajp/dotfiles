@@ -1,5 +1,5 @@
 # Machine-specific configuration for thinkpad
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 let
   # Monitor configuration for thinkpad

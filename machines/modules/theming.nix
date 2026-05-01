@@ -4,7 +4,7 @@
 # consistent. The XDG portal is configured to use the GTK backend
 # so X11 apps (Brave, Slack, Ghostty) follow gsettings color-scheme
 # changes on i3 (where there's no built-in portal).
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Dark GTK theme

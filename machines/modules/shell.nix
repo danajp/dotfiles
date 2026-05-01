@@ -1,5 +1,5 @@
 # Shell environment: tmux multiplexer + starship prompt
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   programs.tmux = {

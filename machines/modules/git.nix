@@ -1,5 +1,5 @@
 # Git + GitHub CLI configuration
-{ config, pkgs, ... }:
+{ ... }:
 
 {
   programs.gh = {

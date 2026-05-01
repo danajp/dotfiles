@@ -21,13 +21,7 @@ in
   home.packages = [ rofi-power-menu volume-control ];
 
   # Enable xsession for display manager integration
-  xsession = {
-    enable = true;
-    # Number of seconds to wait after starting xsession before running extra commands
-    initExtra = '''';
-    # Script to run before window manager starts
-    profileExtra = '''';
-  };
+  xsession.enable = true;
 
   # Create a desktop entry for GDM
   xdg.dataFile."xsessions/i3-home-manager.desktop".text =
