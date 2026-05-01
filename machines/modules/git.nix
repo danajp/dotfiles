@@ -12,9 +12,11 @@ _:
 
   programs.git = {
     enable = true;
-    userName = "Dana Pieluszczak";
-    userEmail = "danajp@users.noreply.github.com";
     settings = {
+      user = {
+        name = "Dana Pieluszczak";
+        email = "danajp@users.noreply.github.com";
+      };
       github.user = "danajp";
       url = {
         "ssh://git@github.com/" = {

@@ -82,7 +82,7 @@ in
       Type = "oneshot";
       # Add delay to let i3/xkbcomp finish before remapping
       ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
-      ExecStart = "${pkgs.xorg.xmodmap}/bin/xmodmap -e 'keycode 107 = Super_R'";
+      ExecStart = "${pkgs.xmodmap}/bin/xmodmap -e 'keycode 107 = Super_R'";
       RemainAfterExit = true;
     };
     Install = {
