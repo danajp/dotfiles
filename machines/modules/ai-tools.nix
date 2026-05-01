@@ -1,5 +1,5 @@
 # AI coding assistants: opencode + claude-code
-{ ... }:
+_:
 
 {
   programs.opencode = {

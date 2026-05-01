@@ -28,10 +28,7 @@ in
         primary = palette.blue;
         alert = palette.red;
         warning = palette.yellow;
-        green = palette.green;
-        cyan = palette.cyan;
-        magenta = palette.magenta;
-        violet = palette.violet;
+        inherit (palette) green cyan magenta violet;
       };
 
       "bar/top" = {

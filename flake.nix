@@ -28,10 +28,10 @@
         config.allowUnfree = true;
         overlays = [
           (_final: _prev: {
-            brave = (import nixpkgs-brave {
+            inherit (import nixpkgs-brave {
               inherit system;
               config.allowUnfree = true;
-            }).brave;
+            }) brave;
           })
         ];
       };

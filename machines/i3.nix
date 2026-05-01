@@ -5,6 +5,8 @@ let
   palette = import ../lib/colors.nix;
   workspaces = import ../lib/i3-workspaces.nix { inherit lib; };
 
+  modifier = "Mod4";
+
   volume-control = import ./volume.nix { inherit pkgs; };
 
   rofi-power-menu = pkgs.writeShellScriptBin "rofi-power-menu" ''
@@ -63,8 +65,8 @@ in
     enable = true;
     package = pkgs.i3;
 
-    config = rec {
-      modifier = "Mod4";
+    config = {
+      inherit modifier;
 
       fonts = {
         names = [ "MesloLGS Nerd Font" ];
@@ -123,7 +125,7 @@ in
 
       floating = {
         border = 1;
-        modifier = modifier;
+        inherit modifier;
         criteria = [
           { class = "floating_window"; }
 

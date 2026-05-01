@@ -14,7 +14,10 @@
   # enable gpu on non nixos linux
   # see https://nix-community.github.io/home-manager/index.xhtml#sec-usage-gpu-non-nixos
   targets.genericLinux.gpu.enable = true;
-  nixpkgs.config.allowUnfreePredicate = pkg: true;
+  # Redundant alongside the `config.allowUnfree = true` in flake.nix's
+  # pkgs import, but harmless and explicit. HM evaluates this predicate
+  # for any unfree package referenced via the module system.
+  nixpkgs.config.allowUnfreePredicate = _: true;
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
