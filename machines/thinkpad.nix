@@ -54,20 +54,13 @@ in
     };
   };
 
-  # Machine-specific i3 workspace output assignments
-  xsession.windowManager.i3.extraConfig = ''
-    # Workspace output assignments
-    workspace 1 output ${internalMonitor}
-    workspace 2 output ${internalMonitor}
-    workspace 3 output ${internalMonitor}
-    workspace 4 output ${internalMonitor}
-    workspace 5 output ${externalMonitor}
-    workspace 6 output ${externalMonitor}
-    workspace 7 output ${externalMonitor}
-    workspace 8 output ${externalMonitor}
-    workspace 9 output ${externalMonitor}
-    workspace 10 output ${externalMonitor}
-  '';
+  # Workspaces 1-4 land on the internal screen, 5-10 on the external.
+  # Rendering is centralized in ../lib/i3-workspaces.nix; see i3.nix for
+  # the option declaration and the extraConfig that consumes it.
+  my.monitors = {
+    internal = internalMonitor;
+    external = externalMonitor;
+  };
 
   # Machine-specific oh-my-opencode config
   xdg.configFile."opencode/oh-my-opencode.json".source = ../dot/config/opencode/oh-my-opencode-thinkpad.json;

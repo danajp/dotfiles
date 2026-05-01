@@ -21,6 +21,25 @@ let
   '';
 in
 {
+  options.my.monitors = {
+    internal = lib.mkOption {
+      type = lib.types.str;
+      description = ''
+        X11 output name of the internal display (e.g. "eDP-1").
+        Workspaces 1-4 are pinned here.
+      '';
+    };
+    external = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        X11 output name of the external display, or null if there
+        isn't one. When set, workspaces 5-10 are pinned to it.
+      '';
+    };
+  };
+
+  config = {
   home.packages = [ rofi-power-menu volume-control ];
 
   # Enable xsession for display manager integration
@@ -365,17 +384,21 @@ in
       };
     };
 
-    # Extra config for workspace output assignments and window rules
+    # Extra config for window rules + workspace output assignments
+    # (workspace lines are generated from config.my.monitors via the
+    # mkWorkspaceOutputs helper in ../lib/i3-workspaces.nix).
     extraConfig = ''
       # Popup during fullscreen
       popup_during_fullscreen smart
-
-      # Machine-specific workspace outputs will be appended by machine configs
 
       # Window rules
       for_window [class="zoom" title="Zoom - Licensed Account"] move to workspace 4
       no_focus [class="zoom" title="Zoom - Licensed Account"]
       for_window [class="zoom"] move to workspace 3
+
+      # Workspace output assignments
+      ${workspaces.mkWorkspaceOutputs config.my.monitors}
     '';
+  };
   };
 }
