@@ -64,6 +64,9 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  # Run autorandr --change at graphical session start
+  services.autorandr.enable = true;
+
   # XDG config files
   xdg.enable = true;
 }
