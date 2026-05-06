@@ -2,40 +2,40 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "anthropic/claude-opus-4-6"
+      "model": "anthropic/claude-opus-4-7"
     },
     "oracle": {
-      "model": "anthropic/claude-opus-4-6"
+      "model": "anthropic/claude-opus-4-7"
     },
     "explore": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     },
     "librarian": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     },
     "frontend-ui-ux-engineer": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     },
     "document-writer": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     },
     "multimodal-looker": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     },
     "metis": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     },
     "momus": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     },
     "sisyphus-junior": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     },
     "prometheus": {
-      "model": "anthropic/claude-opus-4-6"
+      "model": "anthropic/claude-opus-4-7"
     },
     "atlas": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-7"
     }
   }
 }
