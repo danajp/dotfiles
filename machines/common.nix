@@ -48,6 +48,8 @@
       pkgs.signal-desktop
       pkgs.feh
       pkgs.brightnessctl
+      pkgs.temporal-cli
+      pkgs.input-leap
 
       (pkgs.writeShellScriptBin "toggle-colors"
         (builtins.readFile ./scripts/toggle-colors.sh))
