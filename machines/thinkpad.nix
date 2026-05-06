@@ -62,8 +62,8 @@ in
     external = externalMonitor;
   };
 
-  # Machine-specific oh-my-opencode config
-  xdg.configFile."opencode/oh-my-opencode.json".source = ../dot/config/opencode/oh-my-opencode-thinkpad.json;
+  # Machine-specific oh-my-openagent config
+  xdg.configFile."opencode/oh-my-openagent.json".source = ../dot/config/opencode/oh-my-openagent-thinkpad.json;
 
   # Keyboard remapping (ThinkPad T460s only)
   home.keyboard.options = [ "caps:ctrl_modifier" ];

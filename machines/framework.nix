@@ -67,8 +67,8 @@ in
     exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
   '';
 
-  # Machine-specific oh-my-opencode config
-  xdg.configFile."opencode/oh-my-opencode.json".source = ../dot/config/opencode/oh-my-opencode-framework.json;
+  # Machine-specific oh-my-openagent config
+  xdg.configFile."opencode/oh-my-openagent.json".source = ../dot/config/opencode/oh-my-openagent-framework.json;
 
   # Atlassian Jira MCP server (OAuth-based, via mcp.atlassian.com)
   programs.opencode.settings.mcp.atlassian = {
