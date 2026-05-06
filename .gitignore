@@ -1,0 +1,10 @@
+# home-manager build artifacts
+result
+result-*
+
+# Local baseline snapshots used by bin/hm-snapshot + bin/hm-diff.
+# Per-machine, ephemeral, can be regenerated at any time.
+.hm-baseline/
+
+# Refactor checklist (working notes; copy from REFACTOR_CHECKLIST.template.md)
+REFACTOR_CHECKLIST.md

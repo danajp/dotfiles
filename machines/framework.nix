@@ -1,5 +1,5 @@
 # Machine-specific configuration for framework
-{ config, pkgs, ... }:
+_:
 
 let
   # Monitor configuration for framework
@@ -52,21 +52,18 @@ in
     };
   };
 
-  # Machine-specific i3 workspace output assignments
-  xsession.windowManager.i3.extraConfig = ''
-    # Workspace output assignments
-    workspace 1 output ${internalMonitor}
-    workspace 2 output ${internalMonitor}
-    workspace 3 output ${internalMonitor}
-    workspace 4 output ${internalMonitor}
-    workspace 5 output ${externalMonitor}
-    workspace 6 output ${externalMonitor}
-    workspace 7 output ${externalMonitor}
-    workspace 8 output ${externalMonitor}
-    workspace 9 output ${externalMonitor}
-    workspace 10 output ${externalMonitor}
+  # Workspaces 1-4 land on the internal screen, 5-10 on the external.
+  # Rendering is centralized in ../lib/i3-workspaces.nix; see i3.nix for
+  # the option declaration and the extraConfig that consumes it.
+  my.monitors = {
+    internal = internalMonitor;
+    external = externalMonitor;
+  };
 
-    # for fingerprint reader
+  xsession.windowManager.i3.extraConfig = ''
+    # System polkit agent for fingerprint reader. MUST use the system
+    # path (not pkgs.polkit_gnome) because the fingerprint device and
+    # PAM stack are configured to authenticate via /usr/lib/policykit-1-gnome/.
     exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
   '';
 

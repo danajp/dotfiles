@@ -1,0 +1,133 @@
+#!/usr/bin/env bash
+# hm-diff: Compare a fresh home-manager build against the saved baseline
+# snapshot (created by `bin/hm-snapshot`).
+#
+# Usage:
+#   bin/hm-diff                       # diff all snapshotted hosts
+#   bin/hm-diff thinkpad              # diff one host
+#   bin/hm-diff thinkpad --summary    # short summary (changed files only)
+#   bin/hm-diff thinkpad --closure    # also show nix store closure diff
+#
+# Exit code is 0 if everything matches the baseline, 1 if any file differs.
+# This makes it usable as a pre-commit gate during pure refactors.
+
+set -eo pipefail
+[[ -n "$DEBUG" ]] && set -x
+
+fatal() {
+  echo "hm-diff: $*" >&2
+  exit 2
+}
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+baseline_root="${repo_root}/.hm-baseline"
+
+diff_host() {
+  local host="$1"
+  local mode="$2"
+  local baseline="${baseline_root}/${host}"
+
+  if [[ ! -d "${baseline}" ]]; then
+    fatal "no baseline for ${host} — run \`bin/hm-snapshot ${host}\` first"
+  fi
+
+  local scratch
+  scratch="$(mktemp -d)"
+  # Don't trap-cleanup — we may need scratch around for closure diff.
+
+  echo "==> Building dana@${host}..."
+  ( cd "${scratch}" && \
+    home-manager build --flake "${repo_root}#dana@${host}" >/dev/null 2>&1 ) \
+    || fatal "build failed for ${host} (run \`home-manager build --flake ${repo_root}#dana@${host}\` to see the error)"
+
+  local result_link="${scratch}/result"
+  [[ -L "${result_link}" ]] || fatal "expected ${result_link} to be a symlink"
+
+  # Materialize the new build the same way the snapshot did, so we're
+  # comparing apples to apples (dereferenced files, not store-path symlinks).
+  local fresh="${scratch}/fresh"
+  mkdir -p "${fresh}/home-files"
+  cp -rL "${result_link}/home-files/." "${fresh}/home-files/"
+  cp -L "${result_link}/activate" "${fresh}/activate"
+
+  echo "==> Diffing against baseline (${baseline})"
+  echo
+
+  local rc=0
+  if [[ "${mode}" == "summary" ]]; then
+    # Just list which files differ. Faster, less noisy.
+    diff -rq "${baseline}/home-files" "${fresh}/home-files" || rc=$?
+    diff -q "${baseline}/activate" "${fresh}/activate" || rc=$?
+  else
+    # Full unified diff. Useful when you want to inspect every change.
+    diff -ruN "${baseline}/home-files" "${fresh}/home-files" || rc=$?
+    diff -uN "${baseline}/activate" "${fresh}/activate" || rc=$?
+  fi
+
+  if [[ "${mode}" == "closure" ]] || [[ "${3:-}" == "--closure" ]]; then
+    echo
+    echo "==> Closure diff (package version changes):"
+    if [[ -f "${baseline}/.store-path" ]]; then
+      local baseline_store
+      baseline_store="$(cat "${baseline}/.store-path")"
+      if [[ -e "${baseline_store}" ]]; then
+        nix store diff-closures "${baseline_store}" "${result_link}" || true
+      else
+        echo "  (baseline store path ${baseline_store} no longer exists;"
+        echo "   was probably garbage-collected. Re-snapshot to refresh.)"
+      fi
+    fi
+  fi
+
+  # Cleanup. Files copied from /nix/store via cp -L are read-only,
+  # so chmod before rm to avoid noisy "Permission denied" errors.
+  chmod -R u+w "${scratch}" 2>/dev/null || true
+  rm -rf "${scratch}"
+
+  if [[ ${rc} -eq 0 ]]; then
+    echo
+    echo "✓ ${host}: identical to baseline"
+  else
+    echo
+    echo "✗ ${host}: differs from baseline (see diff above)"
+  fi
+
+  return ${rc}
+}
+
+main() {
+  local mode="full"
+  local hosts=()
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --summary) mode="summary"; shift ;;
+      --closure) mode="closure"; shift ;;
+      -h|--help)
+        sed -n '2,15p' "$0" | sed 's/^# \?//'
+        exit 0
+        ;;
+      *) hosts+=("$1"); shift ;;
+    esac
+  done
+
+  if [[ ${#hosts[@]} -eq 0 ]]; then
+    if [[ ! -d "${baseline_root}" ]]; then
+      fatal "no baseline — run \`bin/hm-snapshot\` first"
+    fi
+    # Diff every host that has a baseline.
+    for d in "${baseline_root}"/*/; do
+      hosts+=("$(basename "${d}")")
+    done
+  fi
+
+  local overall_rc=0
+  for host in "${hosts[@]}"; do
+    diff_host "${host}" "${mode}" || overall_rc=$?
+    echo
+  done
+
+  exit ${overall_rc}
+}
+
+main "$@"

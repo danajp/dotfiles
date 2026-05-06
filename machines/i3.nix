@@ -2,6 +2,11 @@
 { config, pkgs, lib, ... }:
 
 let
+  palette = import ../lib/colors.nix;
+  workspaces = import ../lib/i3-workspaces.nix { inherit lib; };
+
+  modifier = "Mod4";
+
   volume-control = import ./volume.nix { inherit pkgs; };
 
   rofi-power-menu = pkgs.writeShellScriptBin "rofi-power-menu" ''
@@ -18,16 +23,29 @@ let
   '';
 in
 {
+  options.my.monitors = {
+    internal = lib.mkOption {
+      type = lib.types.str;
+      description = ''
+        X11 output name of the internal display (e.g. "eDP-1").
+        Workspaces 1-4 are pinned here.
+      '';
+    };
+    external = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        X11 output name of the external display, or null if there
+        isn't one. When set, workspaces 5-10 are pinned to it.
+      '';
+    };
+  };
+
+  config = {
   home.packages = [ rofi-power-menu volume-control ];
 
   # Enable xsession for display manager integration
-  xsession = {
-    enable = true;
-    # Number of seconds to wait after starting xsession before running extra commands
-    initExtra = '''';
-    # Script to run before window manager starts
-    profileExtra = '''';
-  };
+  xsession.enable = true;
 
   # Create a desktop entry for GDM
   xdg.dataFile."xsessions/i3-home-manager.desktop".text =
@@ -47,43 +65,43 @@ in
     enable = true;
     package = pkgs.i3;
 
-    config = rec {
-      modifier = "Mod4";
+    config = {
+      inherit modifier;
 
       fonts = {
         names = [ "MesloLGS Nerd Font" ];
         size = 12.0;
       };
 
-      # Solarized Dark colors
+      # Solarized Dark colors (from ../lib/colors.nix)
       colors = {
         focused = {
-          border = "#002b36";
-          background = "#586e75";
-          text = "#fdf6e3";
-          indicator = "#dc322f";
-          childBorder = "#b58900";
+          border = palette.base03;
+          background = palette.base01;
+          text = palette.base3;
+          indicator = palette.red;
+          childBorder = palette.yellow;
         };
         focusedInactive = {
-          border = "#002b36";
-          background = "#073642";
-          text = "#839496";
-          indicator = "#073642";
-          childBorder = "#002b36";
+          border = palette.base03;
+          background = palette.base02;
+          text = palette.base0;
+          indicator = palette.base02;
+          childBorder = palette.base03;
         };
         unfocused = {
-          border = "#002b36";
-          background = "#073642";
-          text = "#839496";
-          indicator = "#073642";
-          childBorder = "#002b36";
+          border = palette.base03;
+          background = palette.base02;
+          text = palette.base0;
+          indicator = palette.base02;
+          childBorder = palette.base03;
         };
         urgent = {
-          border = "#002b36";
-          background = "#dc322f";
-          text = "#fdf6e3";
-          indicator = "#dc322f";
-          childBorder = "#002b36";
+          border = palette.base03;
+          background = palette.red;
+          text = palette.base3;
+          indicator = palette.red;
+          childBorder = palette.base03;
         };
       };
 
@@ -107,7 +125,7 @@ in
 
       floating = {
         border = 1;
-        modifier = modifier;
+        inherit modifier;
         criteria = [
           { class = "floating_window"; }
 
@@ -141,7 +159,7 @@ in
           notification = false;
         }
         {
-          command = "/usr/bin/nm-applet";
+          command = "${pkgs.networkmanagerapplet}/bin/nm-applet";
           always = false;
           notification = false;
         }
@@ -151,7 +169,11 @@ in
           notification = false;
         }
         {
-          command = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          # System polkit agent (NOT the Nix package): the system's
+          # auth chain (PAM, fingerprint reader, etc.) is wired to
+          # /usr/lib/policykit-1-gnome/. A Nix-store agent would not
+          # have access to system fingerprint device configuration.
+          command = "/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1";
           always = false;
           notification = false;
         }
@@ -214,16 +236,8 @@ in
           "${mod}+9" = "workspace number 9";
           "${mod}+0" = "workspace number 10";
 
-          # Workspaces 11-19 (with Ctrl)
-          "${mod}+Ctrl+1" = "workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
-          "${mod}+Ctrl+2" = "workspace number \"12:<span> </span>12 <span foreground='#859900'></span><span> </span>\"";
-          "${mod}+Ctrl+3" = "workspace number \"13:<span> </span>13 <span foreground='#b58900'></span><span> </span>\"";
-          "${mod}+Ctrl+4" = "workspace number \"14:<span> </span>14 <span foreground='#cb4b16'></span><span> </span>\"";
-          "${mod}+Ctrl+5" = "workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"";
-          "${mod}+Ctrl+6" = "workspace number \"16:<span> </span>16 <span foreground='#d33682'></span><span> </span>\"";
-          "${mod}+Ctrl+7" = "workspace number \"17:<span> </span>17 <span foreground='#6c71c4'></span><span> </span>\"";
-          "${mod}+Ctrl+8" = "workspace number \"18:<span> </span>18 <span foreground='#586e75'></span><span> </span>\"";
-          "${mod}+Ctrl+9" = "workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
+          # Workspaces 11-19 (with Ctrl) are generated below via
+          # workspaces.mkExtBindings — see ../lib/i3-workspaces.nix.
 
           # Workspace navigation
           "${mod}+Tab" = "workspace next";
@@ -279,15 +293,6 @@ in
           "${mod}+Shift+9" = "move container to workspace number 9";
           "${mod}+Shift+0" = "move container to workspace number 10";
 
-          "${mod}+Shift+Ctrl+1" = "move container to workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+2" = "move container to workspace number \"12:<span> </span>12 <span foreground='#859900'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+3" = "move container to workspace number \"13:<span> </span>13 <span foreground='#b58900'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+4" = "move container to workspace number \"14:<span> </span>14 <span foreground='#cb4b16'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+5" = "move container to workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+6" = "move container to workspace number \"16:<span> </span>16 <span foreground='#d33682'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+7" = "move container to workspace number \"17:<span> </span>17 <span foreground='#6c71c4'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+8" = "move container to workspace number \"18:<span> </span>18 <span foreground='#586e75'></span><span> </span>\"";
-          "${mod}+Shift+Ctrl+9" = "move container to workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
 
           # Carry containers to workspaces (move + switch)
           "${mod}+Alt+1" = "move container to workspace number 1; workspace number 1";
@@ -301,15 +306,6 @@ in
           "${mod}+Alt+9" = "move container to workspace number 9; workspace number 9";
           "${mod}+Alt+0" = "move container to workspace number 10; workspace number 10";
 
-          "${mod}+Alt+Ctrl+1" = "move container to workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"; workspace number \"11:<span> </span>11 <span foreground='#2aa198'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+2" = "move container to workspace number \"12:<span> </span>12 <span foreground='#859900'></span><span> </span>\"; workspace number \"12:<span> </span>12 <span foreground='#859900'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+3" = "move container to workspace number \"13:<span> </span>13 <span foreground='#b58900'></span><span> </span>\"; workspace number \"13:<span> </span>13 <span foreground='#b58900'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+4" = "move container to workspace number \"14:<span> </span>14 <span foreground='#cb4b16'></span><span> </span>\"; workspace number \"14:<span> </span>14 <span foreground='#cb4b16'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+5" = "move container to workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"; workspace number \"15:<span> </span>15 <span foreground='#dc322f'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+6" = "move container to workspace number \"16:<span> </span>16 <span foreground='#d33682'></span><span> </span>\"; workspace number \"16:<span> </span>16 <span foreground='#d33682'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+7" = "move container to workspace number \"17:<span> </span>17 <span foreground='#6c71c4'></span><span> </span>\"; workspace number \"17:<span> </span>17 <span foreground='#6c71c4'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+8" = "move container to workspace number \"18:<span> </span>18 <span foreground='#586e75'></span><span> </span>\"; workspace number \"18:<span> </span>18 <span foreground='#586e75'></span><span> </span>\"";
-          "${mod}+Alt+Ctrl+9" = "move container to workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"; workspace number \"19:<span> </span>19 <span foreground='#268bd2'></span><span> </span>\"";
 
           # Resize mode
           "${mod}+r" = "mode resize";
@@ -340,7 +336,7 @@ in
           "${mod}+Escape" = "exec --no-startup-id loginctl lock-session";
           "${mod}+Shift+s" = "exec systemctl suspend";
 
-          "${mod}+Shift+n" = "exec --no-startup-id /usr/bin/nautilus --new-window";
+          "${mod}+Shift+n" = "exec --no-startup-id ${pkgs.nautilus}/bin/nautilus --new-window";
 
           # Volume keys
           "XF86AudioRaiseVolume" = "exec --no-startup-id volume up";
@@ -360,7 +356,13 @@ in
           # Custom splits
           "${mod}+Shift+v" = "split vertical";
           "${mod}+Shift+h" = "split horizontal";
-        };
+        }
+        # Workspaces 11-19 (with Ctrl): switch to workspace
+        // workspaces.mkExtBindings "${mod}+Ctrl+" "workspace number"
+        # Workspaces 11-19 (with Shift+Ctrl): move container to workspace
+        // workspaces.mkExtBindings "${mod}+Shift+Ctrl+" "move container to workspace number"
+        # Workspaces 11-19 (with Alt+Ctrl): carry container — move + switch
+        // workspaces.mkCarryBindings "${mod}+Alt+Ctrl+";
 
       # Resize mode
       modes = {
@@ -388,17 +390,21 @@ in
       };
     };
 
-    # Extra config for workspace output assignments and window rules
+    # Extra config for window rules + workspace output assignments
+    # (workspace lines are generated from config.my.monitors via the
+    # mkWorkspaceOutputs helper in ../lib/i3-workspaces.nix).
     extraConfig = ''
       # Popup during fullscreen
       popup_during_fullscreen smart
-
-      # Machine-specific workspace outputs will be appended by machine configs
 
       # Window rules
       for_window [class="zoom" title="Zoom - Licensed Account"] move to workspace 4
       no_focus [class="zoom" title="Zoom - Licensed Account"]
       for_window [class="zoom"] move to workspace 3
+
+      # Workspace output assignments
+      ${workspaces.mkWorkspaceOutputs config.my.monitors}
     '';
+  };
   };
 }
