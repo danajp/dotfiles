@@ -183,11 +183,6 @@ in
           notification = false;
         }
         {
-          command = "dunst";
-          always = false;
-          notification = false;
-        }
-        {
           # Bridges gsettings (GTK theme, color-scheme) to X11 apps via XSETTINGS.
           # Required for Brave to follow system dark/light theme changes.
           command = "${pkgs.gnome-settings-daemon}/libexec/gsd-xsettings";

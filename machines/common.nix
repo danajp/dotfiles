@@ -69,6 +69,11 @@
   # Run autorandr --change at graphical session start
   services.autorandr.enable = true;
 
+  # Dunst notification daemon (started via D-Bus)
+  services.dunst.enable = true;
+
   # XDG config files
   xdg.enable = true;
+
+  xdg.configFile."dunst/dunstrc".source = ../dot/config/dunst/dunstrc;
 }
