@@ -68,7 +68,7 @@
     dotDir = "${config.xdg.configHome}/zsh";
     oh-my-zsh = {
       enable = true;
-      plugins = [ "asdf" "direnv" "starship" "git" "z" ];
+      plugins = [ "asdf" "direnv" "starship" "git" "z" "kubectl" ];
     };
     shellAliases = {
       k = "kubectl";
@@ -104,8 +104,6 @@
       fi
 
       source_if "$HOME/src/work/zsh"
-
-      source <(kubectl completion zsh)
     '';
   };
 
