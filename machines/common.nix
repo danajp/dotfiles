@@ -4,7 +4,7 @@
 # live here. Topical concerns (git, shell, terminal, browser, polybar,
 # theming, ai-tools) live under ./modules/ and are pulled in via
 # ./modules/default.nix.
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   imports = [
@@ -62,6 +62,52 @@
   };
 
   programs.bun.enable = true;
+
+  programs.zsh = {
+    enable = true;
+    dotDir = "${config.xdg.configHome}/zsh";
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "asdf" "direnv" "starship" "git" "z" ];
+    };
+    shellAliases = {
+      k = "kubectl";
+      kc = "kubectl config use-context";
+      jy = "yj -jy";
+      yc = "batcat -l yaml --style plain";
+      y2i = "ASDF_RUBY_VERSION=3.1.2 ruby -r yaml -r json -e 'puts ({\"items\" => YAML.load_stream(STDIN) }.to_json)'";
+      i2y = "ASDF_RUBY_VERSION=3.1.2 ruby -r yaml -r json -e 'puts JSON.parse(STDIN.read)[\"items\"].map {|i| i.to_yaml }.join(\"\")'";
+    };
+    sessionVariables = {
+      EDITOR = "emacsclient";
+      ASDF_GOLANG_MOD_VERSION_ENABLED = "true";
+    };
+    initContent = ''
+      add_to_path_if() {
+        local dir="$1"
+        [[ -d "$dir" ]] && path+=("$dir")
+      }
+
+      source_if() {
+        local file="$1"
+        [[ -e "$file" ]] && source "$file"
+      }
+
+      add_to_path_if "$HOME/.asdf/shims"
+      add_to_path_if "$HOME/bin"
+      add_to_path_if "$HOME/.local/bin"
+      add_to_path_if "$HOME/.krew/bin"
+      add_to_path_if "$HOME/.cargo/bin"
+
+      if [[ -S "$HOME/.1password/agent.sock" ]]; then
+        export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+      fi
+
+      source_if "$HOME/src/work/zsh"
+
+      source <(kubectl completion zsh)
+    '';
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
