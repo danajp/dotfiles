@@ -2,10 +2,10 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "opencode-go/kimi-k2.5"
+      "model": "opencode-go/kimi-k2.6"
     },
     "oracle": {
-      "model": "opencode-go/kimi-k2.5"
+      "model": "opencode-go/kimi-k2.6"
     },
     "explore": {
       "model": "opencode-go/minimax-m2.5"
@@ -14,25 +14,25 @@
       "model": "opencode-go/glm-5"
     },
     "frontend-ui-ux-engineer": {
-      "model": "opencode-go/kimi-k2.5"
+      "model": "opencode-go/kimi-k2.6"
     },
     "document-writer": {
-      "model": "opencode-go/kimi-k2.5"
+      "model": "opencode-go/kimi-k2.6"
     },
     "multimodal-looker": {
-      "model": "opencode-go/kimi-k2.5"
+      "model": "opencode-go/kimi-k2.6"
     },
     "metis": {
-      "model": "opencode-go/kimi-k2.5"
+      "model": "opencode-go/kimi-k2.6"
     },
     "momus": {
-      "model": "opencode-go/kimi-k2.5"
+      "model": "opencode-go/kimi-k2.6"
     },
     "sisyphus-junior": {
       "model": "opencode-go/minimax-m2.5"
     },
     "prometheus": {
-      "model": "opencode-go/kimi-k2.5"
+      "model": "opencode-go/kimi-k2.6"
     },
     "atlas": {
       "model": "opencode-go/minimax-m2.5"
