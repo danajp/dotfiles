@@ -103,7 +103,7 @@
       pkgs.terminus_font
       pkgs.terminus_font_ttf
       pkgs.inconsolata
-      pkgs.noto-fonts-emoji
+      pkgs.noto-fonts-color-emoji
     ];
 
     file.".asdfrc".source = ../dot/asdfrc;
