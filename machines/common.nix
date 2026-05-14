@@ -65,6 +65,7 @@
       pkgs.xclip
       pkgs.traceroute
       pkgs.moreutils
+      pkgs.bat
 
       # Development tools (migrated from bootstrap apt)
       pkgs.cmake
@@ -147,9 +148,9 @@
       k = "kubectl";
       kc = "kubectl config use-context";
       jy = "yj -jy";
-      yc = "batcat -l yaml --style plain";
-      y2i = "ASDF_RUBY_VERSION=3.1.2 ruby -r yaml -r json -e 'puts ({\"items\" => YAML.load_stream(STDIN) }.to_json)'";
-      i2y = "ASDF_RUBY_VERSION=3.1.2 ruby -r yaml -r json -e 'puts JSON.parse(STDIN.read)[\"items\"].map {|i| i.to_yaml }.join(\"\")'";
+      yc = "bat -l yaml --style plain";
+      y2i = "ruby -r yaml -r json -e 'puts ({\"items\" => YAML.load_stream(STDIN) }.to_json)'";
+      i2y = "ruby -r yaml -r json -e 'puts JSON.parse(STDIN.read)[\"items\"].map {|i| i.to_yaml }.join(\"\")'";
     };
     sessionVariables = {
       EDITOR = "emacsclient";
