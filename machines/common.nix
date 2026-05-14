@@ -55,10 +55,73 @@
         (builtins.readFile ./scripts/toggle-colors.sh))
       pkgs._1password-gui
       pkgs.slack
+
+      # Basic utilities (migrated from bootstrap apt)
+      pkgs.gnupg
+      pkgs.htop
+      pkgs.powertop
+      pkgs.curl
+      pkgs.sqlite
+      pkgs.xclip
+      pkgs.traceroute
+      pkgs.moreutils
+
+      # Development tools (migrated from bootstrap apt)
+      pkgs.cmake
+      pkgs.gnumake
+      pkgs.python3
+      pkgs.ruby
+      pkgs.postgresql
+      pkgs.redis
+      pkgs.graphviz
+      pkgs.nmap  # provides ncat
+      pkgs.openldap  # provides ldapsearch, etc.
+      pkgs.pkg-config
+
+      # Desktop utilities (migrated from bootstrap apt)
+      pkgs.arandr
+      pkgs.blueman
+      pkgs.maim
+
+      # Applications (migrated from bootstrap apt)
+      pkgs.zoom-us
+      pkgs.mullvad-vpn
+      pkgs.ssm-session-manager-plugin
+      pkgs.vagrant
+      pkgs.spotify
+      pkgs.google-cloud-sdk
+      pkgs.terraform-ls
+      pkgs.openvpn3
+      pkgs.docker
+
+      # Fonts (migrated from bootstrap apt)
+      pkgs.terminus_font
+      pkgs.terminus_font_ttf
+      pkgs.inconsolata
+      pkgs.noto-fonts-emoji
     ];
 
     file.".asdfrc".source = ../dot/asdfrc;
     file.".gemrc".source = ../dot/gemrc;
+
+    # asdf default packages (migrated from bootstrap)
+    file."/.default-gems".text = ''
+      bundler
+      solargraph
+      solargraph-standardrb
+    '';
+
+    file."/.default-python-packages".text = ''
+      pipenv
+    '';
+
+    file."/.default-golang-pkgs".text = ''
+      golang.org/x/tools/gopls@latest
+      github.com/rogpeppe/godef@latest
+      golang.org/x/tools/cmd/goimports@latest
+      github.com/zmb3/gogetdoc@latest
+      github.com/maruel/panicparse/v2/cmd/pp@latest
+    '';
   };
 
   programs.bun.enable = true;
@@ -126,4 +189,11 @@
   xdg.enable = true;
 
   xdg.configFile."dunst/dunstrc".source = ../dot/config/dunst/dunstrc;
+
+  # Direnv config (migrated from bootstrap)
+  xdg.configFile."direnv/direnv.toml".text = ''
+    [global]
+    hide_env_diff = true
+    warn_timeout = "30s"
+  '';
 }
