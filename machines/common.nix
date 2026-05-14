@@ -94,6 +94,10 @@
       pkgs.openvpn3
       pkgs.docker
 
+      # LSP servers (migrated from npm globals)
+      pkgs.yaml-language-server
+      pkgs.bash-language-server
+
       # Fonts (migrated from bootstrap apt)
       pkgs.terminus_font
       pkgs.terminus_font_ttf
