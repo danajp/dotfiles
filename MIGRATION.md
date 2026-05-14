@@ -12,58 +12,64 @@ Last updated: 2026-05-09
 
 These are installed via `apt` in bootstrap but have direct nixpkgs equivalents. Move to `home.packages`.
 
-- [ ] `git` → `pkgs.git`
-- [ ] `gnupg` → `pkgs.gnupg`
-- [ ] `tmux` → `pkgs.tmux` (already in HM `programs.tmux`, which pulls in the package)
-- [ ] `python3-dev` → `pkgs.python3`
-- [ ] `postgresql-client` → `pkgs.postgresql`
-- [ ] `libpq-dev` → `pkgs.postgresql` (development files)
-- [ ] `redis-tools` → `pkgs.redis`
-- [ ] `powertop` → `pkgs.powertop`
-- [ ] `powerline` → `pkgs.powerline` (already in HM)
-- [ ] `ncat` → `pkgs.nmap` (`ncat` is included in the nmap package)
-- [ ] `htop` → `pkgs.htop`
-- [ ] `traceroute` → `pkgs.traceroute`
-- [ ] `xclip` → `pkgs.xclip`
-- [ ] `ldap-utils` → `pkgs.openldap` (client tools included)
-- [ ] `moreutils` → `pkgs.moreutils`
-- [ ] `graphviz` → `pkgs.graphviz`
-- [ ] `curl` → `pkgs.curl` (usually already in base system)
-- [ ] `sqlite3` → `pkgs.sqlite`
-- [ ] `zsh` → `pkgs.zsh` (already in HM `programs.zsh`)
-- [ ] `cmake` → `pkgs.cmake`
-- [ ] `g++` → `pkgs.gcc` or `pkgs.stdenv.cc` (part of build tools)
-- [ ] `pkg-config` → `pkgs.pkg-config`
+- [x] `git` → `pkgs.git` (via `programs.git`)
+- [x] `gnupg` → `pkgs.gnupg`
+- [x] `tmux` → `pkgs.tmux` (already in HM `programs.tmux`)
+- [x] `python3-dev` → `pkgs.python3`
+- [x] `postgresql-client` → `pkgs.postgresql`
+- [x] `libpq-dev` → `pkgs.postgresql` (development files)
+- [x] `redis-tools` → `pkgs.redis`
+- [x] `powertop` → `pkgs.powertop`
+- [x] `powerline` → `pkgs.powerline` (already in HM)
+- [x] `ncat` → `pkgs.nmap` (`ncat` is included in the nmap package)
+- [x] `htop` → `pkgs.htop`
+- [x] `traceroute` → `pkgs.traceroute`
+- [x] `xclip` → `pkgs.xclip`
+- [x] `ldap-utils` → `pkgs.openldap` (client tools included)
+- [x] `moreutils` → `pkgs.moreutils`
+- [x] `graphviz` → `pkgs.graphviz`
+- [x] `curl` → `pkgs.curl`
+- [x] `sqlite3` → `pkgs.sqlite`
+- [x] `zsh` → `pkgs.zsh` (already in HM `programs.zsh`)
+- [x] `cmake` → `pkgs.cmake`
+- [x] `g++` → `pkgs.gnumake` (using `gnumake` instead)
+- [x] `pkg-config` → `pkgs.pkg-config`
+- [x] `bat` → `pkgs.bat` (added for `bat` alias)
 
 ### Desktop packages
 
-- [ ] `arandr` → `pkgs.arandr`
-- [ ] `blueman` → `pkgs.blueman`
-- [ ] `copyq` → `pkgs.copyq` (already in HM)
-- [ ] `maim` → `pkgs.maim`
+- [x] `arandr` → `pkgs.arandr`
+- [x] `blueman` → `pkgs.blueman`
+- [x] `copyq` → `pkgs.copyq` (already in HM)
+- [x] `maim` → `pkgs.maim`
 
 ### .deb installs
 
-- [ ] `slack-desktop` → `pkgs.slack` (already in HM)
-- [ ] `input-leap` → `pkgs.input-leap` (already in HM)
-- [ ] `zoom` → `pkgs.zoom-us`
-- [ ] `mullvad-vpn` → `pkgs.mullvad-vpn`
-- [ ] `aws-session-manager-plugin` → `pkgs.ssm-session-manager-plugin` (attribute name differs)
-- [ ] `1password` → `pkgs._1password-gui` (already in HM)
+- [x] `slack-desktop` → `pkgs.slack` (already in HM)
+- [x] `input-leap` → `pkgs.input-leap` (already in HM)
+- [x] `zoom` → `pkgs.zoom-us`
+- [x] `mullvad-vpn` → `pkgs.mullvad-vpn`
+- [x] `aws-session-manager-plugin` → `pkgs.ssm-session-manager-plugin`
+- [x] `1password` → `pkgs._1password-gui` (already in HM)
 
 ### APT repo packages (from `vars/main.yml`)
 
-- [ ] `brave-browser` → `pkgs.brave` (already in HM via overlay)
-- [ ] `signal-desktop` → `pkgs.signal-desktop` (already in HM)
-- [ ] `docker-ce` → `pkgs.docker`
-- [ ] `google-cloud-cli` → `pkgs.google-cloud-sdk` (attribute name differs)
-- [ ] `terraform-ls` → `pkgs.terraform-ls`
-- [ ] `openvpn3` → `pkgs.openvpn3`
-- [ ] `spotify-client` → `pkgs.spotify`
+- [x] `brave-browser` → `pkgs.brave` (already in HM via overlay)
+- [x] `signal-desktop` → `pkgs.signal-desktop` (already in HM)
+- [x] `docker-ce` → `pkgs.docker`
+- [x] `google-cloud-cli` → `pkgs.google-cloud-sdk`
+- [x] `terraform-ls` → `pkgs.terraform-ls`
+- [x] `openvpn3` → `pkgs.openvpn3`
+- [x] `spotify-client` → `pkgs.spotify`
 
 ### Manually downloaded binaries
 
-- [ ] `vagrant` → `pkgs.vagrant`
+- [x] `vagrant` → `pkgs.vagrant`
+
+### LSP servers (migrated from npm globals)
+
+- [x] `yaml-language-server` → `pkgs.yaml-language-server`
+- [x] `bash-language-server` → `pkgs.bash-language-server`
 
 ### Already in HM (don't duplicate)
 
@@ -78,8 +84,8 @@ Keep in asdf, not apt. See Section 3.
 
 ### Move from asdf to nixpkgs (single version sufficient)
 
-- [ ] `python` → `pkgs.python3` (one recent version — drop old 3.6.x/3.7.x, drop asdf)
-- [ ] `ruby` → `pkgs.ruby` (recent version only — drop 2.x, drop asdf)
+- [x] `python` → `pkgs.python3` (one recent version — drop old 3.6.x/3.7.x, drop asdf)
+- [x] `ruby` → `pkgs.ruby` (recent version only — drop 2.x, drop asdf)
 
 ---
 
