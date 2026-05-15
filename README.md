@@ -65,6 +65,27 @@ sudo apparmor_parser -r /etc/apparmor.d/1password-nix
 
 This follows the same pattern as the Brave and Signal fixes above.
 
+## 1Password (system authentication / polkit)
+
+The `_1password-gui` Nix package ships a polkit policy *template* in its store
+path but cannot install it to `/usr/share/polkit-1/actions/` because that's a
+system path home-manager standalone can't write to. Without the rendered
+policy, system authentication (unlock with system password, CLI biometric
+unlock, SSH agent authorization) fails.
+
+On NixOS this is handled by `programs._1password-gui`. On Ubuntu we replicate
+upstream's `after-install.sh` polkit step manually with the helper script:
+
+```bash
+sudo bin/install-1password-polkit
+```
+
+The script resolves the current Nix store path via `which 1password`, renders
+the template with the list of allowed `policy.owners` (human users with
+UID ≥ 1000, matching upstream's logic), and installs the result. Re-run it
+after a 1Password version bump only if upstream changes the policy template
+(rare); the rendered file is independent of the store hash.
+
 ## Slack (AppArmor sandbox)
 
 Slack is an Electron app that has the same AppArmor sandbox issue as Brave, Signal, and 1Password. Create a profile to allow user namespaces:
