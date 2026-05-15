@@ -11,6 +11,8 @@
       window-decoration = "none";
       mouse-scroll-multiplier = 0.5;
       app-notifications = "no-clipboard-copy";
+      shell-integration-features = "no-cursor";
+      cursor-style = "block";
     };
   };
 
