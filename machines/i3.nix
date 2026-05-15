@@ -14,12 +14,31 @@ let
     chosen=$(echo -e "$options" | ${pkgs.rofi}/bin/rofi -dmenu -i -p "Power" -theme power-menu -mesg "Session")
 
     case "$chosen" in
-      Lock)      /bin/i3lock -c 000000 ;;
+      Lock)      loginctl lock-session ;;
       Logout)    ${pkgs.i3}/bin/i3-msg exit ;;
       Suspend)   systemctl suspend ;;
       Reboot)    systemctl reboot ;;
       "Power Off") systemctl poweroff ;;
     esac
+  '';
+
+  # Wrapper around /usr/bin/i3lock (Ubuntu's PAM-aware build) that also
+  # blanks the displays once the lock screen is up. xss-lock invokes
+  # this as the locker; it must stay in the foreground for the entire
+  # locked session, so i3lock runs without -n (i.e. it daemonizes) and
+  # we block on its pidfile via `--nofork` semantics handled by running
+  # i3lock in the foreground with -n and backgrounding dpms separately.
+  #
+  # Sequence:
+  #   1. Launch i3lock in foreground (-n: do not fork).
+  #   2. Once i3lock has grabbed the screen, push DPMS off in the
+  #      background so the monitors turn off shortly after.
+  #   3. Wait on i3lock; xss-lock unblocks when this script exits.
+  lock-screen = pkgs.writeShellScript "lock-screen" ''
+    set -eo pipefail
+    # Kick DPMS off shortly after the locker grabs the screen.
+    ( sleep 0.3; ${pkgs.xset}/bin/xset dpms force off ) &
+    exec /usr/bin/i3lock -n -c 000000
   '';
 in
 {
@@ -43,6 +62,33 @@ in
 
   config = {
   home.packages = [ rofi-power-menu volume-control ];
+
+  # Idle autolocker.
+  #
+  # services.screen-locker wires up xss-lock + xautolock:
+  #   - xss-lock listens for systemd suspend/lid-close/loginctl lock-session
+  #     events AND DPMS/screensaver activation, then runs lockCmd.
+  #   - xautolock runs lockCmd after `inactiveInterval` minutes of X11 idle.
+  # Together they cover: timeout-based locking, suspend/resume, lid close,
+  # and the existing `mod+Escape` -> loginctl lock-session keybind.
+  # Use the system's i3lock (/usr/bin/i3lock), NOT pkgs.i3lock.
+  # Ubuntu's i3lock is linked against the system PAM stack and installed
+  # with /etc/pam.d/i3lock so it can authenticate your user. The Nix
+  # store build has no PAM config registered and silently fails to unlock.
+  # `lock-screen` (above) wraps it to also blank displays via DPMS.
+  services.screen-locker = {
+    enable = true;
+    inactiveInterval = 10; # minutes of idle before locking
+    lockCmd = "${lock-screen}";
+    xautolock.extraOptions = [
+      # Hot corners: TL TR BL BR
+      #   0 = no action, + = force lock, - = inhibit lock
+      # Park the mouse in the top-right corner to prevent idle locking.
+      "-corners" "0-00"
+      "-cornerdelay" "2"   # seconds cursor must dwell before action fires
+      "-cornerredelay" "30" # grace period after unlock before corners re-arm
+    ];
+  };
 
   # Enable xsession for display manager integration
   xsession.enable = true;
