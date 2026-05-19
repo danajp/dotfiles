@@ -62,6 +62,10 @@ in
     external = externalMonitor;
   };
 
+  # ThinkPad T460s has two batteries
+  my.batteries = [ "BAT0" "BAT1" ];
+  my.batteryAdapter = "AC";
+
   # Machine-specific oh-my-openagent config
   xdg.configFile."opencode/oh-my-openagent.json".source = ../dot/config/opencode/oh-my-openagent-thinkpad.json;
 

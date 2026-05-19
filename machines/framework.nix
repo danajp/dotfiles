@@ -60,6 +60,10 @@ in
     external = externalMonitor;
   };
 
+  # Framework has a single battery named BAT1
+  my.batteries = [ "BAT1" ];
+  my.batteryAdapter = "ACAD";
+
   xsession.windowManager.i3.extraConfig = ''
     # System polkit agent for fingerprint reader. MUST use the system
     # path (not pkgs.polkit_gnome) because the fingerprint device and

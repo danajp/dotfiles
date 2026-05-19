@@ -3,13 +3,60 @@
 # NOTE: Systemd service manually disabled. Polybar is started by i3
 # instead - see the `startup` block in i3.nix. Run once on a fresh
 # install: systemctl --user disable polybar
-{ pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   palette = import ../../lib/colors.nix;
+
+  batteries = config.my.batteries;
+
+  mkBatteryModule = name: {
+    type = "internal/battery";
+    battery = name;
+    adapter = config.my.batteryAdapter;
+    full-at = 98;
+    poll-interval = 10;
+    format-charging = "<label-charging>";
+    label-charging = "%{T2}%{T-} %percentage%%";
+    label-charging-foreground = "\${colors.green}";
+    format-discharging = "<label-discharging>";
+    label-discharging = "%{T2}%{T-} %percentage%%";
+    label-discharging-foreground = "\${colors.warning}";
+    format-full = "<label-full>";
+    label-full = "%{T2}%{T-} %percentage%%";
+    label-full-foreground = "\${colors.green}";
+  };
+
+  batteryModules = lib.listToAttrs (
+    lib.imap0 (i: name: {
+      name = "module/${if i == 0 then "battery" else "battery${toString i}"}";
+      value = mkBatteryModule name;
+    }) batteries
+  );
+
+  batteryModuleNames = lib.imap0 (i: _: if i == 0 then "battery" else "battery${toString i}") batteries;
+
+  modulesRight = lib.concatStringsSep " " (
+    [ "net-traffic" "bluetooth" "vpn" "cpu" "memory" ]
+    ++ batteryModuleNames
+    ++ [ "pulseaudio" "time-utc" "time-local" "tray" ]
+  );
 in
 {
-  services.polybar = {
+  options.my.batteries = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    default = [ "BAT0" ];
+    description = "List of battery device names to display in polybar";
+  };
+
+  options.my.batteryAdapter = lib.mkOption {
+    type = lib.types.str;
+    default = "AC";
+    description = "AC adapter device name for polybar battery module";
+  };
+
+  config = {
+    services.polybar = {
     # NOTE: Systemd service manually disabled. Polybar is started by i3 instead.
     # Run: systemctl --user disable polybar
     enable = true;
@@ -45,7 +92,7 @@ in
         font-1 = "MesloLGS Nerd Font:size=13;3";
 
         modules-left = "i3 xwindow";
-        modules-right = "net-traffic bluetooth vpn cpu memory battery pulseaudio time-utc time-local tray";
+        modules-right = modulesRight;
 
         line-size = 2;
         padding = 1;
@@ -157,27 +204,6 @@ in
         label-warn-foreground = "\${colors.alert}";
       };
 
-      # Battery (was: 80_battery)
-      "module/battery" = {
-        type = "internal/battery";
-        battery = "BAT0";
-        adapter = "AC";
-        full-at = 98;
-        poll-interval = 10;
-
-        format-charging = "<label-charging>";
-        label-charging = "%{T2}%{T-} %percentage%%";
-        label-charging-foreground = "\${colors.green}";
-
-        format-discharging = "<label-discharging>";
-        label-discharging = "%{T2}%{T-} %percentage%%";
-        label-discharging-foreground = "\${colors.warning}";
-
-        format-full = "<label-full>";
-        label-full = "%{T2}%{T-} %percentage%%";
-        label-full-foreground = "\${colors.green}";
-      };
-
       # Volume (was: 80_volume)
       "module/pulseaudio" = {
         type = "internal/pulseaudio";
@@ -209,9 +235,7 @@ in
         label = "%{T2}%{T-} %date% %time%";
         label-foreground = "\${colors.primary}";
       };
-
-
-    };
+    } // batteryModules;
 
     script = ''
       PATH="${pkgs.procps}/bin:${pkgs.coreutils}/bin:${pkgs.iproute2}/bin:${pkgs.i3}/bin:${pkgs.gnugrep}/bin:$PATH"
@@ -224,11 +248,12 @@ in
     '';
   };
 
-  systemd.user.services.polybar = {
-    # Make sure polybar restarts quickly
-    Service = {
-      KillSignal = "SIGTERM";
-      TimeoutStopSec = 1;
+    systemd.user.services.polybar = {
+      # Make sure polybar restarts quickly
+      Service = {
+        KillSignal = "SIGTERM";
+        TimeoutStopSec = 1;
+      };
     };
   };
 }
