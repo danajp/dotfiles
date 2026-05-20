@@ -17,13 +17,13 @@ let
     full-at = 98;
     poll-interval = 10;
     format-charging = "<label-charging>";
-    label-charging = "%{T2}%{T-} %percentage%%";
+    label-charging = "%{T2}%{T-}  %percentage%%";
     label-charging-foreground = "\${colors.green}";
     format-discharging = "<label-discharging>";
-    label-discharging = "%{T2}%{T-} %percentage%%";
+    label-discharging = "%{T2}%{T-}  %percentage%%";
     label-discharging-foreground = "\${colors.warning}";
     format-full = "<label-full>";
-    label-full = "%{T2}%{T-} %percentage%%";
+    label-full = "%{T2}%{T-}  %percentage%%";
     label-full-foreground = "\${colors.green}";
   };
 
@@ -183,11 +183,11 @@ in
         type = "internal/cpu";
         interval = 5;
         format = "<label>";
-        label = "%{T2}%{T-} %percentage%%";
+        label = "%{T2}%{T-} %percentage%%";
         label-foreground = "\${colors.foreground}";
         warn-percentage = 80;
         format-warn = "<label-warn>";
-        label-warn = "%{T2}%{T-} %percentage%%";
+        label-warn = "%{T2}%{T-} %percentage%%";
         label-warn-foreground = "\${colors.alert}";
       };
 
@@ -196,11 +196,11 @@ in
         type = "internal/memory";
         interval = 10;
         format = "<label>";
-        label = "%{T2}%{T-} %percentage_used%%";
+        label = "%{T2}%{T-} %percentage_used%%";
         label-foreground = "\${colors.foreground}";
         warn-percentage = 90;
         format-warn = "<label-warn>";
-        label-warn = "%{T2}%{T-} %percentage_used%%";
+        label-warn = "%{T2}%{T-} %percentage_used%%";
         label-warn-foreground = "\${colors.alert}";
       };
 
