@@ -67,7 +67,7 @@ in
   my.batteryAdapter = "AC";
 
   # Machine-specific oh-my-openagent config
-  xdg.configFile."opencode/oh-my-openagent.json".source = ../dot/config/opencode/oh-my-openagent-thinkpad.json;
+  xdg.configFile."opencode/oh-my-openagent.json".source = ./modules/ai-tools/oh-my-openagent-thinkpad.json;
 
   # Keyboard remapping (ThinkPad T460s only)
   home.keyboard.options = [ "caps:ctrl_modifier" ];
