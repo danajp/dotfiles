@@ -96,7 +96,7 @@ in
 
         line-size = 2;
         padding = 1;
-        module-margin = 1;
+        module-margin = 0;
       };
 
       # ── System tray ───────────────────────────────────────────
