@@ -141,7 +141,7 @@ in
       # Focused window name (was: 10_focused-window-name)
       "module/xwindow" = {
         type = "internal/xwindow";
-        label = "%title:0:60:...%";
+        label = "%title:0:50:...%";
         label-foreground = "\${colors.foreground}";
       };
 
