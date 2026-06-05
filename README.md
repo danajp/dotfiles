@@ -86,6 +86,39 @@ UID ≥ 1000, matching upstream's logic), and installs the result. Re-run it
 after a 1Password version bump only if upstream changes the policy template
 (rare); the rendered file is independent of the store hash.
 
+## 1Password (Brave browser-extension integration)
+
+The 1Password browser extension talks to the desktop app over Chrome's native
+messaging protocol. Two pieces have to line up for this to work on Ubuntu with
+a Nix-installed 1Password and Brave:
+
+1. **Per-user native-messaging manifest** at
+   `~/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts/com.1password.1password.json`.
+   The manifest shipped in the Nix store points at `/opt/1Password/1Password-BrowserSupport`,
+   which doesn't exist on Nix. Home-manager renders the right one via
+   `xdg.configFile` in `machines/modules/browser.nix`, with the path
+   interpolated from `pkgs._1password-gui` so it tracks store-hash updates
+   automatically. No manual step required — it lands on the next
+   `home-manager switch`.
+
+2. **System-wide custom browser allowlist** at
+   `/etc/1password/custom_allowed_browsers`. 1Password's desktop app only
+   accepts handshakes from a hardcoded set of browser binaries; Brave isn't
+   on that list, so its executable name (`brave-browser`) has to be added
+   explicitly. Home-manager standalone can't write to `/etc/`, so this is a
+   one-shot sudo helper, same pattern as the polkit installer:
+
+   ```bash
+   sudo bin/install-1password-browser-allowlist
+   ```
+
+   Idempotent; re-run only if you start using a differently-named Brave
+   binary. After running it, restart both the 1Password desktop app and
+   Brave so they re-read their integration state. The 1Password extension
+   should then offer "Unlock using 1Password desktop app" (which routes
+   through system authentication, i.e. your fingerprint reader) instead of
+   asking for the account password.
+
 ## Slack (AppArmor sandbox)
 
 Slack is an Electron app that has the same AppArmor sandbox issue as Brave, Signal, and 1Password. Create a profile to allow user namespaces:
