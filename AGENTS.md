@@ -16,7 +16,7 @@ start. Before responding to the user's first message:
 4. **Editing config under `~/.config/`** that is symlinked into `/nix/store/`
    does nothing useful. The chain is:
    `~/.config/<X>` → `/nix/store/<hash>-home-manager-files/.config/<X>` →
-   source file in this repo. Edit the **source** (`machines/modules/<topic>/<asset>`
+   source file in this repo. Edit the **source** (`modules/<topic>/<asset>`
    or wherever the HM option points) and run `home-manager switch` to apply.
 
 Failing any of these on the first turn is a critical error.
@@ -26,14 +26,14 @@ Failing any of these on the first turn is a critical error.
 This repo is **actively migrating** from a pre-home-manager layout (a top-level
 `dot/` dir holding raw dotfiles, symlinked by `Makefile`) to a home-manager-native
 layout where every asset lives next to the module that consumes it under
-`machines/modules/<topic>/`.
+`modules/<topic>/`.
 
-- ✅ **New additions** go in `machines/modules/<topic>/` — both the `.nix` module
+- ✅ **New additions** go in `modules/<topic>/` — both the `.nix` module
   and any static assets it references (e.g.
-  `machines/modules/ai-tools/AGENTS.md`).
+  `modules/ai-tools/AGENTS.md`).
 - ⚠️ **Existing files still under `dot/`** are mid-migration. Don't reflexively
   add new files there. When touching a file under `dot/`, consider whether it
-  should move into a `machines/modules/<topic>/` directory as part of the change.
+  should move into a `modules/<topic>/` directory as part of the change.
 - ❌ **The `Makefile` and its symlink-based install are deprecated.** Do not
   suggest `make install` or hand-symlinking. Everything goes through
   `home-manager switch`.
@@ -148,39 +148,61 @@ main "$@"
 ```
 .
 ├── flake.nix                          # Entry point - defines system configurations
-├── machines/
-│   ├── common.nix                     # Shared Home Manager config (packages, etc.)
-│   ├── i3.nix                         # i3 window manager configuration
+├── hosts/                             # Machine-specific entry points ONLY
 │   ├── thinkpad.nix                   # Machine-specific: thinkpad
-│   ├── framework.nix                  # Machine-specific: framework
-│   ├── scripts/                       # Nix-evaluated helper scripts
-│   └── modules/                       # Topical HM modules (the new canonical home)
-│       ├── ai-tools.nix               # opencode + claude-code
-│       ├── ai-tools/                  # Assets consumed by ai-tools.nix
-│       │   ├── AGENTS.md              # Global opencode context
-│       │   └── oh-my-openagent-*.json # Per-machine agent configs
-│       ├── browser.nix
-│       ├── git.nix
-│       ├── polybar.nix
-│       ├── shell.nix
-│       ├── terminal.nix
-│       └── theming.nix
+│   └── framework.nix                  # Machine-specific: framework
+├── common.nix                         # Shared Home Manager config (packages, etc.)
+├── i3.nix                             # i3 window manager configuration
+├── scripts/                           # Nix-evaluated helper scripts
+├── modules/                           # Topical HM modules (the canonical home for shared config)
+│   ├── default.nix                    # Aggregate import of all topical modules
+│   ├── ai-tools.nix                   # opencode + claude-code
+│   ├── ai-tools/                      # Assets consumed by ai-tools.nix
+│   │   ├── AGENTS.md                  # Global opencode context
+│   │   └── oh-my-openagent-*.json     # Per-machine agent configs
+│   ├── browser.nix
+│   ├── git.nix
+│   ├── polybar.nix
+│   ├── shell.nix
+│   ├── terminal.nix
+│   └── theming.nix
 ├── bin/                               # User shell scripts (installed via HM)
-├── lib/                               # Shared nix helpers (e.g. colors.nix)
+├── lib/                               # Shared nix helpers, called via import (e.g. colors.nix, volume.nix)
 ├── dot/                               # ⚠️ Legacy: being migrated to modules/<topic>/
 └── Makefile                           # ❌ Deprecated - do not use
 ```
 
-The **module + colocated-assets** pattern (see `machines/modules/ai-tools/`) is
-the target layout. New topical modules should follow it: create
-`machines/modules/<topic>.nix` plus a sibling `machines/modules/<topic>/`
+Only genuinely machine-specific entry points live under `hosts/`. Everything
+shared lives at the repo root.
+
+### Module vs. helper: which directory?
+
+The split between `modules/` and `lib/` is **by kind of Nix file**, not by
+whether the file is "shared":
+
+- **`modules/<topic>.nix` — Home Manager modules.** Signature takes the module
+  args (`{ config, pkgs, lib, ... }:`) and the body returns HM *options*
+  (`programs.*`, `services.*`, `home.*`). Consumed by being listed in an
+  `imports = [ ... ]` (see `modules/default.nix`). Example: `terminal.nix`.
+- **`lib/<name>.nix` — called helpers.** Plain functions (`{ pkgs }:` or
+  `{ lib }:`) that return a *value* — a derivation, a string, a function. They
+  are never in an `imports` list; they're `import`-ed and **called** at a use
+  site. Examples: `volume.nix` (returns a `writeShellScriptBin` derivation,
+  called from `i3.nix`), `colors.nix`, `i3-workspaces.nix`.
+
+Rule of thumb: if it goes in `imports`, it's a module → `modules/`. If you
+`import ./x.nix { ... }` and use the result, it's a helper → `lib/`.
+
+The **module + colocated-assets** pattern (see `modules/ai-tools/`) is
+the target layout for modules. New topical modules should follow it: create
+`modules/<topic>.nix` plus a sibling `modules/<topic>/`
 directory for any static assets it references.
 
 ## Key Conventions
 
-1. **Machine configs**: Always import `./common.nix`, add machine-specific overrides
-2. **Topical modules**: Group related config under `machines/modules/<topic>.nix`
-   and import from machine files; colocate static assets in `machines/modules/<topic>/`
+1. **Machine configs**: Always import `../common.nix`, add machine-specific overrides
+2. **Topical modules**: Group related config under `modules/<topic>.nix`
+   and import from machine files; colocate static assets in `modules/<topic>/`
 3. **Color scheme**: Consistently use Solarized Dark across all configs (palette
    in `lib/colors.nix`)
 4. **Secrets**: Never commit secrets; use `~/.gitconfig-signing` and `~/secrets/`
@@ -195,8 +217,8 @@ directory for any static assets it references.
 # This is the strongest local check; run it before claiming a change works.
 home-manager build --flake .#dana@thinkpad
 home-manager build --flake .#dana@framework   # ALSO run this if you touched
-                                              # anything in machines/common.nix
-                                              # or machines/modules/
+                                              # anything in common.nix
+                                              # or modules/
 
 # Lighter syntax-only check (won't catch HM module issues)
 nix flake check
@@ -214,13 +236,13 @@ framework build.
 
 | What you're adding | Canonical location | How to wire it |
 |---|---|---|
-| Package available in nixpkgs | `home.packages` in `machines/common.nix` (or a machine file if host-specific) | `home.packages = [ pkgs.<name> ];` |
-| Tool with a home-manager module | New or existing `machines/modules/<topic>.nix` | `programs.<name>.enable = true;` + typed options |
-| Static asset consumed by an HM option | `machines/modules/<topic>/<asset>` | Pass via the typed option (e.g. `context = ./<topic>/asset.md;`) |
-| Static config file with no HM module | `machines/modules/<topic>/<asset>` | `xdg.configFile."path".source = ./<topic>/<asset>;` |
+| Package available in nixpkgs | `home.packages` in `common.nix` (or a host file if host-specific) | `home.packages = [ pkgs.<name> ];` |
+| Tool with a home-manager module | New or existing `modules/<topic>.nix` | `programs.<name>.enable = true;` + typed options |
+| Static asset consumed by an HM option | `modules/<topic>/<asset>` | Pass via the typed option (e.g. `context = ./<topic>/asset.md;`) |
+| Static config file with no HM module | `modules/<topic>/<asset>` | `xdg.configFile."path".source = ./<topic>/<asset>;` |
 | User shell script | `bin/<script>` | Installed via existing HM wiring (see `bin/` references in `common.nix`) |
-| Per-machine override | `machines/<host>.nix` | After `imports = [ ./common.nix ];` |
-| Shared across machines | `machines/common.nix` or a module imported by both machines | Plain HM options |
+| Per-machine override | `hosts/<host>.nix` | After `imports = [ ../common.nix ];` |
+| Shared across machines | `common.nix` or a module imported by both machines | Plain HM options |
 | Color/theme constants | `lib/colors.nix` | `let palette = import ../../lib/colors.nix; in ...` |
 
 If the answer to "where does X belong?" isn't on this table, the convention

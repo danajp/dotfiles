@@ -106,8 +106,8 @@
       pkgs.noto-fonts-color-emoji
     ];
 
-    file.".asdfrc".source = ../dot/asdfrc;
-    file.".gemrc".source = ../dot/gemrc;
+    file.".asdfrc".source = ./dot/asdfrc;
+    file.".gemrc".source = ./dot/gemrc;
 
     # asdf default packages (migrated from bootstrap)
     file."/.default-gems".text = ''
@@ -193,7 +193,7 @@
   # XDG config files
   xdg.enable = true;
 
-  xdg.configFile."dunst/dunstrc".source = ../dot/config/dunst/dunstrc;
+  xdg.configFile."dunst/dunstrc".source = ./dot/config/dunst/dunstrc;
 
   # Direnv config (migrated from bootstrap)
   xdg.configFile."direnv/direnv.toml".text = ''

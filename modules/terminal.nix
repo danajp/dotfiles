@@ -38,7 +38,7 @@
 
   # Rofi solarized-dark theme (sourced from dot/)
   xdg.configFile = {
-    "rofi/solarized-dark.rasi".source = ../../dot/config/rofi/solarized-dark.rasi;
-    "rofi/power-menu.rasi".source = ../../dot/config/rofi/power-menu.rasi;
+      "rofi/solarized-dark.rasi".source = ../dot/config/rofi/solarized-dark.rasi;
+      "rofi/power-menu.rasi".source = ../dot/config/rofi/power-menu.rasi;
   };
 }

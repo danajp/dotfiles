@@ -7,7 +7,7 @@ let
   externalMonitor = "DisplayPort-1-0";
 in
 {
-  imports = [ ./common.nix ];
+  imports = [ ../common.nix ];
 
   # Autorandr profiles for display configuration
   # To capture fingerprints for auto-detection, run:
@@ -72,7 +72,7 @@ in
   '';
 
   # Machine-specific oh-my-openagent config
-  xdg.configFile."opencode/oh-my-openagent.json".source = ./modules/ai-tools/oh-my-openagent-framework.json;
+  xdg.configFile."opencode/oh-my-openagent.json".source = ../modules/ai-tools/oh-my-openagent-framework.json;
 
   # Atlassian Jira MCP server (OAuth-based, via mcp.atlassian.com)
   programs.opencode.settings.mcp.atlassian = {

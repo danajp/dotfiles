@@ -36,7 +36,7 @@
         ];
       };
 
-      # Build a homeConfiguration for a host module under machines/.
+      # Build a homeConfiguration for a host module under hosts/.
       # All hosts share pkgs; only the entry-point module differs.
       mkHome = hostModule: home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
@@ -45,8 +45,8 @@
     in
     {
       homeConfigurations = {
-        "dana@thinkpad"  = mkHome ./machines/thinkpad.nix;
-        "dana@framework" = mkHome ./machines/framework.nix;
+        "dana@thinkpad"  = mkHome ./hosts/thinkpad.nix;
+        "dana@framework" = mkHome ./hosts/framework.nix;
       };
 
       # Pure-Nix unit tests for helper functions in lib/.

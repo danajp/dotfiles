@@ -2,12 +2,12 @@
 { config, pkgs, lib, ... }:
 
 let
-  palette = import ../lib/colors.nix;
-  workspaces = import ../lib/i3-workspaces.nix { inherit lib; };
+  palette = import ./lib/colors.nix;
+  workspaces = import ./lib/i3-workspaces.nix { inherit lib; };
 
   modifier = "Mod4";
 
-  volume-control = import ./volume.nix { inherit pkgs; };
+  volume-control = import ./lib/volume.nix { inherit pkgs; };
 
   rofi-power-menu = pkgs.writeShellScriptBin "rofi-power-menu" ''
     options="Lock\nLogout\nSuspend\nReboot\nPower Off"
@@ -119,7 +119,7 @@ in
         size = 12.0;
       };
 
-      # Solarized Dark colors (from ../lib/colors.nix)
+      # Solarized Dark colors (from ./lib/colors.nix)
       colors = {
         focused = {
           border = palette.base03;
@@ -241,7 +241,7 @@ in
           notification = true;
         }
         {
-          command = "feh --bg-fill ${../assets/akash-mehrotra-2.jpg}";
+          command = "feh --bg-fill ${./assets/akash-mehrotra-2.jpg}";
           always = true;
           notification = false;
         }
@@ -278,7 +278,7 @@ in
           "${mod}+0" = "workspace number 10";
 
           # Workspaces 11-19 (with Ctrl) are generated below via
-          # workspaces.mkExtBindings — see ../lib/i3-workspaces.nix.
+          # workspaces.mkExtBindings — see ./lib/i3-workspaces.nix.
 
           # Workspace navigation
           "${mod}+Tab" = "workspace next";
@@ -433,7 +433,7 @@ in
 
     # Extra config for window rules + workspace output assignments
     # (workspace lines are generated from config.my.monitors via the
-    # mkWorkspaceOutputs helper in ../lib/i3-workspaces.nix).
+    # mkWorkspaceOutputs helper in ./lib/i3-workspaces.nix).
     extraConfig = ''
       # Popup during fullscreen
       popup_during_fullscreen smart

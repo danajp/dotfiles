@@ -6,7 +6,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  palette = import ../../lib/colors.nix;
+  palette = import ../lib/colors.nix;
 
   batteries = config.my.batteries;
 
@@ -65,7 +65,7 @@ in
       pulseSupport = true;
     };
 
-    # Solarized Dark palette pulled from ../../lib/colors.nix.
+    # Solarized Dark palette pulled from ../lib/colors.nix.
     config = {
       "colors" = {
         background = palette.base03;

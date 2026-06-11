@@ -26,14 +26,14 @@ test:
 
 .PHONY: lint
 lint:
-	-nix run nixpkgs#deadnix -- machines/ lib/ tests/ flake.nix
+	-nix run nixpkgs#deadnix -- hosts/ modules/ common.nix i3.nix lib/ tests/ flake.nix
 	-nix run nixpkgs#statix  -- check .
 
 # Strict lint: same as lint, but fails on any finding. Use after the
 # refactor stabilizes to enforce a clean baseline going forward.
 .PHONY: lint-strict
 lint-strict:
-	nix run nixpkgs#deadnix -- --fail machines/ lib/ tests/ flake.nix
+	nix run nixpkgs#deadnix -- --fail hosts/ modules/ common.nix i3.nix lib/ tests/ flake.nix
 	nix run nixpkgs#statix  -- check .
 
 .PHONY: build-all

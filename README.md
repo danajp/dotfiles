@@ -96,7 +96,7 @@ a Nix-installed 1Password and Brave:
    `~/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts/com.1password.1password.json`.
    The manifest shipped in the Nix store points at `/opt/1Password/1Password-BrowserSupport`,
    which doesn't exist on Nix. Home-manager renders the right one via
-   `xdg.configFile` in `machines/modules/browser.nix`, with the path
+   `xdg.configFile` in `modules/browser.nix`, with the path
    interpolated from `pkgs._1password-gui` so it tracks store-hash updates
    automatically. No manual step required — it lands on the next
    `home-manager switch`.
