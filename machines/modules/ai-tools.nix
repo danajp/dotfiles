@@ -48,10 +48,16 @@ in
 
     context = ./ai-tools/AGENTS.md;
 
+    tui = {
+      plugin = [
+        "oh-my-openagent/tui"
+      ];
+    };
+
     settings = {
       plugin = [
         "@opencode-ai/plugin"
-        "oh-my-openagent"
+        "oh-my-openagent@latest"
         # https://github.com/shahidshabbir-se/opencode-anthropic-oauth/tree/master
         "opencode-anthropic-oauth"
       ];
