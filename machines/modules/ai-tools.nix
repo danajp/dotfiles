@@ -1,9 +1,50 @@
 # AI coding assistants: opencode + claude-code
-_:
+{ pkgs, ... }:
+
+let
+  dcg = pkgs.stdenvNoCC.mkDerivation rec {
+    pname = "destructive-command-guard";
+    version = "0.5.7";
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/Dicklesworthstone/destructive_command_guard/releases/download/v${version}/dcg-x86_64-unknown-linux-musl.tar.xz";
+      hash = "sha256-PLcpeskKAbguYWW17gp0uLZzJQ5KCrkYLV2+OWpGfN4=";
+    };
+
+    dontUnpack = true;
+
+    nativeBuildInputs = [
+      pkgs.gnutar
+      pkgs.xz
+    ];
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p "$out/bin"
+      tar -xJf "$src" -C "$out/bin" dcg
+      chmod +x "$out/bin/dcg"
+
+      runHook postInstall
+    '';
+
+    meta = {
+      description = "Pre-execution guard that blocks destructive AI shell commands";
+      homepage = "https://github.com/Dicklesworthstone/destructive_command_guard";
+      license = pkgs.lib.licenses.mit;
+      mainProgram = "dcg";
+      platforms = [ "x86_64-linux" ];
+    };
+  };
+in
 
 {
   programs.opencode = {
     enable = true;
+
+    # Keep dcg scoped to opencode so the plugin can find it without making it a
+    # general shell dependency.
+    extraPackages = [ dcg ];
 
     context = ./ai-tools/AGENTS.md;
 
@@ -104,5 +145,12 @@ _:
 
   programs.claude-code = {
     enable = true;
+  };
+
+  xdg.configFile = {
+    "dcg/config.toml".source = ./ai-tools/dcg-config.toml;
+    "opencode/plugins/dcg-guard.js".text = builtins.replaceStrings [ "@dcg@" ] [ "${dcg}/bin/dcg" ] (
+      builtins.readFile ./ai-tools/dcg-guard.js
+    );
   };
 }
