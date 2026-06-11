@@ -5,7 +5,7 @@
 
   "agents": {
     "sisyphus": {
-      "model": "anthropic/claude-opus-4-8"
+      "model": "openai/gpt-5.5"
     },
     "prometheus": {
       "model": "anthropic/claude-opus-4-8"
