@@ -164,3 +164,19 @@ sudo reboot
 
 **Note:** This is system-level configuration outside Home Manager's scope.
 
+## KVM / autorandr auto-detection
+
+A USB KVM switch is used to share the external monitor, keyboard, and mouse between the ThinkPad and the Framework. When the KVM routes the devices to a machine, the monitor does **not** generate a hotplug event (it stays electrically connected to the KVM), so `autorandr` cannot detect the switch on its own. A plain USB hub connected to the KVM, however, appears and disappears reliably in the kernel log.
+
+**Fix:** Add a udev rule that triggers `autorandr --load docked` when the dock's root USB hub appears, and `autorandr --load undocked` when it disappears:
+
+```bash
+sudo tee /etc/udev/rules.d/99-kvm-autorandr.rules << 'EOF'
+# Trigger autorandr when the KVM's root USB hub appears/disappears
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="2109", ATTR{idProduct}=="0812", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/run/user/1000/gdm/Xauthority", RUN+="/usr/sbin/runuser -u dana -- /home/dana/.nix-profile/bin/autorandr --load docked"
+ACTION=="remove", SUBSYSTEM=="usb", ENV{PRODUCT}=="2109/812/*", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/run/user/1000/gdm/Xauthority", RUN+="/usr/sbin/runuser -u dana -- /home/dana/.nix-profile/bin/autorandr --load undocked"
+EOF
+sudo udevadm control --reload-rules
+```
+
+This follows the same pattern as the AppArmor/GRUB fixes above — a one-time system-level setup outside Home Manager's scope. The `2109:0812` IDs are the VIA Labs USB3.0 hub (visible in `dmesg` whenever the KVM switches to the machine). They are hardware IDs, so the same rule works on both the ThinkPad and the Framework.
