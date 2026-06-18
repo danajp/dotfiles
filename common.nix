@@ -66,6 +66,7 @@
       pkgs.traceroute
       pkgs.moreutils
       pkgs.bat
+      pkgs.pandoc
 
       # Development tools (migrated from bootstrap apt)
       pkgs.cmake
