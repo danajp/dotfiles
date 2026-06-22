@@ -90,6 +90,13 @@ in
     ];
   };
 
+  # Compositor; required for Zoom screen sharing.
+  services.picom = {
+    enable = true;
+    backend = "glx";
+    vSync = true;
+  };
+
   # Enable xsession for display manager integration
   xsession.enable = true;
 
