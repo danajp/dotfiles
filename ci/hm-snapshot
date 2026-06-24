@@ -2,11 +2,11 @@
 # hm-snapshot: Capture the current home-manager build as a baseline snapshot.
 #
 # Usage:
-#   bin/hm-snapshot                  # snapshot all hosts (thinkpad + framework)
-#   bin/hm-snapshot thinkpad         # snapshot one host
+#   ci/hm-snapshot                  # snapshot all hosts (thinkpad + framework)
+#   ci/hm-snapshot thinkpad         # snapshot one host
 #
 # The snapshot is written to ./.hm-baseline/<host>/ and contains a copy of
-# every file home-manager would generate. Use `bin/hm-diff` afterwards to
+# every file home-manager would generate. Use `ci/hm-diff` afterwards to
 # compare a fresh build against this baseline.
 #
 # .hm-baseline/ is gitignored — these are local-machine artifacts.
@@ -93,7 +93,7 @@ main() {
   echo "Baseline snapshot complete. ${baseline_root}/ contains:"
   ls -la "${baseline_root}/"
   echo
-  echo "Next: make a refactor change, then run \`bin/hm-diff\` to verify"
+  echo "Next: make a refactor change, then run \`ci/hm-diff\` to verify"
   echo "generated config files are byte-identical to this baseline."
 }
 

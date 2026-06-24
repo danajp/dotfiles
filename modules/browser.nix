@@ -32,7 +32,7 @@
   # NOTE: this only handles the per-user manifest. Brave also requires the
   # browser's executable name to appear in /etc/1password/custom_allowed_browsers
   # (a system path home-manager cannot write to). See
-  # `bin/install-1password-browser-allowlist`.
+  # `setup/install-1password-browser-allowlist`.
   xdg.configFile."BraveSoftware/Brave-Browser/NativeMessagingHosts/com.1password.1password.json".text = builtins.toJSON {
     name = "com.1password.1password";
     description = "1Password BrowserSupport";

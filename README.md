@@ -77,7 +77,7 @@ On NixOS this is handled by `programs._1password-gui`. On Ubuntu we replicate
 upstream's `after-install.sh` polkit step manually with the helper script:
 
 ```bash
-sudo bin/install-1password-polkit
+sudo setup/install-1password-polkit
 ```
 
 The script resolves the current Nix store path via `which 1password`, renders
@@ -109,7 +109,7 @@ a Nix-installed 1Password and Brave:
    one-shot sudo helper, same pattern as the polkit installer:
 
    ```bash
-   sudo bin/install-1password-browser-allowlist
+   sudo setup/install-1password-browser-allowlist
    ```
 
    Idempotent; re-run only if you start using a differently-named Brave

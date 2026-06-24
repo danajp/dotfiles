@@ -2,7 +2,7 @@
 result
 result-*
 
-# Local baseline snapshots used by bin/hm-snapshot + bin/hm-diff.
+# Local baseline snapshots used by ci/hm-snapshot + ci/hm-diff.
 # Per-machine, ephemeral, can be regenerated at any time.
 .hm-baseline/
 

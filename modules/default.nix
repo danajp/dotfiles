@@ -6,6 +6,7 @@
     ./browser.nix
     ./git.nix
     ./polybar.nix
+    ./scripts.nix
     ./shell.nix
     ./terminal.nix
     ./theming.nix

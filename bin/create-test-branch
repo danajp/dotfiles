@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+git fetch origin
+git checkout -B dana-test origin/main
+git commit --allow-empty -m "Empty commit on dana-test"
+git push --force origin dana-test

@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+#
+# list-prod-ingress-lb.sh
+# Lists all ingress classes and their AWS ELB load balancers for specified contexts
+#
+# Usage: list-prod-ingress-lb.sh [-q|--quiet] [-h|--help] [CONTEXT...]
+#
+
+set -euo pipefail
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [OPTIONS] [CONTEXT...]
+
+Lists all ingress classes and their associated AWS ELB load balancers
+for specified kubernetes contexts.
+
+Arguments:
+    CONTEXT...     One or more context names (exact match). If omitted,
+                   queries all contexts in your kubeconfig.
+
+Options:
+    -q, --quiet    Suppress header row (useful for piping)
+    -h, --help     Show this help message
+
+Output columns:
+    CONTEXT        The kubernetes context name
+    INGRESS_CLASS  The ingress class name
+    LOAD_BALANCER  The AWS ELB hostname (or N/A if not available)
+EOF
+    exit 0
+}
+
+get_all_contexts() {
+    kubectl config get-contexts -o name 2>/dev/null | sort
+}
+
+# Namespace mapping: prod.REGION -> default, prod-REGION-0 -> ingress-nginx
+get_namespace() {
+  local ctx
+
+  ctx="$1"
+  ic="$2"
+
+  if [[ "$ic" =~ f5 ]]; then
+    echo "f5-nginx-ingress"
+  elif [[ "$ctx" =~ ^prod\.[a-z0-9]+$ ]]; then
+    echo "default"
+  elif [[ "$ctx" =~ ^prod-[a-z0-9]+-0$ ]]; then
+    echo "ingress-nginx"
+  elif [[ "$ctx" == prod.* ]]; then
+    echo "default"
+  else
+    echo "ingress-nginx"
+  fi
+}
+
+get_ingress_classes() {
+    local ctx="$1"
+    kubectl --context "$ctx" get ingressclass -o json 2>/dev/null \
+        | jq -r '.items[].metadata.name'
+}
+
+get_lb_hostname() {
+    local ctx="$1"
+    local ns="$2"
+    local ingress_class="$3"
+    kubectl --context "$ctx" -n "$ns" get svc -l "ingress-class=$ingress_class" -o json 2>/dev/null \
+        | jq -r '.items[0].status.loadBalancer.ingress[0].hostname // "N/A"'
+}
+
+process_context() {
+  local ctx ns hostname
+  ctx="$1"
+
+  get_ingress_classes "$ctx" 2>/dev/null | while read -r ic; do
+    [[ -z "$ic" ]] && continue
+    ns=$(get_namespace "$ctx" "$ic")
+    hostname=$(get_lb_hostname "$ctx" "$ns" "$ic")
+    printf '%s\t%s\t%s\n' "$ctx" "$ic" "$hostname"
+  done
+}
+
+main() {
+    local quiet=false
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -q|--quiet)
+                quiet=true
+                shift
+                ;;
+            -h|--help)
+                usage
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    {
+        if [[ "$quiet" == "false" ]]; then
+            printf '%s\t%s\t%s\n' "CONTEXT" "INGRESS_CLASS" "LOAD_BALANCER"
+        fi
+
+        for ctx in "$@"; do
+            process_context "$ctx" 2>/dev/null
+        done | sort -t$'\t' -k1,1 -k2,2
+    } | column -t -s$'\t'
+}
+
+main "$@"

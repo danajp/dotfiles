@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -eo pipefail
-
-i3lock -c 000000 -n &
-xset dpms force off

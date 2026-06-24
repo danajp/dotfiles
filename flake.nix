@@ -61,13 +61,27 @@
         inherit (nixpkgs) lib;
       };
 
-      # Wrap the test attrset in a derivation so `nix flake check` can
-      # discover and evaluate it. The actual test execution still goes
-      # through nix-unit (see `make test`).
-      checks.${system}.unit-tests = pkgs.runCommand "unit-tests-eval" { } ''
-        # Evaluating the import is enough to catch syntax/type errors
-        # in lib/ helpers. Functional assertions run via nix-unit.
-        echo "tests evaluated successfully" > $out
-      '';
+      checks.${system} = {
+        # Wrap the test attrset in a derivation so `nix flake check` can
+        # discover and evaluate it. The actual test execution still goes
+        # through nix-unit (see `make test`).
+        unit-tests = pkgs.runCommand "unit-tests-eval" { } ''
+          # Evaluating the import is enough to catch syntax/type errors
+          # in lib/ helpers. Functional assertions run via nix-unit.
+          echo "tests evaluated successfully" > $out
+        '';
+
+        # Shellcheck the scripts that are NOT installed via home-manager and
+        # therefore don't get writeShellApplication's build-time check:
+        #   ci/    — repo tooling (hm-snapshot, hm-diff)
+        #   setup/ — root system-mutation installers
+        # The package-like scripts in bin/ are checked when their
+        # writeShellApplication derivations build.
+        shellcheck = pkgs.runCommand "shellcheck-scripts"
+          { nativeBuildInputs = [ pkgs.shellcheck ]; } ''
+          shellcheck ${./ci}/* ${./setup}/*
+          touch $out
+        '';
+      };
     };
 }

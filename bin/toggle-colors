@@ -1,64 +1,27 @@
-#!/bin/bash
-
 set -eo pipefail
-
 [[ -n "$DEBUG" ]] && set -x
 
-ALACRITTY_CONFIG="$HOME/src/dotfiles/dot/config/alacritty/alacritty.toml"
-REGOLITH_XRESOURCES="$HOME/src/dotfiles/dot/config/regolith/Xresources"
-
-REGOLITH_DARK_THEME="/etc/regolith/styles/solarized-dark/root"
-REGOLITH_LIGHT_THEME="styles/solarized-light/root"
-
 set_emacs() {
-  local value
-
-  value="$1"
-
-  emacsclient -e "(color-theme-sanityinc-solarized-${value})" >/dev/null
+  local value="$1"
+  emacsclient -e "(color-theme-sanityinc-solarized-${value})" >/dev/null 2>&1 || true
 }
 
-set_alacritty() {
-  local value
-
-  value="$1"
-
-  sed "s#\(solarized-\)\(light\|dark\)\(\.toml\)#\1$value\3#" -i "$ALACRITTY_CONFIG"
-
-  # sed 's#\(colors:[[:space:]]\**solarized_\)\(light\|dark\)\(_theme\)#\1'"${value}"'\3#' -i "$ALACRITTY_CONFIG"
-}
-
-set_regolith() {
-  local value theme
-
-  value="$1"
-
-  if [[ "$value" == light ]]; then
-    theme="$REGOLITH_LIGHT_THEME"
+set_system_color_scheme() {
+  local value="$1"
+  if [[ "$value" == dark ]]; then
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
   else
-    theme="$REGOLITH_DARK_THEME"
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
   fi
-
-  sed "s|^#define my_theme.*|#define my_theme \"$theme\"|" -i "$REGOLITH_XRESOURCES"
-  regolith-look refresh
 }
 
-main() {
-  local target
+target="$1"
+case "$target" in
+  dark | light) ;;
+  *) echo "Usage: toggle-colors <dark|light>"; exit 1 ;;
+esac
 
-  target="$1"
-
-  case "$target" in
-    dark | light)
-    ;;
-    *)
-      echo "invalid target: $target"
-      return 1
-  esac
-
-  set_alacritty "$target"
-  set_emacs "$target"
-  set_regolith "$target"
-}
-
-main "$@"
+set_system_color_scheme "$target"
+set_emacs "$target"

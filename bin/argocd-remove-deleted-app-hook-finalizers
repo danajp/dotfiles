@@ -1,0 +1,31 @@
+#!/bin/bash
+
+get_deleted_apps() {
+  kubectl get app -n argocd -o json \
+    | jq -r '.items[] | select(.metadata.deletionTimestamp) | "\(.metadata.labels["lotus.greenhouse.io/application"])/\(.metadata.name)"'
+}
+
+remove_success_job_finalizer() {
+  local argocd_app lotus_app
+
+  lotus_app="$1"
+  argocd_app="$2"
+
+  # namespace is always the lotus app name, hook job is always argocd app name with -success suffix
+  kubectl patch job -n "$lotus_app" "${argocd_app}-pending" --type json -p '[{"op": "remove", "path": "/metadata/finalizers"}]'
+  echo "removed finalizer from job $lotus_app/${argocd_app}-success" >&2
+}
+
+main() {
+  local line lotus_app argocd_app
+
+  for line in $(get_deleted_apps); do
+    lotus_app="$(echo "$line" | awk -F/ '{print $1}')"
+    argocd_app="$(echo "$line" | awk -F/ '{print $2}')"
+
+    remove_success_job_finalizer "$lotus_app" "$argocd_app"
+    # kubectl delete workflow,job -n "$lotus_app" -l argocd.argoproj.io/hook
+  done
+}
+
+main

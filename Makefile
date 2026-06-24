@@ -46,15 +46,15 @@ build-all:
 
 .PHONY: snapshot
 snapshot:
-	./bin/hm-snapshot
+	./ci/hm-snapshot
 
 .PHONY: diff
 diff:
-	./bin/hm-diff --summary
+	./ci/hm-diff --summary
 
 .PHONY: diff-full
 diff-full:
-	./bin/hm-diff
+	./ci/hm-diff
 
 # `verify` is the one-shot safety gate to run after every refactor change.
 # Order: cheapest checks first so failures surface fast.

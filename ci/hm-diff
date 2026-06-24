@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # hm-diff: Compare a fresh home-manager build against the saved baseline
-# snapshot (created by `bin/hm-snapshot`).
+# snapshot (created by `ci/hm-snapshot`).
 #
 # Usage:
-#   bin/hm-diff                       # diff all snapshotted hosts
-#   bin/hm-diff thinkpad              # diff one host
-#   bin/hm-diff thinkpad --summary    # short summary (changed files only)
-#   bin/hm-diff thinkpad --closure    # also show nix store closure diff
+#   ci/hm-diff                       # diff all snapshotted hosts
+#   ci/hm-diff thinkpad              # diff one host
+#   ci/hm-diff thinkpad --summary    # short summary (changed files only)
+#   ci/hm-diff thinkpad --closure    # also show nix store closure diff
 #
 # Exit code is 0 if everything matches the baseline, 1 if any file differs.
 # This makes it usable as a pre-commit gate during pure refactors.
@@ -28,7 +28,7 @@ diff_host() {
   local baseline="${baseline_root}/${host}"
 
   if [[ ! -d "${baseline}" ]]; then
-    fatal "no baseline for ${host} — run \`bin/hm-snapshot ${host}\` first"
+    fatal "no baseline for ${host} — run \`ci/hm-snapshot ${host}\` first"
   fi
 
   local scratch
@@ -113,7 +113,7 @@ main() {
 
   if [[ ${#hosts[@]} -eq 0 ]]; then
     if [[ ! -d "${baseline_root}" ]]; then
-      fatal "no baseline — run \`bin/hm-snapshot\` first"
+      fatal "no baseline — run \`ci/hm-snapshot\` first"
     fi
     # Diff every host that has a baseline.
     for d in "${baseline_root}"/*/; do

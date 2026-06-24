@@ -51,8 +51,6 @@
       pkgs.temporal-cli
       pkgs.input-leap
 
-      (pkgs.writeShellScriptBin "toggle-colors"
-        (builtins.readFile ./scripts/toggle-colors.sh))
       pkgs._1password-gui
       pkgs.slack
 

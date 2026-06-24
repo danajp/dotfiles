@@ -1,0 +1,18 @@
+#!/bin/bash
+
+POD_TEMPLATE="$HOME/tmp/kdebug-pod.yaml"
+
+set -euo pipefail
+
+main() {
+  local pod_name namespace
+
+  pod_name="kdebug-$(openssl rand -hex 8)"
+  namespace="$1"
+
+  < "$POD_TEMPLATE" POD_NAME="$pod_name" NAMESPACE="$namespace" envsubst | kubectl create -f -
+  kubectl wait --for=condition=Ready pod/"$pod_name" -n "$namespace" --timeout=60s
+  kubectl attach -it -n "$namespace" "$pod_name" --container main
+}
+
+main "$@"
