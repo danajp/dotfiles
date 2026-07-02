@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Install Brave's managed policy for Okta/Duo localhost access.
+#
+# Background: Duo Desktop runs a local service on the loopback interface
+# (127.0.0.1) that the Okta login page contacts to verify device health.
+# Starting in Brave 1.88 (Chromium 146) Brave adopted Chromium's Local
+# Network Access (LNA) feature, which blocks a public page from reaching
+# loopback unless permission is granted. The old fix (Brave Shields "down")
+# no longer works because LNA is no longer part of Shields.
+#
+# Two policy pieces are required, and both are needed:
+#   * LocalNetworkAccessAllowedForUrls / LoopbackNetworkAllowedForUrls
+#     pre-grant the permission for the Okta and Duo origins. Chromium 146
+#     split loopback into its own permission, so the loopback list is the
+#     one that actually covers Duo Desktop on 127.0.0.1.
+#   * LocalNetworkAccessPermissionsPolicyDefaultEnabled makes cross-origin
+#     subframes inherit the permission. Duo's loopback call happens inside
+#     an iframe that Okta does not delegate the permission to, so without
+#     this the allowlist above never reaches the frame that needs it.
+#
+# Brave reads managed policies from /etc/brave/policies/managed/, a
+# root-owned path outside $HOME that home-manager standalone cannot write.
+# We install it here, mirroring setup/install-1password-browser-allowlist.
+#
+# Usage: sudo setup/install-brave-policy
+#
+# Idempotent: safe to re-run. Fully restart Brave afterwards — the
+# subframe-inheritance policy is only read at startup.
+
+set -euo pipefail
+
+if [[ $EUID -ne 0 ]]; then
+  echo "error: must run as root (use sudo)" >&2
+  exit 1
+fi
+
+DEST=/etc/brave/policies/managed/okta-duo-lna.json
+
+install -d -m 0755 /etc/brave/policies/managed
+
+TMP="$(mktemp)"
+trap 'rm -f "$TMP"' EXIT
+
+cat > "$TMP" <<'EOF'
+{
+  "LocalNetworkAccessAllowedForUrls": [
+    "https://greenhouse.okta.com",
+    "[*.]okta.com",
+    "[*.]duosecurity.com"
+  ],
+  "LoopbackNetworkAllowedForUrls": [
+    "https://greenhouse.okta.com",
+    "[*.]okta.com",
+    "[*.]duosecurity.com"
+  ],
+  "LocalNetworkAccessPermissionsPolicyDefaultEnabled": true
+}
+EOF
+
+install -Dm0644 "$TMP" "$DEST"
+
+echo "installed: $DEST"
+echo
+echo "Fully restart Brave (close all windows) so it re-reads the policy."
+echo "Verify at brave://policy that the three keys are listed."

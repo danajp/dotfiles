@@ -27,6 +27,18 @@ sudo apparmor_parser -r /etc/apparmor.d/brave-nix
 
 This only needs to be done once per machine. The `*` glob matches any Nix store hash, so it survives version updates.
 
+## Brave Browser (Okta/Duo login)
+
+Duo Desktop authenticates via a local service on `127.0.0.1` that the Okta login page contacts from a cross-origin iframe. Since Brave 1.88 (Chromium 146), Brave's Local Network Access (LNA) feature blocks this by default, and unlike older versions it is no longer controlled by Brave Shields — so turning Shields down no longer fixes it.
+
+The fix is a managed policy that (1) allowlists the Okta/Duo origins for loopback access and (2) enables permission inheritance into cross-origin iframes. Brave reads managed policies from `/etc/brave/policies/managed/`, a root-owned path home-manager standalone cannot write, so install it with the helper:
+
+```bash
+sudo setup/install-brave-policy
+```
+
+Fully restart Brave afterwards (the iframe-inheritance policy is read only at startup), and verify the three keys appear at `brave://policy`. Idempotent; re-run after adding new SSO domains. This follows the same one-shot sudo pattern as the 1Password installers below.
+
 ## Signal Desktop (AppArmor sandbox)
 
 Signal Desktop is an Electron app that has the same AppArmor sandbox issue as Brave. Create a profile to allow user namespaces:

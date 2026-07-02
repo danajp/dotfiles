@@ -8,32 +8,17 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Pinned nixpkgs for brave-browser 1.87.191
-    nixpkgs-brave.url = "github:nixos/nixpkgs/0c39f3b5a9a234421d4ad43ab9c7cf64840172d0";
   };
 
   outputs =
-    { nixpkgs, home-manager, nixpkgs-brave, ... }:
+    { nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
 
-      # nixpkgs with an overlay that pins Brave to a known-good revision.
-      # Browser updates routinely break on nixos-unstable; we hold the
-      # version at nixpkgs-brave's commit instead. The overlay makes the
-      # pinned package available as plain `pkgs.brave`, no extra special
-      # arg threading required.
+      # Brave tracks nixos-unstable along with the rest of nixpkgs.
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [
-          (_final: _prev: {
-            inherit (import nixpkgs-brave {
-              inherit system;
-              config.allowUnfree = true;
-            }) brave;
-          })
-        ];
       };
 
       # Build a homeConfiguration for a host module under hosts/.

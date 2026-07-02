@@ -1,8 +1,10 @@
-# Brave browser. Pinned to a known-good revision via the overlay in
-# flake.nix — `pkgs.brave` already returns the pinned package, so
-# `programs.brave.package` could be omitted (HM defaults to pkgs.brave).
-# Kept explicit so the dependency on the overlay is visible at the
-# call site.
+# Brave browser. Tracks nixos-unstable like the rest of nixpkgs;
+# `programs.brave.package` could be omitted (HM defaults to pkgs.brave)
+# but is kept explicit at the call site.
+#
+# Okta/Duo login needs a managed policy that home-manager cannot write
+# (it lives in /etc/brave). Install it once with
+# `sudo setup/install-brave-policy`. See README for details.
 { pkgs, ... }:
 
 {
