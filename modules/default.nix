@@ -4,6 +4,7 @@
   imports = [
     ./ai-tools.nix
     ./browser.nix
+    ./datadog-pup.nix
     ./git.nix
     ./polybar.nix
     ./scripts.nix
