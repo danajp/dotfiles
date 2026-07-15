@@ -49,6 +49,7 @@
       pkgs.feh
       pkgs.brightnessctl
       pkgs.temporal-cli
+      pkgs.circleci-cli
       pkgs.input-leap
 
       pkgs._1password-gui
