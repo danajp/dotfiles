@@ -49,4 +49,67 @@
       "chrome-extension://dppgmdbiimibapkepcbdbmkaabgiofem/"
     ];
   };
+
+  # 1Password Okta / SSO sign-in handler.
+  #
+  # When signing in to an Okta-federated account, 1Password's web flow
+  # redirects the browser to an `onepassword://sso/oidc/redirect?...` deep
+  # link so the desktop app can finalize the SSO handshake (the app's
+  # `captureUrl` classifies it as `SsoRedirect`).
+  #
+  # Brave hands external schemes to xdg-desktop-portal's OpenURI, and the
+  # portal launches the registered handler's `Exec` command. Under our i3
+  # session the portal's PATH is the bare login PATH (/usr/bin etc.) with NO
+  # ~/.nix-profile/bin on it, so a handler whose Exec is the bare word
+  # `1password` fails to launch — the portal reports "No Apps available".
+  # (The upstream 1password.desktop hits exactly this: its Exec is
+  # `1password %U`.)
+  #
+  # Fix: ship our own handler whose Exec is the ABSOLUTE store path to the
+  # binary, so it launches regardless of the portal's PATH. Interpolating
+  # `${pkgs._1password-gui}` tracks store-hash updates automatically. We also
+  # declare `onepassword8` (a second scheme the app accepts) for completeness.
+  # Fully declarative — no root, no `setup/` helper.
+  #
+  # NOTE: the portal caches the handler database at startup, so after a
+  # `home-manager switch` that changes this entry you must restart the portal
+  # for it to take effect:
+  #   systemctl --user restart xdg-desktop-portal xdg-desktop-portal-gtk
+  xdg.desktopEntries."1password-schemes" = {
+    name = "1Password (URL scheme handler)";
+    genericName = "Password Manager";
+    comment = "Password manager and secure wallet";
+    exec = "${pkgs._1password-gui}/bin/1password %U";
+    icon = "1password";
+    type = "Application";
+    terminal = false;
+    categories = [ "Office" ];
+    # Handler-only entry; hide it from application menus/launchers.
+    noDisplay = true;
+    mimeType = [
+      "x-scheme-handler/onepassword"
+      "x-scheme-handler/onepassword8"
+    ];
+    settings.StartupWMClass = "1Password";
+  };
+
+  # Enabling xdg.mimeApps makes home-manager manage ~/.config/mimeapps.list
+  # (as a read-only symlink), so ALL desired defaults must be declared here
+  # or they'll be dropped. The browser/mail/slack associations below mirror
+  # the pre-existing hand-written file; the onepassword* entries are the SSO
+  # fix.
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "brave-browser.desktop";
+      "x-scheme-handler/http" = "brave-browser.desktop";
+      "x-scheme-handler/https" = "brave-browser.desktop";
+      "x-scheme-handler/about" = "brave-browser.desktop";
+      "x-scheme-handler/unknown" = "brave-browser.desktop";
+      "x-scheme-handler/mailto" = "brave-browser.desktop";
+      "x-scheme-handler/slack" = "slack.desktop";
+      "x-scheme-handler/onepassword" = "1password-schemes.desktop";
+      "x-scheme-handler/onepassword8" = "1password-schemes.desktop";
+    };
+  };
 }
