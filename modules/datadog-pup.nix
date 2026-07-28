@@ -1,8 +1,8 @@
 # Datadog Pup CLI — a Rust-based command-line wrapper for the Datadog APIs.
 #
-# Not in nixpkgs, so we package the upstream prebuilt release binary the same
-# way modules/ai-tools.nix packages `dcg`: fetch the release tarball, verify
-# its hash, and drop the single static binary into $out/bin.
+# Not in nixpkgs, so we package the upstream prebuilt release binary:
+# fetch the release tarball, verify its hash, and drop the single static
+# binary into $out/bin.
 #
 # The Linux x86_64 release is a static-pie ELF (statically linked, no
 # interpreter), so no autoPatchelf / runtime deps are required.
