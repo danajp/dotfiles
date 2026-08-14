@@ -94,6 +94,7 @@
       pkgs.terraform-ls
       pkgs.openvpn3
       pkgs.docker
+      pkgs.coder  # Coder CLI - remote dev environments (github.com/coder/coder)
 
       # LSP servers (migrated from npm globals)
       pkgs.yaml-language-server
