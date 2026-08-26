@@ -78,6 +78,7 @@
       pkgs.nmap  # provides ncat
       pkgs.openldap  # provides ldapsearch, etc.
       pkgs.pkg-config
+      pkgs.devcontainer  # Dev Containers CLI (github.com/devcontainers/cli)
 
       # Desktop utilities (migrated from bootstrap apt)
       pkgs.arandr
