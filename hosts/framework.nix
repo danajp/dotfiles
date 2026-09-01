@@ -80,4 +80,28 @@ in
     url = "https://mcp.atlassian.com/v1/mcp";
     oauth = {};
   };
+
+  # Slack MCP server (OAuth-based, via mcp.slack.com). First use triggers a
+  # browser OAuth flow; approve the workspace + scopes there. Grants read/post
+  # tools (list channels, read history, post messages) to opencode agents.
+  #
+  # Two Slack-specific quirks we work around here:
+  #  1. Slack's MCP does NOT support dynamic client registration (RFC 7591),
+  #     so an empty `oauth = {}` fails with "Incompatible auth server". We must
+  #     pass a pre-registered clientId. We reuse Slack's official Claude-plugin
+  #     client (public app credential from ~/.claude/plugins/.../slack/.mcp.json).
+  #  2. Slack exact-matches the redirect_uri. That client is registered ONLY for
+  #     `http://localhost:3118/callback` (Claude Code's convention). opencode's
+  #     `callbackPort` shorthand would instead build
+  #     `http://127.0.0.1:3118/mcp/oauth/callback` (wrong host AND path), which
+  #     Slack rejects with "redirect_uri did not match any configured URIs".
+  #     So we set the full `redirectUri` explicitly to match Slack's allowlist.
+  programs.opencode.settings.mcp.slack = {
+    type = "remote";
+    url = "https://mcp.slack.com/mcp";
+    oauth = {
+      clientId = "1601185624273.8899143856786";
+      redirectUri = "http://localhost:3118/callback";
+    };
+  };
 }
