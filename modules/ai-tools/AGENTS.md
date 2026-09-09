@@ -4,6 +4,7 @@
 
 Before answering the user's first message in any session:
 
+0. only report to me in ASD-STE100 Simplified Technical English.
 1. **Check for a project `AGENTS.md`** in the working directory (or any ancestor up
    to `$HOME`). If one exists, it has already been loaded into your context —
    *use it*. Acknowledge the project briefly in your first response (one short
@@ -35,10 +36,7 @@ When referencing absolute paths in this user's filesystem, **always use `/home/d
 Do **not** guess `/home/user/`, `/Users/...`, `/root/`, or any other placeholder.
 If unsure, run `echo $HOME` rather than guessing.
 
-## Common locations
+## Guidelines for writing code
 
-- Dotfiles / home-manager config: `/home/dana/src/dotfiles`
-- Source projects: `/home/dana/src/`
-- OpenCode user config: `/home/dana/.config/opencode/` (managed by home-manager — files there
-  may be symlinks into `/nix/store/`; edit the source in `~/src/dotfiles/dot/config/opencode/`
-  instead of editing the symlinked target).
+- Comments should be used to explain why we're doing something, not restating the code.
+- Do not include unnecessary historical context in comments.
