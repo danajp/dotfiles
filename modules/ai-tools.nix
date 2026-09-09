@@ -2,6 +2,16 @@
 { ... }:
 
 {
+  # opencode discovers skills at $XDG_CONFIG_HOME/opencode/skill/<name>/SKILL.md.
+  # The home-manager programs.opencode module only wires commands/agents/themes,
+  # not skills, so link the whole skills directory in ourselves. `recursive = true`
+  # so every skill (and any supporting files) is picked up automatically — drop a
+  # new skill under ./ai-tools/skills/ and it appears without touching this file.
+  xdg.configFile."opencode/skill" = {
+    source = ./ai-tools/skills;
+    recursive = true;
+  };
+
   programs.opencode = {
     enable = true;
 
