@@ -1,5 +1,5 @@
 # AI coding assistants: opencode + claude-code
-{ ... }:
+{ pkgs, lib, config, ... }:
 
 {
   # opencode discovers skills at $XDG_CONFIG_HOME/opencode/skill/<name>/SKILL.md.
@@ -14,6 +14,24 @@
 
   programs.opencode = {
     enable = true;
+
+    # opencode-anthropic-oauth reports a claude-cli version to Anthropic, defaulting
+    # to one frozen at the plugin's release; too old and fable rejects the session.
+    # Wrapped rather than set via home.sessionVariables because those self-guard
+    # against re-sourcing, so sessions predating the switch never see new vars.
+    package = pkgs.symlinkJoin {
+      # Keep the version in the name: the module gates tui config on it.
+      name = "${lib.getName pkgs.opencode}-wrapped-${lib.getVersion pkgs.opencode}";
+      inherit (pkgs.opencode) meta;
+      version = lib.getVersion pkgs.opencode;
+      paths = [ pkgs.opencode ];
+      preferLocalBuild = true;
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/opencode \
+          --set-default ANTHROPIC_CLI_VERSION ${config.programs.claude-code.package.version}
+      '';
+    };
 
     context = ./ai-tools/AGENTS.md;
 
