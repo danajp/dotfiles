@@ -1,49 +1,44 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
 
-  "_comment": "Model assignments for framework (Anthropic OAuth + OpenAI direct API only). Roles mirror the upstream oh-my-openagent defaults (see dist/index.js), upgraded to the newest models each provider currently exposes via `opencode models`. Rationale: Opus orchestrates/plans (sisyphus, prometheus, metis), the newest GPT reasoner debugs and critiques (oracle, momus, hephaestus, atlas), Sonnet drives the cheap-and-cheerful parallel sub-agents (sisyphus-junior, explore, librarian, frontend, document-writer, multimodal). NOTE: the plugin auto-upgrades a few legacy ids at load (claude-opus-4-5 -> 4-6, claude-sonnet-4-5 -> 4-6, gpt-5.3-codex -> gpt-5.4), so avoid gpt-5.3-codex here or it silently becomes a non-codex model.",
+  "_comment": "Model assignments for framework (Anthropic OAuth + OpenAI direct API). Roles mirror the upstream oh-my-openagent defaults (see agent-model-requirements.ts), mapped to the newest models each provider exposes via `opencode models`. Tiers: Opus-5 orchestrates the session (sisyphus); Fable-5-1 writes/analyses plans (prometheus, metis); the newest GPT reasoners debug and critique (oracle -> gpt-5.6-pro, momus -> gpt-6-astra, hephaestus -> gpt-5.6-sol); Sonnet-5 drives the plan-executor workers (atlas, sisyphus-junior); Luna-fast handles the cheap parallel search/research workers (explore, librarian); Sonnet-5 handles single-shot media extraction (multimodal-looker). NOTE: frontend-ui-ux-engineer and document-writer are SKILLS (slash commands), not agents, so they have no model slot and are intentionally omitted.",
 
   "agents": {
     "sisyphus": {
-      "model": "anthropic/claude-opus-4-8"
+      "model": "anthropic/claude-opus-5"
     },
     "prometheus": {
-      "model": "anthropic/claude-opus-4-8"
+      "model": "anthropic/claude-fable-5-1"
     },
     "metis": {
-      "model": "anthropic/claude-opus-4-8"
+      "model": "anthropic/claude-fable-5-1"
     },
 
     "hephaestus": {
-      "model": "openai/gpt-5.6"
+      "model": "openai/gpt-5.6-sol"
     },
     "oracle": {
       "model": "openai/gpt-5.6-pro"
     },
     "momus": {
-      "model": "openai/gpt-5.6"
-    },
-    "atlas": {
-      "model": "openai/gpt-5.6"
+      "model": "openai/gpt-6-astra"
     },
 
-    "sisyphus-junior": {
-      "model": "anthropic/claude-sonnet-4-6"
+    "atlas": {
+      "model": "anthropic/claude-sonnet-5"
     },
+    "sisyphus-junior": {
+      "model": "anthropic/claude-sonnet-5"
+    },
+
     "explore": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "openai/gpt-5.6-luna-fast"
     },
     "librarian": {
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    "frontend-ui-ux-engineer": {
-      "model": "anthropic/claude-sonnet-4-6"
-    },
-    "document-writer": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "openai/gpt-5.6-luna-fast"
     },
     "multimodal-looker": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-5"
     }
   }
 }
