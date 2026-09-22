@@ -20,6 +20,19 @@ thread they give you.
 A link to a Slack thread (a `slack.com/archives/<CHANNEL_ID>/p<TS>` URL), or a channel + message
 timestamp. If the user has not given you a thread link, ask for one before doing anything else.
 
+## Asking the user
+
+Ask every question with the `question` tool. Do not ask in prose. The tool gives the user a
+selectable list, so each question must have concrete options.
+
+Rules for each question:
+
+- Keep `header` to 30 characters or less.
+- Write the full question in `question`.
+- Put the recommended option first. Add "(Recommended)" to the end of its label.
+- Keep each label to 1-5 words. Put the detail in `description`.
+- Do not add an "Other" option. The tool adds a free-text choice.
+
 ## Fixed configuration
 
 Do not guess these. They are verified constants for this workflow.
@@ -56,6 +69,18 @@ Follow these in order. Do not skip the approval gate.
    anything.** The draft must show: summary, issue type, epic link, the full label set, and the
    description. Do not call `createJiraIssue` until the user approves.
 
+   Show the draft as text. Then ask for approval with the `question` tool. Use these options:
+
+   | Label | Description |
+   | --- | --- |
+   | `Create it (Recommended)` | Create the issue, add the triage comment, post the link in the thread. |
+   | `Change the category` | Keep the draft. Use a different taxonomy label. |
+   | `Edit the wording` | Keep the category. Rewrite the summary, description, or comment. |
+   | `Do not create it` | Stop. Create nothing. |
+
+   Use `header: "Approve ticket draft"`. Ask again after each change until the user picks
+   `Create it`.
+
 5. **On approval, create the issue** in project `DEX` with:
    - Issue type `Support Request`.
    - Epic link `DEX-829` — set via `additional_fields: { "customfield_10007": "DEX-829" }`. If the
@@ -78,8 +103,8 @@ Follow these in order. Do not skip the approval gate.
    - the issue URL (`https://greenhouseio.atlassian.net/browse/<KEY>`),
    - confirmation that you posted the link in the thread, and the exact text you posted.
 
-   If you want to say more than a link in the thread (extra context, next steps), draft that longer
-   message here and let the user post it themselves — only the link reply is posted automatically.
+   Stop there. Do not draft a longer Slack message. Do not suggest a follow-up post. The user
+   writes their own replies.
 
 ## Parsing the Slack link
 
@@ -129,6 +154,8 @@ Write the ticket (summary, description, and comment) in **ASD-STE100 Simplified 
 
 ## Tool reference
 
+- `question(questions=[{ header, question, options: [{ label, description }] }])` — every question
+  to the user, including the step 4 approval gate.
 - `slack_read_thread(channel_id, message_ts)` — read the full thread.
 - `slack_send_message(channel_id, message, thread_ts=<parent ts>)` — used ONCE, in step 7, to post
   the ticket link as a threaded reply after the issue exists. Do not use any other Slack send/draft/
@@ -142,8 +169,10 @@ Write the ticket (summary, description, and comment) in **ASD-STE100 Simplified 
 
 - The ONLY Slack post allowed is the ticket-link reply in step 7, and only after the issue is
   created. Do not post anything to Slack while reading or triaging, and never post the triage
-  detail or root-cause commentary to Slack — that stays in the Jira comment. If you want to say more
-  than the link in the thread, hand that text to the user to post.
+  detail or root-cause commentary to Slack — that stays in the Jira comment.
+- Do not write a follow-up Slack message for the user. Do not offer one. The user writes their own
+  replies.
+- Ask all questions with the `question` tool, not in prose. See "Asking the user".
 - Never create the issue before the user approves the draft.
 - Exactly one category label, always plus `platform-support`.
 - If the request is not DevEx/platform work, route it verbally and stop — do not create a ticket.
