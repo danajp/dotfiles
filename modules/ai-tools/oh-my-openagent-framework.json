@@ -5,7 +5,7 @@
 
   "agents": {
     "sisyphus": {
-      "model": "anthropic/claude-opus-5-fast"
+      "model": "anthropic/claude-opus-5"
     },
     "prometheus": {
       "model": "anthropic/claude-fable-5-1"
@@ -25,10 +25,10 @@
     },
 
     "atlas": {
-      "model": "anthropic/claude-opus-5-fast"
+      "model": "anthropic/claude-opus-5"
     },
     "sisyphus-junior": {
-      "model": "anthropic/claude-opus-5-fast"
+      "model": "anthropic/claude-opus-5"
     },
 
     "explore": {
