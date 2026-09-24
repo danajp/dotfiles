@@ -36,6 +36,13 @@ When referencing absolute paths in this user's filesystem, **always use `/home/d
 Do **not** guess `/home/user/`, `/Users/...`, `/root/`, or any other placeholder.
 If unsure, run `echo $HOME` rather than guessing.
 
+## Asking the user questions
+
+Always use the `question` tool to ask the user a question. This includes
+clarifying an ambiguous request, confirming a destructive action, and choosing
+between implementation options. Do not put the question in plain prose and then
+stop — the tool makes the choices selectable and keeps the answer structured.
+
 ## Guidelines for writing code
 
 - Comments should be used to explain why we're doing something, not restating the code.
