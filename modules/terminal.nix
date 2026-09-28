@@ -19,20 +19,22 @@
   programs.rofi = {
     enable = true;
     package = pkgs.rofi;
-    font = "Inconsolata 14";
     theme = "solarized-dark";
-    extraConfig = {
-      modi = "drun,run,window,ssh";
-      show-icons = true;
-      icon-theme = "Adwaita";
-      drun-display-format = "{name}";
-      location = 0;
-      disable-history = false;
-      hide-scrollbar = true;
-      display-drun = "Apps";
-      display-run = "Run";
-      display-window = "Windows";
-      display-ssh = "SSH";
+    settings ={
+      font = "Inconsolata 14";
+      extraConfig = {
+        modi = "drun,run,window,ssh";
+        show-icons = true;
+        icon-theme = "Adwaita";
+        drun-display-format = "{name}";
+        location = 0;
+        disable-history = false;
+        hide-scrollbar = true;
+        display-drun = "Apps";
+        display-run = "Run";
+        display-window = "Windows";
+        display-ssh = "SSH";
+      };
     };
   };
 
