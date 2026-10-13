@@ -1,0 +1,30 @@
+# Config for gh-jira (~/src/gh-jira), which files a Jira card for a pull
+# request and links the two together.
+#
+# No secrets here: the Jira API token is read from $JIRA_API_TOKEN and the
+# GitHub token from $GH_TOKEN (export GH_TOKEN=$(gh auth token)).
+
+jira:
+  site: https://greenhouseio.atlassian.net
+  email: dana@greenhouse.io
+
+defaults:
+  # "me" resolves against whoever $JIRA_API_TOKEN authenticates as, so no
+  # opaque account ID needs to live in this file. Use "none" to leave cards
+  # unassigned.
+  assignee: me
+
+projects:
+  DEX:
+    # Epics here are quarterly and get replaced rather than renamed, so this
+    # key goes stale at the quarter boundary and cards keep landing in a
+    # closed epic. DEX-829 is "Operational - Support Channel - Q3"; its Q4
+    # successor (DEX-1051) already exists. Override per-run with --epic.
+    epic: DEX-829
+#    issue_type: Support Request
+#    labels:
+#      - platform-support
+#      - support-code-review
+
+repos:
+  grnhse/lotus: DEX

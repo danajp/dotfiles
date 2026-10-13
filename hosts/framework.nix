@@ -104,4 +104,8 @@ in
       redirectUri = "http://localhost:3118/callback";
     };
   };
+
+  # gh-jira config. Framework-only because it carries the work Jira site and
+  # the grnhse repo-to-project mapping.
+  xdg.configFile."gh-jira/config.yaml".source = ../modules/gh-jira/config.yaml;
 }
