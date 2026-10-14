@@ -131,6 +131,37 @@ a Nix-installed 1Password and Brave:
    through system authentication, i.e. your fingerprint reader) instead of
    asking for the account password.
 
+## 1Password CLI (desktop-app integration)
+
+`op` is installed via `pkgs._1password-cli` in `common.nix`. To unlock it
+through the desktop app (Settings → Developer → "Integrate with 1Password
+CLI", i.e. fingerprint/system auth instead of the account password), the app
+requires the `op` binary to be setgid to the `onepassword-cli` group. Nix store
+files can't carry setgid bits, so — mirroring NixOS's `programs._1password`
+security wrapper — install a root-owned setgid copy outside the store:
+
+```bash
+# 1Password rejects groups with GID <= 1000, so no --system; 31002 matches
+# NixOS's preallocated ids.gids.onepassword-cli.
+getent group onepassword-cli || sudo groupadd -g 31002 onepassword-cli
+sudo install -D -o root -g onepassword-cli -m 2755 \
+  "$(realpath ~/.nix-profile/bin/op)" /usr/local/lib/onepassword-cli/op
+```
+
+`common.nix` prepends `/usr/local/lib/onepassword-cli` to `PATH` when it
+exists, so the setgid copy shadows the Nix one in new shells. Then fully
+quit and restart the 1Password app (tray icon → Quit; closing the window
+isn't enough) and verify in a new shell with `which op` and `op whoami`.
+
+If `op` still gets "connection reset", check `~/.config/1Password/logs/`:
+"peer was not in the correct application group" means the non-setgid Nix `op`
+ran (PATH problem); "invalid group attempted to connect" means the group's
+GID is <= 1000 (`getent group onepassword-cli`).
+
+Unlike the other one-shot steps, this copy is pinned to the version it was
+copied from: re-run the `install` line after a `_1password-cli` version bump
+(compare `op --version` against `~/.nix-profile/bin/op --version`).
+
 ## Slack (AppArmor sandbox)
 
 Slack is an Electron app that has the same AppArmor sandbox issue as Brave, Signal, and 1Password. Create a profile to allow user namespaces:

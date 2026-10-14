@@ -53,6 +53,7 @@
       pkgs.input-leap
 
       pkgs._1password-gui
+      pkgs._1password-cli  # `op`
       pkgs.slack
 
       # Basic utilities (migrated from bootstrap apt)
@@ -174,6 +175,10 @@
       add_to_path_if "$HOME/.local/bin"
       add_to_path_if "$HOME/.krew/bin"
       add_to_path_if "$HOME/.cargo/bin"
+
+      # setgid copy of `op` for 1Password desktop-app integration; must shadow
+      # the Nix one. Created by the one-shot sudo step in README.md.
+      [[ -d /usr/local/lib/onepassword-cli ]] && path=(/usr/local/lib/onepassword-cli $path)
 
       if [[ -S "$HOME/.1password/agent.sock" ]]; then
         export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
