@@ -43,6 +43,18 @@ clarifying an ambiguous request, confirming a destructive action, and choosing
 between implementation options. Do not put the question in plain prose and then
 stop — the tool makes the choices selectable and keeps the answer structured.
 
+## Git branches and pushes
+
+Git is configured with `push.default = upstream`, so a push goes to the branch's
+upstream, not to a branch of the same name. A branch that tracks `origin/main`
+pushes to `main`.
+
+- Create branches with `git switch -c <branch> --no-track origin/main`.
+- Push with an explicit refspec: `git push -u origin HEAD:refs/heads/<branch>`.
+- Never run a bare `git push` or `git push origin <branch>`.
+- Before you push, run `git branch -vv` and make sure the branch does not track
+  `origin/main`.
+
 ## Guidelines for writing code
 
 - Comments should be used to explain why we're doing something, not restating the code.

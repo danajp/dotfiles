@@ -29,6 +29,10 @@ _:
         status = "auto";
       };
       push.default = "upstream";
+      # Without these, a branch created from origin/main tracks it, and
+      # push.default=upstream then pushes the branch to main.
+      branch.autoSetupMerge = false;
+      push.autoSetupRemote = true;
       commit.gpgsign = true;
       init.defaultBranch = "main";
 
