@@ -22,8 +22,15 @@ let
     url = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo-q5_0.bin";
     hash = "sha256-OUIhcJzVrR9AxG5gMcphvOiJMebgiMGIKUxtWlX/p+I=";
   };
+  omo = import ../lib/omo.nix { inherit pkgs; };
 in
 {
+  # OmO Native: oh-my-openagent's standalone agent CLI (Sisyphus-style
+  # delegation via categories). Keeps its own state under ~/.omo; run
+  # `omo setup` once to carry API keys, MCP servers and skills over from
+  # opencode. OAuth logins can't be copied: `/login anthropic-subscription`.
+  home.packages = [ omo ];
+
   xdg.dataFile."whisper-cpp/ggml-large-v3-turbo-q5_0.bin".source = whisperModel;
 
   # opencode discovers skills at $XDG_CONFIG_HOME/opencode/skill/<name>/SKILL.md.
@@ -63,14 +70,13 @@ in
     # OpenCode 2 terminal-client settings (cli.json; replaces v1's tui.json).
     cli = {
       plugins = [
-        "oh-my-openagent@latest"
         {
           package = "${opencodeVoice}";
           options = {
             opencodeModel = "anthropic/claude-haiku-4-5";
             tts = false;
             # Upstream defaults (ctrl+r, <leader>r) collide with session_rename and
-            # messages_redo; <leader>v is free in both opencode and oh-my-openagent.
+            # messages_redo.
             recordKey = "<leader>v";
             submitKey = "<leader>shift+v";
           };
@@ -81,8 +87,10 @@ in
     settings = {
       # OpenCode 2 key (`plugins`); the v1 `permission` block below is still
       # read and normalized by OpenCode 2.
+      # oh-my-openagent is deliberately absent: on OpenCode 2 the plugin loads but
+      # none of its agents, tools or hooks are active. Its workflow now lives in
+      # the standalone `omo` CLI (see home.packages below).
       plugins = [
-        "oh-my-openagent@latest"
         # Claude subscription auth for OpenCode 2, reusing Claude Code's
         # credentials. Replaces opencode-anthropic-oauth, which is v1-only.
         # One-time setup: /connect -> Anthropic -> Import Claude Code subscription.
