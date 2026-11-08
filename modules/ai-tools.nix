@@ -31,6 +31,10 @@ in
   # opencode. OAuth logins can't be copied: `/login anthropic-subscription`.
   home.packages = [ omo ];
 
+  # omo honours the generic consoledonottrack.com convention, as do many
+  # other CLIs, so this is set globally rather than wrapped into omo alone.
+  home.sessionVariables.DO_NOT_TRACK = "1";
+
   xdg.dataFile."whisper-cpp/ggml-large-v3-turbo-q5_0.bin".source = whisperModel;
 
   # opencode discovers skills at $XDG_CONFIG_HOME/opencode/skill/<name>/SKILL.md.
