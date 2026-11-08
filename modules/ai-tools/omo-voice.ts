@@ -1,18 +1,19 @@
 // Voice dictation for omo (OmO Native), modelled on opencode-voice.
 //
-// Ctrl+R starts recording via sox; Ctrl+R again stops, transcribes with
+// Alt+V starts recording via sox; Alt+V again stops, transcribes with
 // whisper-cli and appends the text to the prompt. Nothing is sent until Enter.
 // `/stt` does the same toggle; `/stt cancel` discards a recording in progress.
 //
-// sox and whisper-cli come from the omo wrapper's PATH (lib/omo.nix); the
-// model is the same file home-manager places for opencode.
+// Home Manager inserts absolute tool paths so existing OmO processes do not
+// depend on the launcher's PATH. The model is shared with opencode.
 
-import { spawn, execFileSync } from "node:child_process";
+import { spawn, spawnSync, execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const SHORTCUT = "ctrl+r";
+// Ctrl+R belongs to OmO's prompt history search.
+const SHORTCUT = "alt+v";
 const MODEL = path.join(
   os.homedir(),
   ".local",
@@ -22,6 +23,9 @@ const MODEL = path.join(
 );
 const WAV = path.join(os.tmpdir(), `omo-stt-${process.pid}.wav`);
 const STATUS_KEY = "voice";
+// Whisper invents "Thank you." on near-silent input, so skip it below this
+// peak level. A dead or switched-off mic measured ~0.008; speech is far louder.
+const MIN_PEAK = 0.02;
 
 type Proc = ReturnType<typeof spawn>;
 
@@ -48,7 +52,7 @@ export default function (pi: any) {
     } catch {}
     const input = pulseAvailable() ? ["-t", "pulseaudio", "default"] : ["-d"];
     let stderr = "";
-    rec = spawn("sox", [...input, "-r", "16000", "-c", "1", "-b", "16", WAV], {
+    rec = spawn("@sox@", [...input, "-r", "16000", "-c", "1", "-b", "16", WAV], {
       stdio: ["ignore", "ignore", "pipe"],
     });
     rec.stderr?.on("data", (d) => (stderr += d.toString()));
@@ -65,7 +69,7 @@ export default function (pi: any) {
         ctx.ui.notify(`sox exited (${code}): ${stderr.trim().split("\n").pop() ?? ""}`, "error");
       }
     });
-    ctx.ui.setStatus(STATUS_KEY, "● recording (ctrl+r to stop)");
+    ctx.ui.setStatus(STATUS_KEY, `● recording (${SHORTCUT} to stop)`);
   };
 
   const stopRecorder = (): Promise<void> =>
@@ -78,9 +82,16 @@ export default function (pi: any) {
       setTimeout(() => p.kill("SIGKILL"), 2000).unref();
     });
 
+  const peakLevel = (): number => {
+    const r = spawnSync("@sox@", [WAV, "-n", "stat"], { encoding: "utf8" });
+    const m = r.stderr?.match(/Maximum amplitude:\s*([\d.]+)/);
+    if (!m) throw new Error(`sox stat failed: ${r.stderr?.trim() || r.error?.message}`);
+    return Number(m[1]);
+  };
+
   const transcribe = (): Promise<string> =>
     new Promise((resolve, reject) => {
-      const p = spawn("whisper-cli", ["-m", MODEL, "-f", WAV, "-l", "auto", "-np", "-nt"], {
+      const p = spawn("@whisperCli@", ["-m", MODEL, "-f", WAV, "-l", "auto", "-np", "-nt"], {
         stdio: ["ignore", "pipe", "pipe"],
       });
       let out = "";
@@ -113,6 +124,10 @@ export default function (pi: any) {
     ctx.ui.setStatus(STATUS_KEY, "• transcribing");
     try {
       await stopRecorder();
+      if (peakLevel() < MIN_PEAK) {
+        ctx.ui.notify("No audio from mic: check the mic switch and input device", "warning");
+        return;
+      }
       const text = await transcribe();
       if (!text) {
         ctx.ui.notify("No speech detected", "warning");

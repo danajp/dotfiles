@@ -36,8 +36,11 @@ in
   # opencode. OAuth logins can't be copied: `/login anthropic-subscription`.
   home.packages = [ omo ];
 
-  # omo auto-loads every extension under <agentDir>/extensions. Ctrl+R / /stt.
-  home.file.".omo/agent/extensions/voice.ts".source = ./ai-tools/omo-voice.ts;
+  # omo auto-loads every extension under <agentDir>/extensions. Alt+V / /stt.
+  home.file.".omo/agent/extensions/voice.ts".source = pkgs.replaceVars ./ai-tools/omo-voice.ts {
+    sox = lib.getExe' pkgs.sox "sox";
+    whisperCli = lib.getExe' pkgs.whisper-cpp-vulkan "whisper-cli";
+  };
 
   # omo honours the generic consoledonottrack.com convention, as do many
   # other CLIs, so this is set globally rather than wrapped into omo alone.
