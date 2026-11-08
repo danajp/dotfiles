@@ -22,7 +22,12 @@ let
     url = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo-q5_0.bin";
     hash = "sha256-OUIhcJzVrR9AxG5gMcphvOiJMebgiMGIKUxtWlX/p+I=";
   };
-  omo = import ../lib/omo.nix { inherit pkgs; };
+  # Both opencode-voice and the omo extension record with sox and transcribe
+  # with whisper-cli. Vulkan cuts transcription from ~8s to ~3s on the
+  # framework's Radeon 780M, and ggml falls back to CPU without a Vulkan device.
+  voiceTools = [ pkgs.sox pkgs.whisper-cpp-vulkan ];
+
+  omo = import ../lib/omo.nix { inherit pkgs; extraPath = voiceTools; };
 in
 {
   # OmO Native: oh-my-openagent's standalone agent CLI (Sisyphus-style
@@ -30,6 +35,9 @@ in
   # `omo setup` once to carry API keys, MCP servers and skills over from
   # opencode. OAuth logins can't be copied: `/login anthropic-subscription`.
   home.packages = [ omo ];
+
+  # omo auto-loads every extension under <agentDir>/extensions. Ctrl+R / /stt.
+  home.file.".omo/agent/extensions/voice.ts".source = ./ai-tools/omo-voice.ts;
 
   # omo honours the generic consoledonottrack.com convention, as do many
   # other CLIs, so this is set globally rather than wrapped into omo alone.
@@ -60,12 +68,9 @@ in
       paths = [ pkgs.opencode ];
       preferLocalBuild = true;
       nativeBuildInputs = [ pkgs.makeWrapper ];
-      # opencode-voice shells out to sox (recording) and whisper-cli (transcription).
-      # Vulkan cuts transcription from ~8s to ~3s on the framework's Radeon 780M, and
-      # ggml falls back to CPU where there's no Vulkan device.
       postBuild = ''
         wrapProgram $out/bin/opencode \
-          --prefix PATH : ${lib.makeBinPath [ pkgs.sox pkgs.whisper-cpp-vulkan ]}
+          --prefix PATH : ${lib.makeBinPath voiceTools}
       '';
     };
 

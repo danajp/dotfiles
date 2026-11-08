@@ -4,7 +4,10 @@
 # engine) and as single-file release binaries. We take the binary: no Node
 # runtime, no postinstall, and it only links libc, so autoPatchelf is all it
 # needs. Hashes come from the SHA256SUMS file attached to the release.
-{ pkgs }:
+#
+# `extraPath` is prepended to PATH for omo only, so tools its extensions shell
+# out to (e.g. sox/whisper-cli for voice dictation) stay out of the user env.
+{ pkgs, extraPath ? [ ] }:
 
 let
   version = "5.1.64";
@@ -21,10 +24,12 @@ pkgs.stdenv.mkDerivation {
   dontUnpack = true;
   dontStrip = true;
 
-  nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+  nativeBuildInputs = [ pkgs.autoPatchelfHook pkgs.makeWrapper ];
 
   installPhase = ''
     install -Dm755 $src $out/bin/omo
+  '' + pkgs.lib.optionalString (extraPath != [ ]) ''
+    wrapProgram $out/bin/omo --prefix PATH : ${pkgs.lib.makeBinPath extraPath}
   '';
 
   meta = {
