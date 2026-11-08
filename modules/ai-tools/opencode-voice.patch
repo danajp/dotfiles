@@ -1,0 +1,108 @@
+--- a/index.js
++++ b/index.js
+@@ -56,7 +56,7 @@
+     const { kv } = api;
+     const logger = createLogger(api.client);
+     logger.log("plugin", "Initializing", "debug");
+-    const { complete } = createClient(options, logger);
++    const { complete } = createClient(options, logger, api.client);
+ 
+     const prompts = {
+       stt: loadPromptFile(options?.sttPrompt, logger, "STT"),
+@@ -65,7 +65,8 @@
+     };
+ 
+     const sttCommands = registerSTT(api, kv, complete, prompts, options, logger);
+-    const ttsCommands = registerTTS(api, kv, complete, prompts, logger);
++    // tts: false skips TTS entirely, freeing its keybinds (notably escape).
++    const ttsCommands = options?.tts === false ? [] : registerTTS(api, kv, complete, prompts, logger);
+ 
+     api.command.register(() => [...sttCommands, ...ttsCommands]);
+   },
+--- a/lib/llm-client.js
++++ b/lib/llm-client.js
+@@ -55,7 +55,15 @@
+  * @param {{ log?: (scope: string, message: string, level?: string) => void }} [logger]
+  * @returns {{ complete: (opts: { system?: string, prompt: string, config?: object }) => Promise<{ text: string | null, error?: string }> }}
+  */
+-export function createClient(pluginOptions, logger) {
++export function createClient(pluginOptions, logger, opencodeClient) {
++  // opencodeModel ("provider/model") routes completions through opencode's own
++  // providers via a throwaway session, so they reuse opencode's auth (e.g.
++  // Anthropic OAuth) instead of needing an API key. The instructions go in the
++  // user message because auth plugins may replace the system prompt.
++  if (pluginOptions?.opencodeModel && opencodeClient) {
++    return { complete: createOpencodeComplete(pluginOptions, logger, opencodeClient) };
++  }
++
+   function getConfig() {
+     return {
+       endpoint: pluginOptions?.endpoint,
+@@ -163,3 +171,47 @@
+ 
+   return { complete };
+ }
++
++function createOpencodeComplete(pluginOptions, logger, client) {
++  const ref = String(pluginOptions.opencodeModel);
++  const slash = ref.indexOf("/");
++  const model = { providerID: ref.slice(0, slash), modelID: ref.slice(slash + 1) };
++
++  return async function complete({ system, prompt }) {
++    if (slash <= 0) return { text: null, error: `Invalid opencodeModel: ${ref}` };
++    const text = system ? `<instructions>\n${system}\n</instructions>\n\n${prompt}` : prompt;
++
++    let sessionID = null;
++    try {
++      const created = await client.session.create({ title: "opencode-voice normalize" });
++      sessionID = created?.data?.id;
++      if (!sessionID) return { text: null, error: "Failed to create normalization session" };
++
++      logger?.log?.("LLM", `opencode completion model=${ref} promptChars=${prompt.length}`, "debug");
++      const result = await client.session.prompt({
++        sessionID,
++        model,
++        tools: { "*": false },
++        parts: [{ type: "text", text }],
++      });
++      const info = result?.data?.info;
++      if (info?.error) {
++        const msg = info.error.data?.message || info.error.name || "unknown error";
++        return { text: null, error: `LLM error: ${msg}` };
++      }
++      const out = (result?.data?.parts || [])
++        .filter((p) => p.type === "text" && !p.synthetic)
++        .map((p) => p.text)
++        .join("")
++        .trim();
++      return out ? { text: out } : { text: null, error: "Empty LLM response" };
++    } catch (err) {
++      logger?.log?.("LLM", `opencode completion error: ${err.message}`, "warn");
++      return { text: null, error: `LLM error: ${err.message}` };
++    } finally {
++      if (sessionID) {
++        await client.session.delete({ sessionID }).catch(() => {});
++      }
++    }
++  };
++}
+--- a/lib/stt.js
++++ b/lib/stt.js
+@@ -494,7 +494,7 @@
+       description: sttApiEndpoint
+         ? "Toggle recording; press again to stop and transcribe via API"
+         : "Toggle recording; press again to stop and transcribe",
+-      keybind: "ctrl+r",
++      keybind: opts?.recordKey ?? "ctrl+r",
+       slash: { name: "stt-record" },
+       onSelect() {
+         if (processing) {
+@@ -516,7 +516,7 @@
+       description: sttApiEndpoint
+         ? "Stop recording, transcribe via API, and submit prompt"
+         : "Stop recording, transcribe, and submit prompt",
+-      keybind: "<leader>r",
++      keybind: opts?.submitKey ?? "<leader>r",
+       slash: { name: "stt-submit" },
+       onSelect() {
+         if (processing) {

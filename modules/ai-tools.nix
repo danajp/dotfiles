@@ -1,7 +1,32 @@
 # AI coding assistants: opencode + claude-code
 { pkgs, lib, config, ... }:
 
+let
+  # Voice dictation: https://github.com/renjfk/opencode-voice
+  # Pinned to 0.6.0, the last release for the opencode 1.x plugin API (1.0.0 needs v2).
+  # Patched so transcript cleanup runs through opencode's own providers (reusing
+  # Anthropic OAuth, no API key), so the unused TTS half doesn't bind escape, and so
+  # the STT keybinds are configurable.
+  opencodeVoice = pkgs.stdenvNoCC.mkDerivation {
+    pname = "opencode-voice";
+    version = "0.6.0";
+    src = pkgs.fetchurl {
+      url = "https://registry.npmjs.org/@renjfk/opencode-voice/-/opencode-voice-0.6.0.tgz";
+      hash = "sha256-9i5MVxrtB/0A3nT2Afo+msvm9jpQI2AFNhukAAX7jLM=";
+    };
+    patches = [ ./ai-tools/opencode-voice.patch ];
+    installPhase = "cp -r . $out";
+  };
+
+  # The plugin's default model; it looks for it under ~/.local/share/whisper-cpp/.
+  whisperModel = pkgs.fetchurl {
+    url = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo-q5_0.bin";
+    hash = "sha256-OUIhcJzVrR9AxG5gMcphvOiJMebgiMGIKUxtWlX/p+I=";
+  };
+in
 {
+  xdg.dataFile."whisper-cpp/ggml-large-v3-turbo-q5_0.bin".source = whisperModel;
+
   # opencode discovers skills at $XDG_CONFIG_HOME/opencode/skill/<name>/SKILL.md.
   # The home-manager programs.opencode module only wires commands/agents/themes,
   # not skills, so link the whole skills directory in ourselves. `recursive = true`
@@ -27,9 +52,13 @@
       paths = [ pkgs.opencode ];
       preferLocalBuild = true;
       nativeBuildInputs = [ pkgs.makeWrapper ];
+      # opencode-voice shells out to sox (recording) and whisper-cli (transcription).
+      # Vulkan cuts transcription from ~8s to ~3s on the framework's Radeon 780M, and
+      # ggml falls back to CPU where there's no Vulkan device.
       postBuild = ''
         wrapProgram $out/bin/opencode \
-          --set-default ANTHROPIC_CLI_VERSION ${config.programs.claude-code.package.version}
+          --set-default ANTHROPIC_CLI_VERSION ${config.programs.claude-code.package.version} \
+          --prefix PATH : ${lib.makeBinPath [ pkgs.sox pkgs.whisper-cpp-vulkan ]}
       '';
     };
 
@@ -38,6 +67,17 @@
     tui = {
       plugin = [
         "oh-my-openagent/tui"
+        [
+          "${opencodeVoice}"
+          {
+            opencodeModel = "anthropic/claude-haiku-4-5";
+            tts = false;
+            # Upstream defaults (ctrl+r, <leader>r) collide with session_rename and
+            # messages_redo; <leader>v is free in both opencode and oh-my-openagent.
+            recordKey = "<leader>v";
+            submitKey = "<leader>shift+v";
+          }
+        ]
       ];
     };
 
