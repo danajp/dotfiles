@@ -8,17 +8,30 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # TEMPORARY: Brave only. It was dropped from nixpkgs (PR #582838) and
+    # re-added (PR #584534); the re-add reached nixos-unstable-small before
+    # nixos-unstable. Once `pkgs.brave` evaluates on nixos-unstable again,
+    # delete this input and the overlay below.
+    nixpkgs-brave.url = "github:nixos/nixpkgs/nixos-unstable-small";
   };
 
   outputs =
-    { nixpkgs, home-manager, ... }:
+    { nixpkgs, nixpkgs-brave, home-manager, ... }:
     let
       system = "x86_64-linux";
 
-      # Brave tracks nixos-unstable along with the rest of nixpkgs.
+      # Everything tracks nixos-unstable except Brave (see nixpkgs-brave).
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        overlays = [
+          (_final: _prev: {
+            inherit (import nixpkgs-brave {
+              inherit system;
+              config.allowUnfree = true;
+            }) brave;
+          })
+        ];
       };
 
       # Build a homeConfiguration for a host module under hosts/.

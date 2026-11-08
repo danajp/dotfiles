@@ -1,4 +1,5 @@
-# Brave browser. Tracks nixos-unstable like the rest of nixpkgs;
+# Brave browser. Temporarily comes from nixos-unstable-small via an overlay
+# in flake.nix (see the nixpkgs-brave input there);
 # `programs.brave.package` could be omitted (HM defaults to pkgs.brave)
 # but is kept explicit at the call site.
 #
