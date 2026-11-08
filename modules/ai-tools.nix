@@ -1,18 +1,17 @@
 # AI coding assistants: opencode + claude-code
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, ... }:
 
 let
   # Voice dictation: https://github.com/renjfk/opencode-voice
-  # Pinned to 0.6.0, the last release for the opencode 1.x plugin API (1.0.0 needs v2).
-  # Patched so transcript cleanup runs through opencode's own providers (reusing
-  # Anthropic OAuth, no API key), so the unused TTS half doesn't bind escape, and so
-  # the STT keybinds are configurable.
+  # 1.x targets the OpenCode 2 plugin API. Patched so transcript cleanup runs
+  # through opencode's own providers (reusing its Anthropic auth, no API key), so
+  # the unused TTS half doesn't bind escape, and so the STT keybinds are configurable.
   opencodeVoice = pkgs.stdenvNoCC.mkDerivation {
     pname = "opencode-voice";
-    version = "0.6.0";
+    version = "1.0.0";
     src = pkgs.fetchurl {
-      url = "https://registry.npmjs.org/@renjfk/opencode-voice/-/opencode-voice-0.6.0.tgz";
-      hash = "sha256-9i5MVxrtB/0A3nT2Afo+msvm9jpQI2AFNhukAAX7jLM=";
+      url = "https://registry.npmjs.org/@renjfk/opencode-voice/-/opencode-voice-1.0.0.tgz";
+      hash = "sha256-LS1dPXmW/BskIdgRzZyJ0ZaeP7BP8efB4+1ftPIeYaI=";
     };
     patches = [ ./ai-tools/opencode-voice.patch ];
     installPhase = "cp -r . $out";
@@ -40,10 +39,8 @@ in
   programs.opencode = {
     enable = true;
 
-    # opencode-anthropic-oauth reports a claude-cli version to Anthropic, defaulting
-    # to one frozen at the plugin's release; too old and fable rejects the session.
-    # Wrapped rather than set via home.sessionVariables because those self-guard
-    # against re-sourcing, so sessions predating the switch never see new vars.
+    # Wrapped so opencode-voice finds its tools on PATH. Done in a wrapper rather
+    # than home.packages so they don't leak into the user environment.
     package = pkgs.symlinkJoin {
       # Keep the version in the name: the module gates tui config on it.
       name = "${lib.getName pkgs.opencode}-wrapped-${lib.getVersion pkgs.opencode}";
@@ -57,36 +54,40 @@ in
       # ggml falls back to CPU where there's no Vulkan device.
       postBuild = ''
         wrapProgram $out/bin/opencode \
-          --set-default ANTHROPIC_CLI_VERSION ${config.programs.claude-code.package.version} \
           --prefix PATH : ${lib.makeBinPath [ pkgs.sox pkgs.whisper-cpp-vulkan ]}
       '';
     };
 
     context = ./ai-tools/AGENTS.md;
 
-    tui = {
-      plugin = [
-        "oh-my-openagent/tui"
-        [
-          "${opencodeVoice}"
-          {
+    # OpenCode 2 terminal-client settings (cli.json; replaces v1's tui.json).
+    cli = {
+      plugins = [
+        "oh-my-openagent@latest"
+        {
+          package = "${opencodeVoice}";
+          options = {
             opencodeModel = "anthropic/claude-haiku-4-5";
             tts = false;
             # Upstream defaults (ctrl+r, <leader>r) collide with session_rename and
             # messages_redo; <leader>v is free in both opencode and oh-my-openagent.
             recordKey = "<leader>v";
             submitKey = "<leader>shift+v";
-          }
-        ]
+          };
+        }
       ];
     };
 
     settings = {
-      plugin = [
-        "@opencode-ai/plugin"
+      # OpenCode 2 key (`plugins`); the v1 `permission` block below is still
+      # read and normalized by OpenCode 2.
+      plugins = [
         "oh-my-openagent@latest"
-        # https://github.com/shahidshabbir-se/opencode-anthropic-oauth/tree/master
-        "opencode-anthropic-oauth"
+        # Claude subscription auth for OpenCode 2, reusing Claude Code's
+        # credentials. Replaces opencode-anthropic-oauth, which is v1-only.
+        # One-time setup: /connect -> Anthropic -> Import Claude Code subscription.
+        # https://github.com/griffinmartin/opencode-claude-auth
+        "opencode-claude-auth@latest"
       ];
 
       permission = {
@@ -172,6 +173,9 @@ in
 
         edit = "allow";
         webfetch = "allow";
+        # OpenCode 1 asked by default before touching paths outside the project;
+        # OpenCode 2 allows it. Keep the v1 behavior.
+        external_directory = "ask";
       };
     };
   };

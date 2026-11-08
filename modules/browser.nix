@@ -111,6 +111,11 @@
       "x-scheme-handler/slack" = "slack.desktop";
       "x-scheme-handler/onepassword" = "1password-schemes.desktop";
       "x-scheme-handler/onepassword8" = "1password-schemes.desktop";
+      # Claude Code registers this itself on first run (writing its own desktop
+      # entry under ~/.local/share/applications), replacing the HM-managed
+      # mimeapps.list symlink with a plain file. Declaring it here keeps the
+      # handler without the clobber.
+      "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
     };
   };
 }
