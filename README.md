@@ -223,3 +223,32 @@ sudo udevadm control --reload-rules
 ```
 
 This follows the same pattern as the AppArmor/GRUB fixes above — a one-time system-level setup outside Home Manager's scope. The `2109:0812` IDs are the VIA Labs USB3.0 hub (visible in `dmesg` whenever the KVM switches to the machine). They are hardware IDs, so the same rule works on both the ThinkPad and the Framework.
+
+## Framework 16 keyboard: Caps Lock → Control (QMK/VIA)
+
+The Framework Laptop 16 keyboard module runs QMK firmware with VIA support (firmware v0.2.9 at time of writing; check with `cat /sys/bus/usb/devices/1-4.3/bcdDevice`). The remap is stored in the keyboard's own EEPROM, so it affects only the internal keyboard, needs no OS-side config, and survives reinstalls and other OSes.
+
+VIA runs in the browser over WebHID, which needs read/write access to the keyboard's `/dev/hidraw*` nodes. These are root-only by default, so first add a udev rule that grants the logged-in user access:
+
+```bash
+sudo tee /etc/udev/rules.d/50-framework-keyboard-via.rules << 'EOF'
+# Let the logged-in user access the Framework Laptop 16 keyboard module via hidraw (VIA / WebHID)
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0012", MODE="0660", TAG+="uaccess"
+EOF
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=hidraw
+```
+
+Verify with `ls -l /dev/hidraw*`: the keyboard's nodes should show `crw-rw----+` (the `+` is the user ACL). `32ac:0012` is the ANSI keyboard module; other layouts have different product IDs (check `lsusb`).
+
+Then remap:
+
+1. Open <https://keyboard.frame.work> (Framework's hosted VIA, which has the keyboard definition built in) in a Chromium-based browser. Firefox has no WebHID support.
+2. Click **Authorize device** and select **Framework Laptop 16 Keyboard Module - ANSI**.
+3. In **Configure**, on **Layer 0**, click the **Caps Lock** key, then pick **Left Ctrl** (`KC_LCTL`) from **Basic**.
+
+Changes are written to the keyboard immediately; there is nothing to flash or save. To revert, set the key back to `KC_CAPS` or use **Reset keymap**.
+
+If using upstream <https://usevia.app> instead and it reports the device as unsupported, enable the **Design** tab in Settings and load the Framework 16 ANSI JSON definition from [FrameworkComputer/qmk_firmware](https://github.com/FrameworkComputer/qmk_firmware).
+
+The udev rule is only needed while configuring with VIA; the remap itself persists without it.
