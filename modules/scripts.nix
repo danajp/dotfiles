@@ -35,6 +35,9 @@ in
     (mkScript "backup-home" [ gnutar gzip ])
     (mkScript "clone-gh" [ git gawk ])
     (mkScript "create-test-branch" [ git ])
+    (mkScript "dictate" [
+      sox whisper-cpp-vulkan xdotool libnotify pulseaudio gawk gnused coreutils
+    ])
     (mkScript "fix-audio" [ pulseaudio gnugrep gawk ])
     (mkScript "kdebug2" [ kubectl openssl envsubst ])
     (mkScript "list-ingress-lb" [ kubectl jq util-linux coreutils ])

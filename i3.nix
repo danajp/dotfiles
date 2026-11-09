@@ -401,6 +401,9 @@ in
           # CopyQ
           "${mod}+c" = "exec copyq menu";
 
+          # Whisper dictation: press to record, press again to type the text
+          "${mod}+d" = "exec --no-startup-id dictate";
+
           # Custom splits
           "${mod}+Shift+v" = "split vertical";
           "${mod}+Shift+h" = "split horizontal";
