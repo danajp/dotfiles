@@ -90,7 +90,6 @@
       pkgs.zoom-us
       pkgs.mullvad-vpn
       pkgs.ssm-session-manager-plugin
-      pkgs.vagrant
       pkgs.spotify
       pkgs.google-cloud-sdk
       pkgs.terraform-ls
