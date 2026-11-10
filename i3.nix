@@ -22,23 +22,16 @@ let
     esac
   '';
 
-  # Wrapper around /usr/bin/i3lock (Ubuntu's PAM-aware build) that also
-  # blanks the displays once the lock screen is up. xss-lock invokes
-  # this as the locker; it must stay in the foreground for the entire
-  # locked session, so i3lock runs without -n (i.e. it daemonizes) and
-  # we block on its pidfile via `--nofork` semantics handled by running
-  # i3lock in the foreground with -n and backgrounding dpms separately.
-  #
-  # Sequence:
-  #   1. Launch i3lock in foreground (-n: do not fork).
-  #   2. Once i3lock has grabbed the screen, push DPMS off in the
-  #      background so the monitors turn off shortly after.
-  #   3. Wait on i3lock; xss-lock unblocks when this script exits.
+  # Wrapper around /usr/bin/i3lock (Ubuntu's PAM-aware build).
+  # xss-lock invokes this as the locker; it must stay in the foreground
+  # for the entire locked session. Use `-n` so i3lock does not fork, and
+  # `-d` so i3lock manages DPMS itself: displays are turned off while
+  # locked and turned back on after a successful unlock. We previously
+  # forced DPMS off with `xset` and that left the screen stuck black
+  # after unlocking on the ThinkPad.
   lock-screen = pkgs.writeShellScript "lock-screen" ''
     set -eo pipefail
-    # Kick DPMS off shortly after the locker grabs the screen.
-    ( sleep 0.3; ${pkgs.xset}/bin/xset dpms force off ) &
-    exec /usr/bin/i3lock -n -c 000000
+    exec /usr/bin/i3lock -n -d -c 000000
   '';
 in
 {
