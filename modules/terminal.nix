@@ -20,6 +20,7 @@
     enable = true;
     package = pkgs.rofi;
     theme = "solarized-dark";
+    settings = {
       font = "Inconsolata 14";
       modi = "drun,run,window,ssh";
       show-icons = true;
