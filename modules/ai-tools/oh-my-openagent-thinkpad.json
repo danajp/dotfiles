@@ -1,20 +1,21 @@
 {
-  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "_comment": "Optimized for opencode-go with access to latest models (July 2026). Orchestration: Kimi K2.7/K2.6. Reasoning: GLM-5.2. Utility: MiniMax M3. See oh-my-openagent source fallback chains for rationale.",
   "agents": {
     "sisyphus": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/kimi-k2.7-code"
     },
     "oracle": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/glm-5.2"
     },
     "explore": {
-      "model": "opencode-go/minimax-m2.5"
+      "model": "opencode-go/minimax-m3"
     },
     "librarian": {
-      "model": "opencode-go/glm-5"
+      "model": "opencode-go/minimax-m3"
     },
     "frontend-ui-ux-engineer": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/glm-5.2"
     },
     "document-writer": {
       "model": "opencode-go/kimi-k2.6"
@@ -23,19 +24,19 @@
       "model": "opencode-go/kimi-k2.6"
     },
     "metis": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/glm-5.2"
     },
     "momus": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/glm-5.2"
     },
     "sisyphus-junior": {
-      "model": "opencode-go/minimax-m2.5"
-    },
-    "prometheus": {
       "model": "opencode-go/kimi-k2.6"
     },
+    "prometheus": {
+      "model": "opencode-go/glm-5.2"
+    },
     "atlas": {
-      "model": "opencode-go/minimax-m2.5"
+      "model": "opencode-go/kimi-k2.6"
     }
   }
 }
