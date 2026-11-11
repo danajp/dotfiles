@@ -69,6 +69,9 @@ in
   # Machine-specific oh-my-openagent config
   xdg.configFile."opencode/oh-my-openagent.json".source = ../modules/ai-tools/oh-my-openagent-thinkpad.json;
 
+  # Machine-specific omo config
+  my.omo.configFile = ../modules/ai-tools/omo-thinkpad.jsonc;
+
   # Keyboard remapping (ThinkPad T460s only)
   home.keyboard.options = [ "caps:ctrl_modifier" ];
 

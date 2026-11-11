@@ -1,5 +1,5 @@
 # AI coding assistants: opencode + claude-code
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   # Voice dictation: https://github.com/renjfk/opencode-voice
@@ -30,6 +30,12 @@ let
   omo = import ../lib/omo.nix { inherit pkgs; extraPath = voiceTools; };
 in
 {
+  options.my.omo.configFile = lib.mkOption {
+    type = lib.types.path;
+    description = "Path to the per-machine omo.jsonc config.";
+  };
+
+  config = {
   # OmO Native: oh-my-openagent's standalone agent CLI (Sisyphus-style
   # delegation via categories). Keeps its own state under ~/.omo; run
   # `omo setup` once to carry API keys, MCP servers and skills over from
@@ -45,7 +51,7 @@ in
   # omo.jsonc: category-level model routing and a 5-hour wall-clock cap.
   # Managed here so model choices are versioned with the rest of the config.
   home.file.".omo/omo.jsonc" = {
-    source = ./ai-tools/omo.jsonc;
+    source = config.my.omo.configFile;
     force = true;
   };
 
@@ -210,4 +216,5 @@ in
   programs.claude-code = {
     enable = true;
   };
+};
 }

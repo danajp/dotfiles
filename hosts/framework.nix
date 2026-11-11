@@ -74,6 +74,9 @@ in
   # Machine-specific oh-my-openagent config
   xdg.configFile."opencode/oh-my-openagent.json".source = ../modules/ai-tools/oh-my-openagent-framework.json;
 
+  # Machine-specific omo config
+  my.omo.configFile = ../modules/ai-tools/omo-framework.jsonc;
+
   # Atlassian Jira MCP server (OAuth-based, via mcp.atlassian.com)
   programs.opencode.settings.mcp.atlassian = {
     type = "remote";
