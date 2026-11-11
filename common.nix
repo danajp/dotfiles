@@ -85,6 +85,8 @@
       pkgs.arandr
       pkgs.blueman
       pkgs.maim
+      # Audio control GUI; the polybar volume module's right-click launches it
+      pkgs.pavucontrol
 
       # Applications (migrated from bootstrap apt)
       pkgs.zoom-us

@@ -214,7 +214,8 @@ in
         format-muted = "<label-muted>";
         label-muted = "%{T2}%{T-} muted";
         label-muted-foreground = "\${colors.foreground-alt}";
-        click-right = "pavucontrol";
+        # Full store path: polybar runs under systemctl --user, whose PATH has no nix profile
+        click-right = "${pkgs.pavucontrol}/bin/pavucontrol";
       };
 
       # UTC time (was: 85_utc)
