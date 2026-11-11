@@ -1,0 +1,30 @@
+// OmO Native configuration: category-level model routing and a 5-hour wall-clock cap.
+// Managed by home-manager via modules/ai-tools.nix.
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
+  "[native]": {
+    "categories": {
+      "quick": { "model": "opencode-go/kimi-k2.7-code" },
+      "unspecified-low": { "model": "opencode-go/gpt-5.6-luna" },
+      "deep-low": { "model": "opencode-go/gpt-5.6-luna" },
+      "writing": { "model": "opencode-go/glm-5.2" },
+      "artistry": { "model": "opencode-go/glm-5.2" },
+      "visual-engineering": { "model": "opencode-go/kimi-k2.7-code" },
+      "unspecified-high": { "model": "opencode-go/kimi-k3" },
+      "deep-high": { "model": "opencode-go/kimi-k3" },
+      "architect": { "model": "opencode-go/kimi-k3" },
+      "ultrabrain": { "model": "opencode-go/kimi-k3" }
+    },
+    "agents": {
+      "explore": { "model": "opencode-go/minimax-m3" },
+      "librarian": { "model": "opencode-go/minimax-m3" },
+      "plan-consultant": { "model": "opencode-go/glm-5.2" },
+      "plan-reviewer": { "model": "opencode-go/glm-5.2" }
+    },
+    "task": {
+      "team": {
+        "max_wall_clock_minutes": 300
+      }
+    }
+  }
+}

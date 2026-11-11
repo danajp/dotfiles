@@ -42,6 +42,13 @@ in
     whisperCli = lib.getExe' pkgs.whisper-cpp-vulkan "whisper-cli";
   };
 
+  # omo.jsonc: category-level model routing and a 5-hour wall-clock cap.
+  # Managed here so model choices are versioned with the rest of the config.
+  home.file.".omo/omo.jsonc" = {
+    source = ./ai-tools/omo.jsonc;
+    force = true;
+  };
+
   # omo honours the generic consoledonottrack.com convention, as do many
   # other CLIs, so this is set globally rather than wrapped into omo alone.
   home.sessionVariables.DO_NOT_TRACK = "1";
