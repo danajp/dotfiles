@@ -80,6 +80,7 @@ in
       "-corners" "0-00"
       "-cornerdelay" "2"   # seconds cursor must dwell before action fires
       "-cornerredelay" "30" # grace period after unlock before corners re-arm
+      "-cornersize" "100"   # size of the hot corner area in pixels
     ];
   };
 
