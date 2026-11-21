@@ -69,6 +69,11 @@ in
   # with /etc/pam.d/i3lock so it can authenticate your user. The Nix
   # store build has no PAM config registered and silently fails to unlock.
   # `lock-screen` (above) wraps it to also blank displays via DPMS.
+  #
+  # xautolock's hot corner only inhibits xautolock itself, not X11's own
+  # screensaver/DPMS idle blanking. Disable those automatic timeouts so
+  # xautolock is the only idle-triggered action; the screen still blanks
+  # when i3lock -d takes over during a lock.
   services.screen-locker = {
     enable = true;
     inactiveInterval = 10; # minutes of idle before locking
@@ -233,6 +238,16 @@ in
           # Bridges gsettings (GTK theme, color-scheme) to X11 apps via XSETTINGS.
           # Required for Brave to follow system dark/light theme changes.
           command = "${pkgs.gnome-settings-daemon}/libexec/gsd-xsettings";
+          always = false;
+          notification = false;
+        }
+        {
+          # Disable X11's own screensaver and DPMS idle timeouts.
+          # xautolock's hot corner only inhibits xautolock; without this,
+          # X would still blank the screen while the mouse is parked there.
+          # Using `dpms 0 0 0` keeps the DPMS extension enabled (so i3lock -d
+          # can still blank on lock) without automatic timeout-based blanking.
+          command = "${pkgs.xset}/bin/xset s off && ${pkgs.xset}/bin/xset dpms 0 0 0";
           always = false;
           notification = false;
         }
